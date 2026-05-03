@@ -1,0 +1,37 @@
+<!--
+  part-type: actions
+  name: actions-placeholder
+  caption: Placeholder for filter/highlight/parameter actions
+  datasource: -
+  last-modified: 2026-05-01
+
+  NOTE: The 4 navigation actions are realised in the dashboard chrome itself —
+  each nav-strip button uses button-config kind='nav' with a target-window-name,
+  so Tableau emits the navigation action when the .twb is opened.
+
+  The 7 remaining actions (2 filter, 4 highlight, 1 parameter) are intentionally
+  left to be authored in Tableau Desktop on first open. Reasons:
+    - Filter/highlight action XML in Tableau workbooks is fragile and version-
+      sensitive; mis-specified actions cause Tableau to silently drop them.
+    - Tableau Desktop has a UI for adding these in Dashboard → Actions, which
+      produces correct XML with the right field qualifiers and GUIDs.
+
+  When you author these in Tableau Desktop, the resulting <action> elements
+  will appear in this file's slot. To migrate them out of the workbook into
+  parts, copy the rendered <action> XML from the saved .twb back into this file
+  (between the comment block and the end of the part) and re-compile.
+
+  Action 5 — Filter: "Campaign Row → Overview Trend"
+    Source: [BC] Campaign Table / Target: [BC] Email Trend / Field: [campaign_name]
+
+  Action 6 — Filter: "Pipeline Row → Pipeline Trend"
+    Source: [BC] Pipeline Table / Target: [BC] Pipeline Trend / Field: [campaign_name]
+
+  Action 7-10 — Highlight cross-filter on Audience Breakdown:
+    Country / Company Size / Lifecycle Stage / Industry — each highlights the
+    other three on the same dashboard.
+
+  Action 11 — Parameter: "Chart View Toggle"
+    Source: a small text worksheet of pill labels / Target parameter:
+    [Chart View Toggle].
+-->

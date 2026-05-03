@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTOR LP]
+  caption: CTOR LP
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='CTOR LP' datatype='real' default-format='0.0%' name='[CTOR LP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Clicks LP] / IIF([Opens LP] = 0, NULL, [Opens LP])' />
+</column>

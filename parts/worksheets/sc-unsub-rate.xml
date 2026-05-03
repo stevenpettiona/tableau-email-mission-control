@@ -1,0 +1,105 @@
+<!--
+  part-type: worksheet
+  name: [SC] Unsub Rate
+  caption: [SC] Unsub Rate
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<!-- SECTION:WORKSHEET -->
+<worksheet name='[SC] Unsub Rate'>
+  <layout-options>
+    <title>
+      <formatted-text>
+        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>UNSUB RATE</run>
+      </formatted-text>
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
+        <datasource caption='Parameters' name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
+        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
+        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
+        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
+        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Unsub Rate SP' datatype='real' name='[Unsub Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate SP]' derivation='User' name='[usr:Unsub Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Unsub Rate Δ' datatype='real' default-format='p0.00%' name='[Unsub Rate Δ]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate Δ]' derivation='User' name='[usr:Unsub Rate Δ:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <aggregation value='true' />
+    </view>
+    <style>
+      <style-rule element='cell'>
+        <format attr='text-align' value='center' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='text-align' value='center' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+    </style>
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Automatic' />
+        <encodings>
+          <text column='[federated.ehemailengagement].[usr:Unsub Rate SP:qk]' />
+              <text column='[federated.ehemailengagement].[usr:Unsub Rate Δ:qk]' />
+        </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailengagement].[usr:Unsub Rate SP:qk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailengagement].[usr:Unsub Rate Δ:qk]> vs prior period]]></run>
+              </formatted-text>
+            </customized-label>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows />
+    <cols />
+  </table>
+  <simple-id uuid='{0C400203-C63C-491B-8EC6-2DF718E6955D}' />
+</worksheet>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='worksheet' name='[SC] Unsub Rate'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{14AC7EC8-A996-42BE-95B0-C66560B72712}' />
+</window>

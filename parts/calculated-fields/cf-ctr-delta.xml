@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTR Δ]
+  caption: CTR Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='CTR Δ' datatype='real' default-format='p0.00%' name='[CTR Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([CTR SP] - [CTR LP]) / IIF([CTR LP] = 0, NULL, [CTR LP])' />
+</column>

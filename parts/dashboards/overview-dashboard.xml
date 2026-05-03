@@ -1,0 +1,138 @@
+<!--
+  part-type: dashboard
+  name: Email Overview
+  caption: Email Overview
+  datasource: -
+  last-modified: 2026-05-01
+-->
+<!-- SECTION:DASHBOARD -->
+<dashboard enable-sort-zone-taborder='true' name='Email Overview'>
+  <style />
+  <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <zones>
+    <zone h='100000' id='1000' type-v2='layout-basic' w='100000' x='0' y='0'>
+<zone h='4888' id='1113' type-v2='text' w='100000' x='0' y='0'>
+  <formatted-text>
+    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
+  </formatted-text>
+</zone>
+<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1114' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
+<zone friendly-name='Overview' h='4222' id='1115' type-v2='text' w='25000' x='0' y='4888'>
+  <formatted-text>
+    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#6B3FA0' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Campaign Performance' h='4222' id='1116' type-v2='text' w='25000' x='25000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Audience Breakdown' h='4222' id='1117' type-v2='text' w='25000' x='50000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Email Pipeline' h='4222' id='1118' type-v2='text' w='25000' x='75000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone>
+<zone-style>
+  <format attr='background-color' value='#1F1045' />
+  <format attr='border-color' value='#000000' />
+  <format attr='border-style' value='none' />
+  <format attr='border-width' value='0' />
+  <format attr='margin' value='1' />
+</zone-style>
+</zone>
+<zone h='5333' id='1119' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
+<zone h='100000' id='1120' type-v2='text' w='14285' x='0' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1121' type-v2='text' w='14285' x='14285' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
+  </formatted-text>
+</zone><zone h='100000' id='1122' type-v2='text' w='14285' x='28570' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1123' type-v2='text' w='14285' x='42855' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
+  </formatted-text>
+</zone><zone h='100000' id='1124' type-v2='text' w='14285' x='57140' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
+  </formatted-text>
+</zone><zone h='100000' id='1125' type-v2='text' w='14285' x='71425' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1126' type-v2='text' w='14285' x='85710' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
+  </formatted-text>
+</zone>
+</zone>
+<zone h='82000' id='1127' type-v2='layout-basic' w='100000' x='0' y='14443'>
+<zone h='14905' id='1100' type-v2='layout-flow' w='100000' x='0' y='0' param='horz' layout-strategy-id='distribute-evenly'>
+<zone h='100000' id='1101' name='[SC] Sends' w='12500' x='0' y='0' /><zone h='100000' id='1102' name='[SC] Opens' w='12500' x='12500' y='0' /><zone h='100000' id='1103' name='[SC] Clicks' w='12500' x='25000' y='0' /><zone h='100000' id='1104' name='[SC] Unsubscribes' w='12500' x='37500' y='0' /><zone h='100000' id='1105' name='[SC] Open Rate' w='12500' x='50000' y='0' /><zone h='100000' id='1106' name='[SC] CTR' w='12500' x='62500' y='0' /><zone h='100000' id='1107' name='[SC] CTOR' w='12500' x='75000' y='0' /><zone h='100000' id='1108' name='[SC] Unsub Rate' w='12500' x='87500' y='0' />
+</zone>
+<zone h='85095' id='1109' type-v2='layout-basic' w='100000' x='0' y='14905'>
+<zone h='100000' id='1110' name='[BC] Email Trend' w='65000' x='0' y='0' /><zone h='100000' id='1111' name='[BC] Platform Split' w='35000' x='65000' y='0' />
+</zone>
+</zone>
+<zone h='3557' id='1128' type-v2='text' w='100000' x='0' y='96443'>
+  <formatted-text>
+    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
+  </formatted-text>
+</zone>
+    </zone>
+  </zones>
+  <simple-id uuid='{CC05D821-D847-4E83-BD90-8CE3971B99AE}' />
+</dashboard>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='dashboard' name='Email Overview'>
+  <viewpoints>
+    <viewpoint name='[SC] Sends' />
+    <viewpoint name='[SC] Opens' />
+    <viewpoint name='[SC] Clicks' />
+    <viewpoint name='[SC] Unsubscribes' />
+    <viewpoint name='[SC] Open Rate' />
+    <viewpoint name='[SC] CTR' />
+    <viewpoint name='[SC] CTOR' />
+    <viewpoint name='[SC] Unsub Rate' />
+    <viewpoint name='[BC] Email Trend' />
+    <viewpoint name='[BC] Platform Split' />
+  </viewpoints>
+  <active id='-1' />
+  <simple-id uuid='{C5677F52-EC91-4676-970C-B2B74BC6CBAC}' />
+</window>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTOR SP]
+  caption: CTOR SP
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='CTOR SP' datatype='real' default-format='0.0%' name='[CTOR SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Clicks SP] / IIF([Opens SP] = 0, NULL, [Opens SP])' />
+</column>

@@ -1,0 +1,184 @@
+<!--
+  part-type: datasource
+  name: Parameters
+  caption: Parameters
+  datasource: parameters
+  last-modified: 2026-05-01
+-->
+<datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+  <aliases enabled='yes' />
+  <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;marketo&quot;' value='Marketo' />
+      <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Marketo' value='&quot;marketo&quot;' />
+      <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
+    </members>
+  </column>
+  <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+      <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+      <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+      <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+      <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+      <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      <alias key='&quot;Default&quot;' value='Default' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+      <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+      <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+      <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+      <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+      <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+      <member alias='Default' value='&quot;Default&quot;' />
+    </members>
+  </column>
+  <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;Inbound&quot;' value='Inbound' />
+      <alias key='&quot;Outbound&quot;' value='Outbound' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Inbound' value='&quot;Inbound&quot;' />
+      <member alias='Outbound' value='&quot;Outbound&quot;' />
+    </members>
+  </column>
+  <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;AU&quot;' value='AU' />
+      <alias key='&quot;NZ&quot;' value='NZ' />
+      <alias key='&quot;GB&quot;' value='UK' />
+      <alias key='&quot;CA&quot;' value='CA' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='AU' value='&quot;AU&quot;' />
+      <member alias='NZ' value='&quot;NZ&quot;' />
+      <member alias='UK' value='&quot;GB&quot;' />
+      <member alias='CA' value='&quot;CA&quot;' />
+    </members>
+  </column>
+  <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;micro&quot;' value='Micro' />
+      <alias key='&quot;core&quot;' value='Core' />
+      <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Micro' value='&quot;micro&quot;' />
+      <member alias='Core' value='&quot;core&quot;' />
+      <member alias='Mid-Market' value='&quot;mid-market&quot;' />
+    </members>
+  </column>
+  <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;CHR&quot;' value='CHR' />
+      <alias key='&quot;HRA&quot;' value='HRA' />
+      <alias key='&quot;MP&quot;' value='MP' />
+      <alias key='&quot;LMS&quot;' value='LMS' />
+      <alias key='&quot;EAP&quot;' value='EAP' />
+      <alias key='&quot;GC&quot;' value='GC' />
+      <alias key='&quot;&quot;' value='Not Specified' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='CHR' value='&quot;CHR&quot;' />
+      <member alias='HRA' value='&quot;HRA&quot;' />
+      <member alias='MP' value='&quot;MP&quot;' />
+      <member alias='LMS' value='&quot;LMS&quot;' />
+      <member alias='EAP' value='&quot;EAP&quot;' />
+      <member alias='GC' value='&quot;GC&quot;' />
+      <member alias='Not Specified' value='&quot;&quot;' />
+    </members>
+  </column>
+  <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90'>
+    <calculation class='tableau' formula='90' />
+    <members>
+      <member value='30' />
+      <member value='60' />
+      <member value='90' />
+      <member value='180' />
+      <member value='365' />
+    </members>
+  </column>
+  <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;'>
+    <calculation class='tableau' formula='&quot;Sends + Rates&quot;' />
+    <members>
+      <member value='&quot;Sends + Rates&quot;' />
+      <member value='&quot;Sends Only&quot;' />
+      <member value='&quot;Rates Only&quot;' />
+    </members>
+  </column>
+  <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+      <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+      <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+      <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+      <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+      <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      <alias key='&quot;Default&quot;' value='Default' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+      <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+      <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+      <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+      <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+      <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+      <member alias='Default' value='&quot;Default&quot;' />
+    </members>
+  </column>
+  <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+    <calculation class='tableau' formula='#2026-02-01#' />
+    <range min='#2023-01-01#' />
+  </column>
+  <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+    <calculation class='tableau' formula='#2026-05-01#' />
+    <range min='#2023-01-01#' />
+  </column>
+  <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+    <calculation class='tableau' formula='&quot;PoP&quot;' />
+    <aliases>
+      <alias key='&quot;YoY&quot;' value='Year over Year' />
+      <alias key='&quot;PoP&quot;' value='Period over Period' />
+      <alias key='&quot;Custom&quot;' value='Custom Range' />
+    </aliases>
+    <members>
+      <member alias='Year over Year' value='&quot;YoY&quot;' />
+      <member alias='Period over Period' value='&quot;PoP&quot;' />
+      <member alias='Custom Range' value='&quot;Custom&quot;' />
+    </members>
+  </column>
+  <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
+    <calculation class='tableau' formula='#2025-02-01#' />
+    <range min='#2023-01-01#' />
+  </column>
+  <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
+    <calculation class='tableau' formula='#2025-05-01#' />
+    <range min='#2023-01-01#' />
+  </column>
+</datasource>

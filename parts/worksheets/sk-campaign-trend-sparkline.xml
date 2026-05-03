@@ -1,0 +1,91 @@
+<!--
+  part-type: worksheet
+  name: [SK] Campaign Trend Sparkline
+  caption: [SK] Campaign Trend Sparkline
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<!-- SECTION:WORKSHEET -->
+<worksheet name='[SK] Campaign Trend Sparkline'>
+  <layout-options>
+    <title>
+      <formatted-text />
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
+        <datasource caption='Parameters' name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
+        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
+        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
+        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
+        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
+        <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
+        <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
+        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+          <slices>
+            <column>[federated.ehemailengagement].[none:campaign_name:nk]</column>
+            <column>[federated.ehemailengagement].[none:event_week:ok]</column>
+          </slices>
+      <aggregation value='true' />
+    </view>
+    <style />
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Line' />
+        <encodings>
+
+        </encodings>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows>[federated.ehemailengagement].[usr:Open Rate:qk]</rows>
+    <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
+  </table>
+  <simple-id uuid='{9E8C44AC-047F-483A-A5D9-26CA4672D306}' />
+</worksheet>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='worksheet' name='[SK] Campaign Trend Sparkline'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{5873F957-3874-473C-9FD4-C8A6CB0838E6}' />
+</window>

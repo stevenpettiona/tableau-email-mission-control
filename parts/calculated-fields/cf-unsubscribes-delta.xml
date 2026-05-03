@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Unsubscribes Δ]
+  caption: Unsubscribes Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Unsubscribes Δ' datatype='real' default-format='p0.00%' name='[Unsubscribes Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Unsubscribes SP] - [Unsubscribes LP]) / IIF([Unsubscribes LP] = 0, NULL, [Unsubscribes LP])' />
+</column>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Traffic Light - CTR]
+  caption: CTR Traffic Light
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='CTR Traffic Light' datatype='string' name='[Traffic Light - CTR]' role='dimension' type='nominal'>
+  <calculation class='tableau' formula='IF COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.03 THEN &quot;Green&quot; ELSEIF COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.01 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
+</column>

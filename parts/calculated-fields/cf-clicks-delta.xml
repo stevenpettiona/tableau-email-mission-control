@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Clicks Δ]
+  caption: Clicks Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Clicks Δ' datatype='real' default-format='p0.00%' name='[Clicks Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Clicks SP] - [Clicks LP]) / IIF([Clicks LP] = 0, NULL, [Clicks LP])' />
+</column>

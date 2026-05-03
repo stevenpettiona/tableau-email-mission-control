@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Open Rate Δ]
+  caption: Open Rate Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Open Rate Δ' datatype='real' default-format='p0.00%' name='[Open Rate Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Open Rate SP] - [Open Rate LP]) / IIF([Open Rate LP] = 0, NULL, [Open Rate LP])' />
+</column>

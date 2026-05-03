@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Open Rate SP]
+  caption: Open Rate SP
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Open Rate SP' datatype='real' default-format='0.0%' name='[Open Rate SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Opens SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+</column>

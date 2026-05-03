@@ -1,0 +1,159 @@
+<!--
+  part-type: datasource
+  name: federated.ehemailpipeline
+  caption: EH Email Pipeline
+  datasource: ds2
+  last-modified: 2026-05-01
+-->
+<datasource caption='EH Email Pipeline' inline='true' name='federated.ehemailpipeline' version='18.1'>
+  <connection class='federated'>
+    <named-connections>
+      <named-connection caption='ehdw-01.c4377kymkso8.ap-southeast-2.redshift.amazonaws.com' name='redshift.ds2conn'>
+        <connection authentication='auth-user-pass' class='redshift' dbname='dev' odbc-connect-string-extras='' one-time-sql='' port='5439' schema='mart' server='ehdw-01.c4377kymkso8.ap-southeast-2.redshift.amazonaws.com' show-other-databases='' single-node='' sslmode='require' username='tableau' />
+      </named-connection>
+    </named-connections>
+    <relation type='collection'>
+      <relation connection='redshift.ds2conn' name='Email Events' type='text'>SELECT
+    f.event_id,
+    f.event_timestamp,
+    DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
+    DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
+    f.event_type,
+    f.source                                      AS platform,
+    f.dim_marketing_campaign_sk,
+    c.campaign_name,
+    c.sub_campaign_name,
+    c.campaign_source,
+    c.program_type,
+    c.campaign_type,
+    c.product,
+    c.channel,
+    c.direction,
+    c.campaign_year_month,
+    a.marketo_geo_code                            AS country,
+    a.sf_estimated_company_size_category          AS company_size,
+    a.marketo_industry                            AS industry,
+    a.marketo_lifecycle_stage                     AS lifecycle_stage,
+    a.marketo_mql_score                           AS mql_score
+FROM mart.fct_marketing_email_engagement f
+LEFT JOIN mart.dim_marketing_campaign c
+    ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+LEFT JOIN mart.dim_marketing_audience a
+    ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
+    AND a.is_current = TRUE
+WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)</relation>
+      <relation connection='redshift.ds2conn' name='Program MQLs' type='text'>SELECT
+    dim_marketing_campaign_sk,
+    date              AS mql_date,
+    country           AS mql_country,
+    employee_segment  AS mql_segment,
+    SUM(mql_count)    AS mqls,
+    SUM(lead_count)   AS leads,
+    SUM(recycled_mql_count) AS recycled_mqls
+FROM mart.rpt_marketing_mofu_leads
+WHERE dim_marketing_campaign_sk IS NOT NULL
+GROUP BY 1, 2, 3, 4</relation>
+      <relation connection='redshift.ds2conn' name='Program SAOs' type='text'>SELECT
+    dim_marketing_campaign_sk,
+    date              AS sao_date,
+    country           AS sao_country,
+    employee_segment  AS sao_segment,
+    SUM(sao_count)    AS saos,
+    SUM(sao_arr)      AS sao_arr_aud
+FROM mart.rpt_marketing_bofu_opportunities
+WHERE dim_marketing_campaign_sk IS NOT NULL
+GROUP BY 1, 2, 3, 4</relation>
+    </relation>
+    <object-graph>
+      <objects>
+        <object caption='Email Events' id='Email Events_DS2_ROOT'>
+          <properties context=''>
+            <relation connection='redshift.ds2conn' name='Email Events' type='text' />
+          </properties>
+        </object>
+        <object caption='Program MQLs' id='Program MQLs_DS2'>
+          <properties context=''>
+            <relation connection='redshift.ds2conn' name='Program MQLs' type='text' />
+          </properties>
+        </object>
+        <object caption='Program SAOs' id='Program SAOs_DS2'>
+          <properties context=''>
+            <relation connection='redshift.ds2conn' name='Program SAOs' type='text' />
+          </properties>
+        </object>
+      </objects>
+      <relationships>
+        <relationship cardinality-1='many' cardinality-2='many' integrity-1='some' integrity-2='some'>
+          <expression op='='>
+            <expression op='[dim_marketing_campaign_sk]' />
+            <expression op='[dim_marketing_campaign_sk (Email Events)]' />
+          </expression>
+          <first-end-point object-id='Program MQLs_DS2' />
+          <second-end-point object-id='Email Events_DS2_ROOT' />
+        </relationship>
+        <relationship cardinality-1='many' cardinality-2='many' integrity-1='some' integrity-2='some'>
+          <expression op='='>
+            <expression op='[dim_marketing_campaign_sk]' />
+            <expression op='[dim_marketing_campaign_sk (Email Events)]' />
+          </expression>
+          <first-end-point object-id='Program SAOs_DS2' />
+          <second-end-point object-id='Email Events_DS2_ROOT' />
+        </relationship>
+      </relationships>
+    </object-graph>
+    <cols>
+      <map key='[event_id]' value='[Email Events].[event_id]' />
+      <map key='[event_timestamp]' value='[Email Events].[event_timestamp]' />
+      <map key='[event_week]' value='[Email Events].[event_week]' />
+      <map key='[event_month]' value='[Email Events].[event_month]' />
+      <map key='[event_type]' value='[Email Events].[event_type]' />
+      <map key='[platform]' value='[Email Events].[platform]' />
+      <map key='[dim_marketing_campaign_sk (Email Events)]' value='[Email Events].[dim_marketing_campaign_sk]' />
+      <map key='[campaign_name]' value='[Email Events].[campaign_name]' />
+      <map key='[program_type]' value='[Email Events].[program_type]' />
+      <map key='[direction]' value='[Email Events].[direction]' />
+      <map key='[country]' value='[Email Events].[country]' />
+      <map key='[company_size]' value='[Email Events].[company_size]' />
+      <map key='[product]' value='[Email Events].[product]' />
+      <map key='[dim_marketing_campaign_sk (Program MQLs)]' value='[Program MQLs].[dim_marketing_campaign_sk]' />
+      <map key='[mql_date]' value='[Program MQLs].[mql_date]' />
+      <map key='[mql_country]' value='[Program MQLs].[mql_country]' />
+      <map key='[mql_segment]' value='[Program MQLs].[mql_segment]' />
+      <map key='[mqls]' value='[Program MQLs].[mqls]' />
+      <map key='[leads]' value='[Program MQLs].[leads]' />
+      <map key='[recycled_mqls]' value='[Program MQLs].[recycled_mqls]' />
+      <map key='[dim_marketing_campaign_sk (Program SAOs)]' value='[Program SAOs].[dim_marketing_campaign_sk]' />
+      <map key='[sao_date]' value='[Program SAOs].[sao_date]' />
+      <map key='[sao_country]' value='[Program SAOs].[sao_country]' />
+      <map key='[sao_segment]' value='[Program SAOs].[sao_segment]' />
+      <map key='[saos]' value='[Program SAOs].[saos]' />
+      <map key='[sao_arr_aud]' value='[Program SAOs].[sao_arr_aud]' />
+    </cols>
+  </connection>
+  <aliases enabled='yes' />
+  <!-- Email Events columns -->
+  <column datatype='string' hidden='true' name='[event_id]' role='dimension' type='nominal' />
+  <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+  <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
+  <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+  <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
+  <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+  <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+  <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
+  <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
+  <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
+  <!-- Program MQLs columns -->
+  <column caption='MQL Date' datatype='date' name='[mql_date]' role='dimension' type='ordinal' />
+  <column caption='MQL Country' datatype='string' name='[mql_country]' role='dimension' type='nominal' />
+  <column caption='MQL Segment' datatype='string' name='[mql_segment]' role='dimension' type='nominal' />
+  <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
+  <column caption='Leads' datatype='integer' name='[leads]' role='measure' type='quantitative' />
+  <column caption='Recycled MQLs' datatype='integer' name='[recycled_mqls]' role='measure' type='quantitative' />
+  <!-- Program SAOs columns -->
+  <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
+  <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
+  <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
+  <column caption='SAOs' datatype='integer' name='[saos]' role='measure' type='quantitative' />
+  <column caption='SAO ARR (AUD)' datatype='real' default-format='&quot;$&quot;#,##0' name='[sao_arr_aud]' role='measure' type='quantitative' />
+  <!-- INJECT:calculated-fields -->
+</datasource>

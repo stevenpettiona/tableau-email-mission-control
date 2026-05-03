@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTR LP]
+  caption: CTR LP
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='CTR LP' datatype='real' default-format='0.0%' name='[CTR LP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Clicks LP] / IIF([Sends LP] = 0, NULL, [Sends LP])' />
+</column>

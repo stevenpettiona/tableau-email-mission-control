@@ -1,0 +1,134 @@
+<!--
+  part-type: dashboard
+  name: Email Audience Breakdown
+  caption: Email Audience Breakdown
+  datasource: -
+  last-modified: 2026-05-01
+-->
+<!-- SECTION:DASHBOARD -->
+<dashboard enable-sort-zone-taborder='true' name='Email Audience Breakdown'>
+  <style />
+  <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <zones>
+    <zone h='100000' id='1400' type-v2='layout-basic' w='100000' x='0' y='0'>
+<zone h='4888' id='1507' type-v2='text' w='100000' x='0' y='0'>
+  <formatted-text>
+    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
+  </formatted-text>
+</zone>
+<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1508' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
+<zone friendly-name='Overview' h='4222' id='1509' type-v2='text' w='25000' x='0' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Campaign Performance' h='4222' id='1510' type-v2='text' w='25000' x='25000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Audience Breakdown' h='4222' id='1511' type-v2='text' w='25000' x='50000' y='4888'>
+  <formatted-text>
+    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#6B3FA0' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Email Pipeline' h='4222' id='1512' type-v2='text' w='25000' x='75000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone>
+<zone-style>
+  <format attr='background-color' value='#1F1045' />
+  <format attr='border-color' value='#000000' />
+  <format attr='border-style' value='none' />
+  <format attr='border-width' value='0' />
+  <format attr='margin' value='1' />
+</zone-style>
+</zone>
+<zone h='5333' id='1513' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
+<zone h='100000' id='1514' type-v2='text' w='14285' x='0' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1515' type-v2='text' w='14285' x='14285' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
+  </formatted-text>
+</zone><zone h='100000' id='1516' type-v2='text' w='14285' x='28570' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1517' type-v2='text' w='14285' x='42855' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
+  </formatted-text>
+</zone><zone h='100000' id='1518' type-v2='text' w='14285' x='57140' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
+  </formatted-text>
+</zone><zone h='100000' id='1519' type-v2='text' w='14285' x='71425' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
+  </formatted-text>
+</zone><zone h='100000' id='1520' type-v2='text' w='14285' x='85710' y='0'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
+  </formatted-text>
+</zone>
+</zone>
+<zone h='82000' id='1521' type-v2='layout-basic' w='100000' x='0' y='14443'>
+<zone h='95664' id='1500' type-v2='layout-basic' w='100000' x='0' y='0'>
+<zone h='47832' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='0' /><zone h='47832' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='0' /><zone h='47832' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='47832' /><zone h='47832' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='47832' />
+</zone>
+<zone h='4336' id='1505' type-v2='text' w='100000' x='0' y='95664'>
+  <formatted-text>
+    <run fontcolor='#6B7280' fontname='Poppins' fontsize='11'>Best performing segment will appear here once data is loaded</run>
+  </formatted-text>
+</zone>
+</zone>
+<zone h='3557' id='1522' type-v2='text' w='100000' x='0' y='96443'>
+  <formatted-text>
+    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
+  </formatted-text>
+</zone>
+    </zone>
+  </zones>
+  <simple-id uuid='{00A46D18-E86D-40FB-96F7-4567566A76F5}' />
+</dashboard>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='dashboard' name='Email Audience Breakdown'>
+  <viewpoints>
+    <viewpoint name='[BC] Country Breakdown' />
+    <viewpoint name='[BC] Company Size Breakdown' />
+    <viewpoint name='[BC] Lifecycle Stage Breakdown' />
+    <viewpoint name='[BC] Industry Breakdown' />
+  </viewpoints>
+  <active id='-1' />
+  <simple-id uuid='{009BEC44-BB31-41EF-B95B-51262EC806BA}' />
+</window>

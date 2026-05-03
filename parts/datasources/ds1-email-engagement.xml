@@ -1,0 +1,92 @@
+<!--
+  part-type: datasource
+  name: federated.ehemailengagement
+  caption: EH Email Engagement
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<datasource caption='EH Email Engagement' inline='true' name='federated.ehemailengagement' version='18.1'>
+  <connection class='federated'>
+    <named-connections>
+      <named-connection caption='ehdw-01.c4377kymkso8.ap-southeast-2.redshift.amazonaws.com' name='redshift.ds1conn'>
+        <connection authentication='auth-user-pass' class='redshift' dbname='dev' odbc-connect-string-extras='' one-time-sql='' port='5439' schema='mart' server='ehdw-01.c4377kymkso8.ap-southeast-2.redshift.amazonaws.com' show-other-databases='' single-node='' sslmode='require' username='tableau' />
+      </named-connection>
+    </named-connections>
+    <relation connection='redshift.ds1conn' name='Email Engagement' type='text'>SELECT
+    f.event_id,
+    f.event_timestamp,
+    DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
+    DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
+    f.event_type,
+    f.source                                      AS platform,
+    f.dim_marketing_campaign_sk,
+    c.campaign_name,
+    c.sub_campaign_name,
+    c.campaign_source,
+    c.program_type,
+    c.campaign_type,
+    c.product,
+    c.channel,
+    c.direction,
+    c.campaign_year_month,
+    a.marketo_geo_code                            AS country,
+    a.sf_estimated_company_size_category          AS company_size,
+    a.marketo_industry                            AS industry,
+    a.marketo_lifecycle_stage                     AS lifecycle_stage,
+    a.marketo_mql_score                           AS mql_score
+FROM mart.fct_marketing_email_engagement f
+LEFT JOIN mart.dim_marketing_campaign c
+    ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+LEFT JOIN mart.dim_marketing_audience a
+    ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
+    AND a.is_current = TRUE
+WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)</relation>
+    <cols>
+      <map key='[event_id]' value='[Email Engagement].[event_id]' />
+      <map key='[event_timestamp]' value='[Email Engagement].[event_timestamp]' />
+      <map key='[event_week]' value='[Email Engagement].[event_week]' />
+      <map key='[event_month]' value='[Email Engagement].[event_month]' />
+      <map key='[event_type]' value='[Email Engagement].[event_type]' />
+      <map key='[platform]' value='[Email Engagement].[platform]' />
+      <map key='[dim_marketing_campaign_sk]' value='[Email Engagement].[dim_marketing_campaign_sk]' />
+      <map key='[campaign_name]' value='[Email Engagement].[campaign_name]' />
+      <map key='[sub_campaign_name]' value='[Email Engagement].[sub_campaign_name]' />
+      <map key='[campaign_source]' value='[Email Engagement].[campaign_source]' />
+      <map key='[program_type]' value='[Email Engagement].[program_type]' />
+      <map key='[campaign_type]' value='[Email Engagement].[campaign_type]' />
+      <map key='[product]' value='[Email Engagement].[product]' />
+      <map key='[channel]' value='[Email Engagement].[channel]' />
+      <map key='[direction]' value='[Email Engagement].[direction]' />
+      <map key='[campaign_year_month]' value='[Email Engagement].[campaign_year_month]' />
+      <map key='[country]' value='[Email Engagement].[country]' />
+      <map key='[company_size]' value='[Email Engagement].[company_size]' />
+      <map key='[industry]' value='[Email Engagement].[industry]' />
+      <map key='[lifecycle_stage]' value='[Email Engagement].[lifecycle_stage]' />
+      <map key='[mql_score]' value='[Email Engagement].[mql_score]' />
+    </cols>
+  </connection>
+  <aliases enabled='yes' />
+  <!-- Source columns -->
+  <column datatype='string' hidden='true' name='[event_id]' role='dimension' type='nominal' />
+  <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+  <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
+  <column caption='Event Month' datatype='date' name='[event_month]' role='dimension' type='ordinal' />
+  <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
+  <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+  <column datatype='string' hidden='true' name='[dim_marketing_campaign_sk]' role='dimension' type='nominal' />
+  <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
+  <column caption='Sub-Campaign' datatype='string' name='[sub_campaign_name]' role='dimension' type='nominal' />
+  <column caption='Campaign Source' datatype='string' name='[campaign_source]' role='dimension' type='nominal' />
+  <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+  <column caption='Campaign Type' datatype='string' name='[campaign_type]' role='dimension' type='nominal' />
+  <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
+  <column caption='Channel' datatype='string' name='[channel]' role='dimension' type='nominal' />
+  <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+  <column caption='Program Launch Month' datatype='date' name='[campaign_year_month]' role='dimension' type='ordinal' />
+  <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
+  <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
+  <column caption='Industry' datatype='string' name='[industry]' role='dimension' type='nominal' />
+  <column caption='Lifecycle Stage' datatype='string' name='[lifecycle_stage]' role='dimension' type='nominal' />
+  <column caption='MQL Score' datatype='real' name='[mql_score]' role='measure' type='quantitative' />
+  <!-- INJECT:calculated-fields -->
+</datasource>

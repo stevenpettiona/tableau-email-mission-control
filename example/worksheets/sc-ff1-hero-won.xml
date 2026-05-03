@@ -1,0 +1,199 @@
+<!--
+  part-type: worksheet
+  name: [SC] FF1 - Hero - Won
+  last-modified: 2026-05-01
+-->
+<worksheet name='[SC] FF1 - Hero - Won'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>WON</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Marketing Mission Control Dataset' name='federated.0h0rhj21s8fugq1ekg8b50nmig8c' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column alias='Custom Model' caption='Attribution Model' datatype='string' name='[param_attributionmodel]' param-domain-type='list' role='measure' type='nominal' value='&quot;Custom Model&quot;'>
+              <calculation class='tableau' formula='&quot;Custom Model&quot;' />
+              <aliases>
+                <alias key='&quot;Custom Model&quot;' value='Custom Model' />
+                <alias key='&quot;First Touch&quot;' value='First Touch' />
+                <alias key='&quot;Lead Creation&quot;' value='Lead Creation' />
+                <alias key='&quot;U-Shaped&quot;' value='U-Shaped' />
+                <alias key='&quot;W-Shaped&quot;' value='W-Shaped' />
+              </aliases>
+            </column>
+            <column caption='Channel' datatype='string' name='[param_channel]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+            </column>
+            <column alias='All' caption='Direction' datatype='string' name='[param_direction]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+              <aliases>
+                <alias key='&quot;All&quot;' value='All' />
+                <alias key='&quot;Inbound&quot;' value='Inbound' />
+                <alias key='&quot;Outbound&quot;' value='Outbound' />
+                <alias key='&quot;Partner&quot;' value='Partner' />
+              </aliases>
+            </column>
+            <column caption='End Date' datatype='date' name='[param_enddate]' param-domain-type='range' role='measure' type='quantitative' value='#2026-03-31#'>
+              <calculation class='tableau' formula='#2026-03-31#' />
+              <range min='#2023-01-01#' />
+            </column>
+            <column caption='MQL Sub-type' datatype='string' name='[param_mqltsubype]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+              <aliases>
+                <alias key='&quot;0&quot;' value='No Demo' />
+                <alias key='&quot;1&quot;' value='Demo' />
+              </aliases>
+            </column>
+            <column alias='Period over Period' caption='Period Comparison' datatype='string' name='[param_periodcomparison]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+              <calculation class='tableau' formula='&quot;PoP&quot;' />
+              <aliases>
+                <alias key='&quot;Custom&quot;' value='Custom Range' />
+                <alias key='&quot;PoP&quot;' value='Period over Period' />
+                <alias key='&quot;YoY&quot;' value='Year over Year' />
+              </aliases>
+            </column>
+            <column caption='Comparison End Date' datatype='date' name='[param_periodcomparison_enddate]' param-domain-type='range' role='measure' type='quantitative' value='#2025-04-29#'>
+              <calculation class='tableau' formula='#2025-04-29#' />
+              <range min='#2023-01-01#' />
+            </column>
+            <column caption='Comparison Start Date' datatype='date' name='[param_periodcomparison_startdate]' param-domain-type='range' role='measure' type='quantitative' value='#2025-04-01#'>
+              <calculation class='tableau' formula='#2025-04-01#' />
+              <range min='#2023-01-01#' />
+            </column>
+            <column alias='CA' caption='Region' datatype='string' name='[param_region]' param-domain-type='list' role='measure' type='nominal' value='&quot;Canada&quot;'>
+              <calculation class='tableau' formula='&quot;Canada&quot;' />
+              <aliases>
+                <alias key='&quot;Australia&quot;' value='AU' />
+                <alias key='&quot;Canada&quot;' value='CA' />
+                <alias key='&quot;Malaysia&quot;' value='MY' />
+                <alias key='&quot;New Zealand&quot;' value='NZ' />
+                <alias key='&quot;Singapore&quot;' value='SG' />
+                <alias key='&quot;United Kingdom&quot;' value='UK' />
+              </aliases>
+            </column>
+            <column alias='All' caption='Segment' datatype='string' name='[param_segment]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+              <calculation class='tableau' formula='&quot;All&quot;' />
+              <aliases>
+                <alias key='&quot;All&quot;' value='All' />
+                <alias key='&quot;core&quot;' value='Core' />
+                <alias key='&quot;micro&quot;' value='Micro' />
+                <alias key='&quot;mid-market&quot;' value='Mid Market' />
+              </aliases>
+            </column>
+            <column caption='Start Date' datatype='date' name='[param_startdate]' param-domain-type='range' role='measure' type='quantitative' value='#2026-03-01#'>
+              <calculation class='tableau' formula='#2026-03-01#' />
+              <range min='#2023-01-01#' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.0h0rhj21s8fugq1ekg8b50nmig8c'>
+            <column caption='SAO - SP' datatype='real' name='[Calculation_1469696709189642]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='IF ([Parameters].[param_region] = &quot;Global&quot; OR [country (rpt_marketing_bofu_opportunities)] = [Parameters].[param_region])&#10;AND ([Parameters].[param_segment] = &quot;All&quot; OR [employee_segment (rpt_marketing_bofu_opportunities)] = [Parameters].[param_segment])&#10;AND ([Parameters].[param_channel] = &quot;All&quot; OR [channel_group] = [Parameters].[param_channel])&#10;AND ([Parameters].[param_direction] = &quot;All&quot; or [direction] = [Parameters].[param_direction])&#10;AND ([Parameters].[param_mqltsubype] = &quot;All&quot; or [requested_demo (rpt_marketing_bofu_opportunities)] = [Parameters].[param_mqltsubype])&#10;AND ([report_date] &gt;= [Parameters].[param_startdate] AND [report_date] &lt;= [Parameters].[param_enddate])&#10;THEN &#10; IF [Parameters].[param_attributionmodel] = &quot;Custom Model&quot; THEN [sao_weighted_with_unattributed_cust]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;First Touch&quot; THEN [sao_weighted_with_unattributed_ft]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;Lead Creation&quot; THEN [sao_weighted_with_unattributed_lc]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;U-Shaped&quot; THEN [sao_weighted_with_unattributed_us]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;W-Shaped&quot; THEN [sao_weighted_with_unattributed_ws]&#10;  END&#10;END' />
+            </column>
+            <column caption='SAO per Won - SP' datatype='real' default-format='p0.00%' name='[Calculation_1469696711094284]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='Sum([SAO - SP (copy)_1469696710713355])/ZN(Sum([Calculation_1469696709189642]))' />
+            </column>
+            <column caption='Won - SP' datatype='real' name='[SAO - SP (copy)_1469696710713355]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='IF ([Parameters].[param_region] = &quot;Global&quot; OR [country (rpt_marketing_bofu_opportunities)] = [Parameters].[param_region])&#10;AND ([Parameters].[param_segment] = &quot;All&quot; OR [employee_segment (rpt_marketing_bofu_opportunities)] = [Parameters].[param_segment])&#10;AND ([Parameters].[param_channel] = &quot;All&quot; OR [channel_group] = [Parameters].[param_channel])&#10;AND ([Parameters].[param_direction] = &quot;All&quot; or [direction] = [Parameters].[param_direction])&#10;AND ([Parameters].[param_mqltsubype] = &quot;All&quot; or [requested_demo (rpt_marketing_bofu_opportunities)] = [Parameters].[param_mqltsubype])&#10;AND ([report_date] &gt;= [Parameters].[param_startdate] AND [report_date] &lt;= [Parameters].[param_enddate])&#10;THEN &#10; IF [Parameters].[param_attributionmodel] = &quot;Custom Model&quot; THEN [won_weighted_with_unattributed_cust]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;First Touch&quot; THEN [won_weighted_with_unattributed_ft]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;Lead Creation&quot; THEN [won_weighted_with_unattributed_lc]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;U-Shaped&quot; THEN [won_weighted_with_unattributed_us]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;W-Shaped&quot; THEN [won_weighted_with_unattributed_ws]&#10;  END&#10;END' />
+            </column>
+            <column caption='Alpha Two Letter' datatype='string' name='[alpha_two_letter]' role='dimension' type='nominal' />
+            <column caption='Comparison Period - End Date' datatype='datetime' name='[cf_comparison_enddate]' role='dimension' type='quantitative'>
+              <calculation class='tableau' formula='IF [Parameters].[param_periodcomparison] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[param_enddate])&#10;ELSEIF [Parameters].[param_periodcomparison] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -1, [Parameters].[param_startdate])&#10;ELSEIF [Parameters].[param_periodcomparison] = &quot;Custom&quot; THEN [Parameters].[param_periodcomparison_enddate]&#10;END' />
+            </column>
+            <column caption='Comparison Period - Start Date' datatype='datetime' name='[cf_comparison_startdate]' role='dimension' type='quantitative'>
+              <calculation class='tableau' formula='IF [Parameters].[param_periodcomparison] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[param_startdate])&#10;ELSEIF [Parameters].[param_periodcomparison] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -(DATEDIFF(&apos;day&apos;, [Parameters].[param_startdate], [Parameters].[param_enddate]) + 1), [Parameters].[param_startdate])&#10;ELSEIF [Parameters].[param_periodcomparison] = &quot;Custom&quot; THEN [Parameters].[param_periodcomparison_startdate]&#10;END' />
+            </column>
+            <column caption='Won - SP - No Region' datatype='real' name='[cf_won_sp_noregion]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='IF ([Parameters].[param_segment] = &quot;All&quot; OR [employee_segment (rpt_marketing_bofu_opportunities)] = [Parameters].[param_segment])&#10;AND ([Parameters].[param_channel] = &quot;All&quot; OR [channel_group] = [Parameters].[param_channel])&#10;AND ([Parameters].[param_direction] = &quot;All&quot; or [direction] = [Parameters].[param_direction])&#10;AND ([Parameters].[param_mqltsubype] = &quot;All&quot; or [requested_demo (rpt_marketing_bofu_opportunities)] = [Parameters].[param_mqltsubype])&#10;AND ([report_date] &gt;= [Parameters].[param_startdate] AND [report_date] &lt;= [Parameters].[param_enddate])&#10;THEN &#10; IF [Parameters].[param_attributionmodel] = &quot;Custom Model&quot; THEN [won_weighted_with_unattributed_cust]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;First Touch&quot; THEN [won_weighted_with_unattributed_ft]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;Lead Creation&quot; THEN [won_weighted_with_unattributed_lc]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;U-Shaped&quot; THEN [won_weighted_with_unattributed_us]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;W-Shaped&quot; THEN [won_weighted_with_unattributed_ws]&#10;  END&#10;END' />
+            </column>
+            <column caption='Won - SPLY - No Region' datatype='real' name='[cf_won_sply_noregion]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='IF ([Parameters].[param_segment] = &quot;All&quot; OR [employee_segment (rpt_marketing_bofu_opportunities)] = [Parameters].[param_segment])&#10;AND ([Parameters].[param_channel] = &quot;All&quot; OR [channel_group] = [Parameters].[param_channel])&#10;AND ([Parameters].[param_direction] = &quot;All&quot; OR [direction] = [Parameters].[param_direction])&#10;AND ([Parameters].[param_mqltsubype] = &quot;All&quot; OR [requested_demo (rpt_marketing_bofu_opportunities)] = [Parameters].[param_mqltsubype])&#10;AND ([report_date] &gt;= [cf_comparison_startdate] AND [report_date] &lt;= [cf_comparison_enddate])&#10;THEN&#10; IF [Parameters].[param_attributionmodel] = &quot;Custom Model&quot; THEN [won_weighted_with_unattributed_cust]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;First Touch&quot; THEN [won_weighted_with_unattributed_ft]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;Lead Creation&quot; THEN [won_weighted_with_unattributed_lc]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;U-Shaped&quot; THEN [won_weighted_with_unattributed_us]&#10;  ELSEIF [Parameters].[param_attributionmodel] = &quot;W-Shaped&quot; THEN [won_weighted_with_unattributed_ws]&#10;  END&#10;END' />
+            </column>
+            <column caption='Won - YoY % - No Region' datatype='real' default-format='p0.00%' name='[cf_won_yoy_noregion]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='(SUM([cf_won_sp_noregion]) - SUM([cf_won_sply_noregion])) / ZN(SUM([cf_won_sply_noregion]))' />
+            </column>
+            <column caption='Channel Group' datatype='string' name='[channel_group]' role='dimension' type='nominal' />
+            <column caption='Country (Rpt Marketing Bofu Opportunities)' datatype='string' name='[country (rpt_marketing_bofu_opportunities)]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+            <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+            <column caption='Employee Segment (Rpt Marketing Bofu Opportunities)' datatype='string' name='[employee_segment (rpt_marketing_bofu_opportunities)]' role='dimension' type='nominal' />
+            <column-instance column='[alpha_two_letter]' derivation='None' name='[none:alpha_two_letter:nk]' pivot='key' type='nominal' />
+            <column caption='Report Date' datatype='date' name='[report_date]' role='dimension' type='ordinal' />
+            <column caption='Requested Demo (Rpt Marketing Bofu Opportunities)' datatype='string' datatype-customized='true' name='[requested_demo (rpt_marketing_bofu_opportunities)]' role='dimension' type='nominal' />
+            <column caption='Sao Weighted With Unattributed Cust' datatype='real' name='[sao_weighted_with_unattributed_cust]' role='measure' type='quantitative' />
+            <column caption='Sao Weighted With Unattributed Ft' datatype='real' name='[sao_weighted_with_unattributed_ft]' role='measure' type='quantitative' />
+            <column caption='Sao Weighted With Unattributed Lc' datatype='real' name='[sao_weighted_with_unattributed_lc]' role='measure' type='quantitative' />
+            <column caption='Sao Weighted With Unattributed Us' datatype='real' name='[sao_weighted_with_unattributed_us]' role='measure' type='quantitative' />
+            <column caption='Sao Weighted With Unattributed Ws' datatype='real' name='[sao_weighted_with_unattributed_ws]' role='measure' type='quantitative' />
+            <column-instance column='[cf_won_sp_noregion]' derivation='Sum' name='[sum:cf_won_sp_noregion:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Calculation_1469696711094284]' derivation='User' name='[usr:Calculation_1469696711094284:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[cf_won_yoy_noregion]' derivation='User' name='[usr:cf_won_yoy_noregion:qk]' pivot='key' type='quantitative' />
+            <column caption='Won Weighted With Unattributed Cust' datatype='real' name='[won_weighted_with_unattributed_cust]' role='measure' type='quantitative' />
+            <column caption='Won Weighted With Unattributed Ft' datatype='real' name='[won_weighted_with_unattributed_ft]' role='measure' type='quantitative' />
+            <column caption='Won Weighted With Unattributed Lc' datatype='real' name='[won_weighted_with_unattributed_lc]' role='measure' type='quantitative' />
+            <column caption='Won Weighted With Unattributed Us' datatype='real' name='[won_weighted_with_unattributed_us]' role='measure' type='quantitative' />
+            <column caption='Won Weighted With Unattributed Ws' datatype='real' name='[won_weighted_with_unattributed_ws]' role='measure' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[Action (Alpha Two Letter)]'>
+            <groupfilter function='member' level='[alpha_two_letter]' member='&quot;AU&quot;' user:ui-action-filter='[Action1_AEA470A18D6C41478B4523E9CBCE6CA6]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='categorical' column='[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[none:alpha_two_letter:nk]'>
+            <groupfilter function='level-members' level='[none:alpha_two_letter:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <slices>
+            <column>[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[none:alpha_two_letter:nk]</column>
+            <column>[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[Action (Alpha Two Letter)]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-align' value='center' />
+            <format attr='vertical-align' value='center' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='vertical-align' value='center' />
+            <format attr='text-align' value='center' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[sum:cf_won_sp_noregion:qk]' />
+              <text column='[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[usr:cf_won_yoy_noregion:qk]' />
+              <text column='[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[usr:Calculation_1469696711094284:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold='true' fontsize='14'><![CDATA[<[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[sum:cf_won_sp_noregion:qk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontsize='8'><![CDATA[<[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[usr:cf_won_yoy_noregion:qk]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontalignment='2'>Æ&#10;</run>
+                <run bold='true' fontalignment='2' fontcolor='#3e1962' fontsize='8'>SAO </run>
+                <run fontalignment='2' fontcolor='#4b2b72' fontsize='8'>→ </run>
+                <run bold='true' fontalignment='2' fontcolor='#3e1962' fontsize='8'><![CDATA[Won: <[federated.0h0rhj21s8fugq1ekg8b50nmig8c].[usr:Calculation_1469696711094284:qk]>]]></run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{A1B2C3D4-7777-4A7B-8C9D-E0F1A2B3C407}' />
+    </worksheet>

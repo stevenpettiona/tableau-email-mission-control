@@ -1,0 +1,135 @@
+<!--
+  part-type: worksheet
+  name: [BC] Pipeline Table
+  caption: [BC] Pipeline Table
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<!-- SECTION:WORKSHEET -->
+<worksheet name='[BC] Pipeline Table'>
+  <layout-options>
+    <title>
+      <formatted-text>
+        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>PIPELINE TABLE</run>
+      </formatted-text>
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
+        <datasource caption='Parameters' name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
+        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
+        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
+        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
+        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
+        <column caption='MQL Country' datatype='string' name='[mql_country]' role='dimension' type='nominal' />
+        <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
+        <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
+        <column-instance column='[mqls]' derivation='Sum' name='[sum:mqls:qk]' pivot='key' type='quantitative' />
+        <column caption='Leads' datatype='integer' name='[leads]' role='measure' type='quantitative' />
+        <column-instance column='[leads]' derivation='Sum' name='[sum:leads:qk]' pivot='key' type='quantitative' />
+        <column caption='SAOs' datatype='integer' name='[saos]' role='measure' type='quantitative' />
+        <column-instance column='[saos]' derivation='Sum' name='[sum:saos:qk]' pivot='key' type='quantitative' />
+        <column caption='SAO ARR (AUD)' datatype='real' name='[sao_arr_aud]' role='measure' type='quantitative' />
+        <column-instance column='[sao_arr_aud]' derivation='Sum' name='[sum:sao_arr_aud:qk]' pivot='key' type='quantitative' />
+        <column caption='SAO Rate (MQL→SAO)' datatype='real' name='[SAO Rate]' role='measure' type='quantitative' />
+        <column-instance column='[SAO Rate]' derivation='User' name='[usr:SAO Rate:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <filter class='categorical' column='[federated.ehemailpipeline].[:Measure Names]'>
+        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailpipeline].[sum:mqls:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailpipeline].[sum:leads:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailpipeline].[sum:saos:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailpipeline].[sum:sao_arr_aud:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailpipeline].[usr:SAO Rate:qk]&quot;' />
+        </groupfilter>
+      </filter>
+          <slices>
+            <column>[federated.ehemailpipeline].[:Measure Names]</column>
+          </slices>
+      <aggregation value='true' />
+    </view>
+    <style>
+      <style-rule element='cell'>
+        <format attr='font-size' value='9' />
+        <format attr='text-align' value='right' />
+      </style-rule>
+      <style-rule element='header'>
+        <format attr='font-size' value='9' />
+        <format attr='text-align' value='left' />
+        <format attr='background-color' field='[federated.ehemailpipeline].[:Measure Names]' value='#6B3FA0' />
+        <format attr='color' data-class='subtotal' field='[federated.ehemailpipeline].[:Measure Names]' value='#ffffff' />
+      </style-rule>
+      <style-rule element='field-labels'>
+        <format attr='background-color' value='#1F1045' />
+      </style-rule>
+      <style-rule element='field-labels-decoration'>
+        <format attr='color' value='#ffffff' />
+      </style-rule>
+      <style-rule element='field-labels-spanner'>
+        <format attr='color' scope='cols' value='#ffffff' />
+        <format attr='font-weight' scope='cols' value='bold' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='font-size' value='9' />
+        <format attr='text-align' value='center' />
+        <format attr='color' field='[federated.ehemailpipeline].[:Measure Names]' value='#ffffff' />
+      </style-rule>
+    </style>
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Text' />
+        <encodings>
+          <text column='[federated.ehemailpipeline].[Multiple Values]' />
+        </encodings>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows>[federated.ehemailpipeline].[campaign_name]</rows>
+    <cols>[federated.ehemailpipeline].[:Measure Names]</cols>
+  </table>
+  <simple-id uuid='{9E7E0DF7-1A4C-4604-87E7-667C47F8AC70}' />
+</worksheet>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='worksheet' name='[BC] Pipeline Table'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{C73E3170-EDA9-4AA5-9EF6-189313F021A7}' />
+</window>

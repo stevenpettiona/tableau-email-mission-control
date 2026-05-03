@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Sends Δ]
+  caption: Sends Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Sends Δ' datatype='real' default-format='p0.00%' name='[Sends Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Sends SP] - [Sends LP]) / IIF([Sends LP] = 0, NULL, [Sends LP])' />
+</column>

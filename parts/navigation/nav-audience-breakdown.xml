@@ -1,0 +1,65 @@
+<!--
+  part-type: navigation
+  dashboard: audience-breakdown
+  active-tab: Audience Breakdown
+  last-modified: 2026-05-04
+
+  This zone is embedded verbatim in parts/dashboards/audience-breakdown-dashboard.xml
+  within the outer layout-basic zone, replacing the static text nav strip.
+  Active tab uses background #6B3FA0 (accent purple).
+  Inactive tabs use #1F1045 (nav strip dark purple).
+-->
+<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1508' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
+<zone friendly-name='Overview' h='4222' id='1509' type-v2='text' w='25000' x='0' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Campaign Performance' h='4222' id='1510' type-v2='text' w='25000' x='25000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Audience Breakdown' h='4222' id='1511' type-v2='text' w='25000' x='50000' y='4888'>
+  <formatted-text>
+    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#6B3FA0' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone><zone friendly-name='Email Pipeline' h='4222' id='1512' type-v2='text' w='25000' x='75000' y='4888'>
+  <formatted-text>
+    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
+  </formatted-text>
+  <zone-style>
+    <format attr='background-color' value='#1F1045' />
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+  </zone-style>
+</zone>
+<zone-style>
+  <format attr='background-color' value='#1F1045' />
+  <format attr='border-color' value='#000000' />
+  <format attr='border-style' value='none' />
+  <format attr='border-width' value='0' />
+  <format attr='margin' value='1' />
+</zone-style>
+</zone>

@@ -1,0 +1,31 @@
+<!--
+  part-type: parameter
+  name: [param_channel]
+  caption: Channel
+  last-modified: 2026-05-04
+-->
+<column caption='Channel' datatype='string' name='[param_channel]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+        <calculation class='tableau' formula='&quot;All&quot;' />
+        <members>
+          <member value='&quot;All&quot;' />
+          <member value='&quot;Affiliate&quot;' />
+          <member value='&quot;Chatbot&quot;' />
+          <member value='&quot;Content Syndication&quot;' />
+          <member value='&quot;Direct&quot;' />
+          <member value='&quot;Email&quot;' />
+          <member value='&quot;Event&quot;' />
+          <member value='&quot;Media Buy&quot;' />
+          <member value='&quot;Organic Generative&quot;' />
+          <member value='&quot;Organic Search&quot;' />
+          <member value='&quot;Organic Social&quot;' />
+          <member value='&quot;Other&quot;' />
+          <member value='&quot;Paid Display&quot;' />
+          <member value='&quot;Paid Facebook&quot;' />
+          <member value='&quot;Paid LinkedIn&quot;' />
+          <member value='&quot;Paid Other&quot;' />
+          <member value='&quot;Paid Search Google&quot;' />
+          <member value='&quot;Paid Tiktok&quot;' />
+          <member value='&quot;Referral&quot;' />
+          <member value='&quot;SMS&quot;' />
+        </members>
+      </column>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Unsub Rate Δ]
+  caption: Unsub Rate Δ
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Unsub Rate Δ' datatype='real' default-format='p0.00%' name='[Unsub Rate Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Unsub Rate SP] - [Unsub Rate LP]) / IIF([Unsub Rate LP] = 0, NULL, [Unsub Rate LP])' />
+</column>

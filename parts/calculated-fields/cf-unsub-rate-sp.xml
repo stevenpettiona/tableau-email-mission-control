@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Unsub Rate SP]
+  caption: Unsub Rate SP
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Unsub Rate SP' datatype='real' default-format='0.0%' name='[Unsub Rate SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Unsubscribes SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+</column>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Comp Start Date]
+  caption: Comp Start Date
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Comp Start Date' datatype='date' name='[Comp Start Date]' role='dimension' type='ordinal'>
+  <calculation class='tableau' formula='IF [Parameters].[Compare Period] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) ELSEIF [Parameters].[Compare Period] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -(DATEDIFF(&apos;day&apos;, [Parameters].[Start Date], [Parameters].[End Date]) + 1), [Parameters].[Start Date]) ELSE [Parameters].[Comparison Start] END' />
+</column>

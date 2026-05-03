@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Program Type Badge]
+  caption: Program Type Badge
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Program Type Badge' datatype='string' name='[Program Type Badge]' role='dimension' type='nominal'>
+  <calculation class='tableau' formula='CASE [program_type] WHEN &quot;Batch and Blast&quot; THEN &quot;BB&quot; WHEN &quot;Email Nurture&quot; THEN &quot;EN&quot; WHEN &quot;Sales Email&quot; THEN &quot;SE&quot; WHEN &quot;Newsletter&quot; THEN &quot;NL&quot; WHEN &quot;Event-Webinar&quot; THEN &quot;EV&quot; WHEN &quot;Training/Hero Academy&quot; THEN &quot;TR&quot; ELSE &quot;DE&quot; END' />
+</column>

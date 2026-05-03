@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Opens]
+  caption: Opens
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Opens' datatype='integer' name='[Opens]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END)' />
+</column>

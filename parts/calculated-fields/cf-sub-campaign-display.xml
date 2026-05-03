@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Sub Campaign Display]
+  caption: Sub-Campaign Display
+  datasource: ds1
+  last-modified: 2026-05-01
+-->
+<column caption='Sub-Campaign Display' datatype='string' name='[Sub Campaign Display]' role='dimension' type='nominal'>
+  <calculation class='tableau' formula='IF [sub_campaign_name] = &quot;no associated sub-campaign&quot; THEN &quot;&#8212;&quot; ELSE [sub_campaign_name] END' />
+</column>
