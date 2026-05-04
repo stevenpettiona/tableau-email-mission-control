@@ -6,15 +6,28 @@
     <AccessibleZoneTabOrder />
     <AnimationOnByDefault />
     <AutoCreateAndUpdateDSDPhoneLayouts />
+    <BasicButtonObject />
+    <BasicButtonObjectTextSupport />
+    <ISO8601PeriodTypes />
+    <_.fcp.IndividualControlFormatting.true...IndividualControlFormatting />
+    <IntuitiveSorting />
+    <IntuitiveSorting_SP2 />
     <MarkAnimation />
     <ObjectModelEncapsulateLegacy />
     <_.fcp.ObjectModelSharedDimensions.true...ObjectModelSharedDimensions />
     <ObjectModelTableType />
+    <ParameterAction />
+    <ParameterActionClearSelection />
+    <PatternedLineMarks />
     <RelationshipCalculations />
     <SchemaViewerObjectModel />
     <SetMembershipControl />
     <SheetIdentifierTracking />
+    <SortTagCleanup />
     <WindowsPersistSimpleIdentifiers />
+    <WorksheetBackgroundTransparency />
+    <ZoneBackgroundTransparency />
+    <ZoneFriendlyName />
   </document-format-change-manifest>
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />

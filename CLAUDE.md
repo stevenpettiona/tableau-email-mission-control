@@ -87,6 +87,42 @@ Dashboard parts files contain two named sections:
 <window class='dashboard' name='...'>...</window>
 ```
 
+### Shell document-format-change-manifest
+
+The shell must include this exact manifest for `<BasicButtonObject>` / `<BasicButtonObjectTextSupport>` to be recognised by Tableau — without them, navigation button zones are silently rejected at load time. The full required set:
+
+```xml
+<document-format-change-manifest>
+  <AccessibleZoneTabOrder />
+  <AnimationOnByDefault />
+  <AutoCreateAndUpdateDSDPhoneLayouts />
+  <BasicButtonObject />
+  <BasicButtonObjectTextSupport />
+  <ISO8601PeriodTypes />
+  <_.fcp.IndividualControlFormatting.true...IndividualControlFormatting />
+  <IntuitiveSorting />
+  <IntuitiveSorting_SP2 />
+  <MarkAnimation />
+  <ObjectModelEncapsulateLegacy />
+  <_.fcp.ObjectModelSharedDimensions.true...ObjectModelSharedDimensions />
+  <ObjectModelTableType />
+  <ParameterAction />
+  <ParameterActionClearSelection />
+  <PatternedLineMarks />
+  <RelationshipCalculations />
+  <SchemaViewerObjectModel />
+  <SetMembershipControl />
+  <SheetIdentifierTracking />
+  <SortTagCleanup />
+  <WindowsPersistSimpleIdentifiers />
+  <WorksheetBackgroundTransparency />
+  <ZoneBackgroundTransparency />
+  <ZoneFriendlyName />
+</document-format-change-manifest>
+```
+
+This is already set correctly in `shell/email-mission-control.shell.twb`. Do not trim entries from this list.
+
 ### Shell injection markers
 
 The shell TWB has five named markers where parts are injected:
