@@ -2325,465 +2325,1382 @@ GROUP BY 1, 2, 3, 4</relation>
   </worksheets>
   <dashboards>
     <dashboard enable-sort-zone-taborder='true' name='Email Overview'>
-  <style />
+  <style>
+    <style-rule element='dashboard'>
+      <format attr='background-color' value='#f5f3fa' />
+    </style-rule>
+    <style-rule element='dash-text'>
+      <format attr='vertical-align' id='dash-text_113' value='top' />
+      <format attr='vertical-align' id='dash-text_112' value='top' />
+      <format attr='vertical-align' id='dash-text_114' value='top' />
+    </style-rule>
+    <style-rule element='parameter-ctrl-title'>
+      <format attr='font-weight' value='bold' />
+      <format attr='color' value='#4b2b72' />
+      <format attr='font-size' value='6' />
+    </style-rule>
+  </style>
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <datasources>
+    <datasource name='Parameters' />
+  </datasources>
+  <datasource-dependencies datasource='Parameters'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;core&quot;' value='Core' />
+        <alias key='&quot;micro&quot;' value='Micro' />
+        <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Micro' value='&quot;micro&quot;' />
+        <member alias='Core' value='&quot;core&quot;' />
+        <member alias='Mid-Market' value='&quot;mid-market&quot;' />
+      </members>
+    </column>
+    <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+      <calculation class='tableau' formula='&quot;PoP&quot;' />
+      <aliases>
+        <alias key='&quot;Custom&quot;' value='Custom Range' />
+        <alias key='&quot;PoP&quot;' value='Period over Period' />
+        <alias key='&quot;YoY&quot;' value='Year over Year' />
+      </aliases>
+      <members>
+        <member alias='Year over Year' value='&quot;YoY&quot;' />
+        <member alias='Period over Period' value='&quot;PoP&quot;' />
+        <member alias='Custom Range' value='&quot;Custom&quot;' />
+      </members>
+    </column>
+    <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
+      <calculation class='tableau' formula='#2025-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
+      <calculation class='tableau' formula='#2025-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;AU&quot;' value='AU' />
+        <alias key='&quot;CA&quot;' value='CA' />
+        <alias key='&quot;GB&quot;' value='UK' />
+        <alias key='&quot;NZ&quot;' value='NZ' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='AU' value='&quot;AU&quot;' />
+        <member alias='NZ' value='&quot;NZ&quot;' />
+        <member alias='UK' value='&quot;GB&quot;' />
+        <member alias='CA' value='&quot;CA&quot;' />
+      </members>
+    </column>
+    <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+      <calculation class='tableau' formula='#2026-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+        <alias key='&quot;marketo&quot;' value='Marketo' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Marketo' value='&quot;marketo&quot;' />
+        <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
+      </members>
+    </column>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+        <alias key='&quot;Default&quot;' value='Default' />
+        <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+        <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+        <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+        <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+        <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+        <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+        <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+        <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+        <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+        <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+        <member alias='Default' value='&quot;Default&quot;' />
+      </members>
+    </column>
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+  </datasource-dependencies>
   <zones>
     <zone h='100000' id='1000' type-v2='layout-basic' w='100000' x='0' y='0'>
-<zone h='4888' id='1113' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
-  </formatted-text>
-</zone>
-<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1114' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
-<zone friendly-name='Overview' h='4222' id='1115' type-v2='text' w='25000' x='0' y='4888'>
-  <formatted-text>
-    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#6B3FA0' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Campaign Performance' h='4222' id='1116' type-v2='text' w='25000' x='25000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Audience Breakdown' h='4222' id='1117' type-v2='text' w='25000' x='50000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Email Pipeline' h='4222' id='1118' type-v2='text' w='25000' x='75000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone>
-<zone-style>
-  <format attr='background-color' value='#1F1045' />
-  <format attr='border-color' value='#000000' />
-  <format attr='border-style' value='none' />
-  <format attr='border-width' value='0' />
-  <format attr='margin' value='1' />
-</zone-style>
-</zone>
-<zone h='5333' id='1119' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1120' type-v2='text' w='14285' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1121' type-v2='text' w='14285' x='14285' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
-  </formatted-text>
-</zone><zone h='100000' id='1122' type-v2='text' w='14285' x='28570' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1123' type-v2='text' w='14285' x='42855' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
-  </formatted-text>
-</zone><zone h='100000' id='1124' type-v2='text' w='14285' x='57140' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
-  </formatted-text>
-</zone><zone h='100000' id='1125' type-v2='text' w='14285' x='71425' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1126' type-v2='text' w='14285' x='85710' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
-  </formatted-text>
-</zone>
-</zone>
-<zone h='82000' id='1127' type-v2='layout-basic' w='100000' x='0' y='14443'>
-<zone h='14905' id='1100' type-v2='layout-flow' w='100000' x='0' y='0' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1101' name='[SC] Sends' w='12500' x='0' y='0' /><zone h='100000' id='1102' name='[SC] Opens' w='12500' x='12500' y='0' /><zone h='100000' id='1103' name='[SC] Clicks' w='12500' x='25000' y='0' /><zone h='100000' id='1104' name='[SC] Unsubscribes' w='12500' x='37500' y='0' /><zone h='100000' id='1105' name='[SC] Open Rate' w='12500' x='50000' y='0' /><zone h='100000' id='1106' name='[SC] CTR' w='12500' x='62500' y='0' /><zone h='100000' id='1107' name='[SC] CTOR' w='12500' x='75000' y='0' /><zone h='100000' id='1108' name='[SC] Unsub Rate' w='12500' x='87500' y='0' />
-</zone>
-<zone h='85095' id='1109' type-v2='layout-basic' w='100000' x='0' y='14905'>
-<zone h='100000' id='1110' name='[BC] Email Trend' w='65000' x='0' y='0' /><zone h='100000' id='1111' name='[BC] Platform Split' w='35000' x='65000' y='0' />
-</zone>
-</zone>
-<zone h='3557' id='1128' type-v2='text' w='100000' x='0' y='96443'>
-  <formatted-text>
-    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-  </formatted-text>
-</zone>
+      <zone friendly-name='Dashboard Container' h='3586' id='1130' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone friendly-name='HeroBanner' h='4192' id='1151' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3304' id='1149' type-v2='text' w='49121' x='293' y='444'>
+            <formatted-text>
+              <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
+              <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3304' id='1150' type-v2='text' w='50292' x='49414' y='444'>
+            <formatted-text>
+              <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Email Overview</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='4' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1131' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+          <zone h='3334' id='1129' type-v2='dashboard-object' w='25037' x='0' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview</caption>
+                <button-caption-font-style bold='true' fontcolor='#ffffff' fontname='Tableau Bold' fontsize='9' />
+                <format attr='background-color' value='#7a48b9' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1132' type-v2='dashboard-object' w='25036' x='25037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{A32A9061-EDF3-40B3-93CD-E1B12EA58AFA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Campaign Performance</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1133' type-v2='dashboard-object' w='24964' x='50073' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{009BEC44-BB31-41EF-B95B-51262EC806BA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Audience Breakdown</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1134' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Email &#8594; Pipeline</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1139' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
+          <zone custom-title='true' h='3555' id='1141' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+            <formatted-text>
+              <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1140' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1142' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1143' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1144' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1145' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1146' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1147' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1148' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#eea7ff4e' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Hero Metrics Title' fixed-size='30' forceUpdate='true' h='3111' id='1153' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
+          <zone forceUpdate='true' h='3111' id='1154' type-v2='text' w='100000' x='0' y='11333'>
+            <formatted-text>
+              <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>HERO METRICS</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#ccb4ed81' />
+            </zone-style>
+          </zone>
+        </zone>
+        <zone friendly-name='Hero Metrics' h='8778' id='1100' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='14444'>
+          <zone h='8778' id='1101' name='[SC] Sends' w='12518' x='0' y='14444' />
+          <zone h='8778' id='1102' name='[SC] Opens' w='12519' x='12518' y='14444' />
+          <zone h='8778' id='1103' name='[SC] Clicks' w='12518' x='25037' y='14444' />
+          <zone h='8778' id='1104' name='[SC] Unsubscribes' w='12518' x='37555' y='14444' />
+          <zone h='8778' id='1105' name='[SC] Open Rate' w='12519' x='50073' y='14444' />
+          <zone h='8778' id='1106' name='[SC] CTR' w='12518' x='62592' y='14444' />
+          <zone h='8778' id='1107' name='[SC] CTOR' w='12445' x='75110' y='14444' />
+          <zone h='8778' id='1108' name='[SC] Unsub Rate' w='12445' x='87555' y='14444' />
+        </zone>
+        <zone friendly-name='Send Metrics Title' fixed-size='30' forceUpdate='true' h='3111' id='1155' param='horz' type-v2='layout-flow' w='100000' x='0' y='23222'>
+          <zone forceUpdate='true' h='3111' id='1156' type-v2='text' w='100000' x='0' y='23222'>
+            <formatted-text>
+              <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>SENDS</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#ccb4ed81' />
+            </zone-style>
+          </zone>
+        </zone>
+        <zone friendly-name='Send Metrics' h='73035' id='1109' param='horz' type-v2='layout-flow' w='100000' x='0' y='26333'>
+          <zone h='73035' id='1110' name='[BC] Email Trend' w='78843' x='0' y='26333' />
+          <zone h='73035' id='1111' name='[BC] Platform Split' w='21157' x='78843' y='26333' />
+        </zone>
+      </zone>
     </zone>
   </zones>
   <simple-id uuid='{CC05D821-D847-4E83-BD90-8CE3971B99AE}' />
 </dashboard>
 <dashboard enable-sort-zone-taborder='true' name='Email Campaign Performance'>
-  <style />
+  <style>
+    <style-rule element='dashboard'>
+      <format attr='background-color' value='#f5f3fa' />
+    </style-rule>
+    <style-rule element='parameter-ctrl-title'>
+      <format attr='font-weight' value='bold' />
+      <format attr='color' value='#4b2b72' />
+      <format attr='font-size' value='6' />
+    </style-rule>
+  </style>
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <datasources>
+    <datasource name='Parameters' />
+  </datasources>
+  <datasource-dependencies datasource='Parameters'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;core&quot;' value='Core' />
+        <alias key='&quot;micro&quot;' value='Micro' />
+        <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Micro' value='&quot;micro&quot;' />
+        <member alias='Core' value='&quot;core&quot;' />
+        <member alias='Mid-Market' value='&quot;mid-market&quot;' />
+      </members>
+    </column>
+    <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+      <calculation class='tableau' formula='&quot;PoP&quot;' />
+      <aliases>
+        <alias key='&quot;Custom&quot;' value='Custom Range' />
+        <alias key='&quot;PoP&quot;' value='Period over Period' />
+        <alias key='&quot;YoY&quot;' value='Year over Year' />
+      </aliases>
+      <members>
+        <member alias='Year over Year' value='&quot;YoY&quot;' />
+        <member alias='Period over Period' value='&quot;PoP&quot;' />
+        <member alias='Custom Range' value='&quot;Custom&quot;' />
+      </members>
+    </column>
+    <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
+      <calculation class='tableau' formula='#2025-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
+      <calculation class='tableau' formula='#2025-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;AU&quot;' value='AU' />
+        <alias key='&quot;CA&quot;' value='CA' />
+        <alias key='&quot;GB&quot;' value='UK' />
+        <alias key='&quot;NZ&quot;' value='NZ' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='AU' value='&quot;AU&quot;' />
+        <member alias='NZ' value='&quot;NZ&quot;' />
+        <member alias='UK' value='&quot;GB&quot;' />
+        <member alias='CA' value='&quot;CA&quot;' />
+      </members>
+    </column>
+    <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+      <calculation class='tableau' formula='#2026-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+        <alias key='&quot;marketo&quot;' value='Marketo' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Marketo' value='&quot;marketo&quot;' />
+        <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
+      </members>
+    </column>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+        <alias key='&quot;Default&quot;' value='Default' />
+        <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+        <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+        <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+        <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+        <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+        <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+        <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+        <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+        <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+        <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+        <member alias='Default' value='&quot;Default&quot;' />
+      </members>
+    </column>
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+  </datasource-dependencies>
   <zones>
     <zone h='100000' id='1200' type-v2='layout-basic' w='100000' x='0' y='0'>
-<zone h='4888' id='1304' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
-  </formatted-text>
-</zone>
-<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1305' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
-<zone friendly-name='Overview' h='4222' id='1306' type-v2='text' w='25000' x='0' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Campaign Performance' h='4222' id='1307' type-v2='text' w='25000' x='25000' y='4888'>
-  <formatted-text>
-    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#6B3FA0' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Audience Breakdown' h='4222' id='1308' type-v2='text' w='25000' x='50000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Email Pipeline' h='4222' id='1309' type-v2='text' w='25000' x='75000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone>
-<zone-style>
-  <format attr='background-color' value='#1F1045' />
-  <format attr='border-color' value='#000000' />
-  <format attr='border-style' value='none' />
-  <format attr='border-width' value='0' />
-  <format attr='margin' value='1' />
-</zone-style>
-</zone>
-<zone h='5333' id='1310' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1311' type-v2='text' w='14285' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1312' type-v2='text' w='14285' x='14285' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
-  </formatted-text>
-</zone><zone h='100000' id='1313' type-v2='text' w='14285' x='28570' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1314' type-v2='text' w='14285' x='42855' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
-  </formatted-text>
-</zone><zone h='100000' id='1315' type-v2='text' w='14285' x='57140' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
-  </formatted-text>
-</zone><zone h='100000' id='1316' type-v2='text' w='14285' x='71425' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1317' type-v2='text' w='14285' x='85710' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
-  </formatted-text>
-</zone>
-</zone>
-<zone h='82000' id='1318' type-v2='layout-basic' w='100000' x='0' y='14443'>
-<zone h='4878' id='1300' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>ALL  |  BATCH &amp; BLAST  |  EMAIL NURTURE  |  SALES EMAIL  |  NEWSLETTER  |  EVENT / WEBINAR  |  TRAINING  |  DEFAULT</run>
-  </formatted-text>
-</zone>
-<zone h='4336' id='1301' type-v2='text' w='100000' x='0' y='4878'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='11'>Showing all programs</run>
-  </formatted-text>
-</zone>
-<zone h='90786' id='1302' name='[BC] Campaign Table' w='100000' x='0' y='9214' />
-</zone>
-<zone h='3557' id='1319' type-v2='text' w='100000' x='0' y='96443'>
-  <formatted-text>
-    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-  </formatted-text>
-</zone>
+      <zone friendly-name='Dashboard Container' h='3586' id='1340' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone friendly-name='HeroBanner' h='4192' id='1341' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3304' id='1342' type-v2='text' w='49121' x='293' y='444'>
+            <formatted-text>
+              <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
+              <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3304' id='1343' type-v2='text' w='50292' x='49414' y='444'>
+            <formatted-text>
+              <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Campaign Performance</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='4' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1344' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+          <zone h='3334' id='1345' type-v2='dashboard-object' w='25037' x='0' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1346' type-v2='dashboard-object' w='25036' x='25037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{A32A9061-EDF3-40B3-93CD-E1B12EA58AFA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Campaign Performance</caption>
+                <button-caption-font-style bold='true' fontcolor='#ffffff' fontname='Tableau Bold' fontsize='9' />
+                <format attr='background-color' value='#7a48b9' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1347' type-v2='dashboard-object' w='24964' x='50073' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{009BEC44-BB31-41EF-B95B-51262EC806BA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Audience Breakdown</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1348' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Email &#8594; Pipeline</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1349' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
+          <zone custom-title='true' h='3555' id='1350' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+            <formatted-text>
+              <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1351' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1352' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1353' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1354' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1355' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1356' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1357' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1358' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#eea7ff4e' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Campaign Table Title' fixed-size='30' forceUpdate='true' h='3111' id='1359' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
+          <zone forceUpdate='true' h='3111' id='1360' type-v2='text' w='100000' x='0' y='11333'>
+            <formatted-text>
+              <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>CAMPAIGN TABLE</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#ccb4ed81' />
+            </zone-style>
+          </zone>
+        </zone>
+        <zone h='82000' id='1318' type-v2='layout-basic' w='100000' x='0' y='14444'>
+          <zone h='4878' id='1300' type-v2='text' w='100000' x='0' y='0'>
+            <formatted-text>
+              <run fontcolor='#6b7280' fontname='Poppins' fontsize='10'>ALL  |  BATCH &amp; BLAST  |  EMAIL NURTURE  |  SALES EMAIL  |  NEWSLETTER  |  EVENT / WEBINAR  |  TRAINING  |  DEFAULT</run>
+            </formatted-text>
+          </zone>
+          <zone h='4336' id='1301' type-v2='text' w='100000' x='0' y='4878'>
+            <formatted-text>
+              <run fontcolor='#6b7280' fontname='Poppins' fontsize='11'>Showing all programs</run>
+            </formatted-text>
+          </zone>
+          <zone h='90786' id='1302' name='[BC] Campaign Table' w='100000' x='0' y='9214' />
+        </zone>
+        <zone h='3557' id='1319' type-v2='text' w='100000' x='0' y='96443'>
+          <formatted-text>
+            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
+          </formatted-text>
+        </zone>
+      </zone>
     </zone>
   </zones>
   <simple-id uuid='{3C0C1FAB-C0D5-4F0B-8C98-C8F2B37EC364}' />
 </dashboard>
 <dashboard enable-sort-zone-taborder='true' name='Email Audience Breakdown'>
-  <style />
+  <style>
+    <style-rule element='dashboard'>
+      <format attr='background-color' value='#f5f3fa' />
+    </style-rule>
+    <style-rule element='parameter-ctrl-title'>
+      <format attr='font-weight' value='bold' />
+      <format attr='color' value='#4b2b72' />
+      <format attr='font-size' value='6' />
+    </style-rule>
+  </style>
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <datasources>
+    <datasource name='Parameters' />
+  </datasources>
+  <datasource-dependencies datasource='Parameters'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;core&quot;' value='Core' />
+        <alias key='&quot;micro&quot;' value='Micro' />
+        <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Micro' value='&quot;micro&quot;' />
+        <member alias='Core' value='&quot;core&quot;' />
+        <member alias='Mid-Market' value='&quot;mid-market&quot;' />
+      </members>
+    </column>
+    <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+      <calculation class='tableau' formula='&quot;PoP&quot;' />
+      <aliases>
+        <alias key='&quot;Custom&quot;' value='Custom Range' />
+        <alias key='&quot;PoP&quot;' value='Period over Period' />
+        <alias key='&quot;YoY&quot;' value='Year over Year' />
+      </aliases>
+      <members>
+        <member alias='Year over Year' value='&quot;YoY&quot;' />
+        <member alias='Period over Period' value='&quot;PoP&quot;' />
+        <member alias='Custom Range' value='&quot;Custom&quot;' />
+      </members>
+    </column>
+    <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
+      <calculation class='tableau' formula='#2025-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
+      <calculation class='tableau' formula='#2025-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;AU&quot;' value='AU' />
+        <alias key='&quot;CA&quot;' value='CA' />
+        <alias key='&quot;GB&quot;' value='UK' />
+        <alias key='&quot;NZ&quot;' value='NZ' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='AU' value='&quot;AU&quot;' />
+        <member alias='NZ' value='&quot;NZ&quot;' />
+        <member alias='UK' value='&quot;GB&quot;' />
+        <member alias='CA' value='&quot;CA&quot;' />
+      </members>
+    </column>
+    <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+      <calculation class='tableau' formula='#2026-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+        <alias key='&quot;marketo&quot;' value='Marketo' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Marketo' value='&quot;marketo&quot;' />
+        <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
+      </members>
+    </column>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+        <alias key='&quot;Default&quot;' value='Default' />
+        <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+        <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+        <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+        <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+        <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+        <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+        <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+        <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+        <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+        <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+        <member alias='Default' value='&quot;Default&quot;' />
+      </members>
+    </column>
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+  </datasource-dependencies>
   <zones>
     <zone h='100000' id='1400' type-v2='layout-basic' w='100000' x='0' y='0'>
-<zone h='4888' id='1507' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
-  </formatted-text>
-</zone>
-<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1508' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
-<zone friendly-name='Overview' h='4222' id='1509' type-v2='text' w='25000' x='0' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Campaign Performance' h='4222' id='1510' type-v2='text' w='25000' x='25000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Audience Breakdown' h='4222' id='1511' type-v2='text' w='25000' x='50000' y='4888'>
-  <formatted-text>
-    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#6B3FA0' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Email Pipeline' h='4222' id='1512' type-v2='text' w='25000' x='75000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone>
-<zone-style>
-  <format attr='background-color' value='#1F1045' />
-  <format attr='border-color' value='#000000' />
-  <format attr='border-style' value='none' />
-  <format attr='border-width' value='0' />
-  <format attr='margin' value='1' />
-</zone-style>
-</zone>
-<zone h='5333' id='1513' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1514' type-v2='text' w='14285' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1515' type-v2='text' w='14285' x='14285' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
-  </formatted-text>
-</zone><zone h='100000' id='1516' type-v2='text' w='14285' x='28570' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1517' type-v2='text' w='14285' x='42855' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
-  </formatted-text>
-</zone><zone h='100000' id='1518' type-v2='text' w='14285' x='57140' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
-  </formatted-text>
-</zone><zone h='100000' id='1519' type-v2='text' w='14285' x='71425' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1520' type-v2='text' w='14285' x='85710' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
-  </formatted-text>
-</zone>
-</zone>
-<zone h='82000' id='1521' type-v2='layout-basic' w='100000' x='0' y='14443'>
-<zone h='95664' id='1500' type-v2='layout-basic' w='100000' x='0' y='0'>
-<zone h='47832' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='0' /><zone h='47832' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='0' /><zone h='47832' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='47832' /><zone h='47832' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='47832' />
-</zone>
-<zone h='4336' id='1505' type-v2='text' w='100000' x='0' y='95664'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='11'>Best performing segment will appear here once data is loaded</run>
-  </formatted-text>
-</zone>
-</zone>
-<zone h='3557' id='1522' type-v2='text' w='100000' x='0' y='96443'>
-  <formatted-text>
-    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-  </formatted-text>
-</zone>
+      <zone friendly-name='Dashboard Container' h='3586' id='1540' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone friendly-name='HeroBanner' h='4192' id='1541' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3304' id='1542' type-v2='text' w='49121' x='293' y='444'>
+            <formatted-text>
+              <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
+              <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3304' id='1543' type-v2='text' w='50292' x='49414' y='444'>
+            <formatted-text>
+              <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Audience Breakdown</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='4' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1544' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+          <zone h='3334' id='1545' type-v2='dashboard-object' w='25037' x='0' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1546' type-v2='dashboard-object' w='25036' x='25037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{A32A9061-EDF3-40B3-93CD-E1B12EA58AFA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Campaign Performance</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1547' type-v2='dashboard-object' w='24964' x='50073' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{009BEC44-BB31-41EF-B95B-51262EC806BA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Audience Breakdown</caption>
+                <button-caption-font-style bold='true' fontcolor='#ffffff' fontname='Tableau Bold' fontsize='9' />
+                <format attr='background-color' value='#7a48b9' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1548' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Email &#8594; Pipeline</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1549' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
+          <zone custom-title='true' h='3555' id='1550' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+            <formatted-text>
+              <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1551' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1552' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1553' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1554' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1555' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1556' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1557' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1558' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#eea7ff4e' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Audience Breakdown Title' fixed-size='30' forceUpdate='true' h='3111' id='1559' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
+          <zone forceUpdate='true' h='3111' id='1560' type-v2='text' w='100000' x='0' y='11333'>
+            <formatted-text>
+              <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>AUDIENCE BREAKDOWN</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#ccb4ed81' />
+            </zone-style>
+          </zone>
+        </zone>
+        <zone h='82000' id='1521' type-v2='layout-basic' w='100000' x='0' y='14444'>
+          <zone h='95664' id='1500' type-v2='layout-basic' w='100000' x='0' y='0'>
+            <zone h='47832' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='0' />
+            <zone h='47832' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='0' />
+            <zone h='47832' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='47832' />
+            <zone h='47832' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='47832' />
+          </zone>
+          <zone h='4336' id='1505' type-v2='text' w='100000' x='0' y='95664'>
+            <formatted-text>
+              <run fontcolor='#6b7280' fontname='Poppins' fontsize='11'>Best performing segment will appear here once data is loaded</run>
+            </formatted-text>
+          </zone>
+        </zone>
+        <zone h='3557' id='1522' type-v2='text' w='100000' x='0' y='96443'>
+          <formatted-text>
+            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
+          </formatted-text>
+        </zone>
+      </zone>
     </zone>
   </zones>
   <simple-id uuid='{00A46D18-E86D-40FB-96F7-4567566A76F5}' />
 </dashboard>
 <dashboard enable-sort-zone-taborder='true' name='Email Pipeline'>
-  <style />
+  <style>
+    <style-rule element='dashboard'>
+      <format attr='background-color' value='#f5f3fa' />
+    </style-rule>
+    <style-rule element='parameter-ctrl-title'>
+      <format attr='font-weight' value='bold' />
+      <format attr='color' value='#4b2b72' />
+      <format attr='font-size' value='6' />
+    </style-rule>
+  </style>
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
+  <datasources>
+    <datasource name='Parameters' />
+  </datasources>
+  <datasource-dependencies datasource='Parameters'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;core&quot;' value='Core' />
+        <alias key='&quot;micro&quot;' value='Micro' />
+        <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Micro' value='&quot;micro&quot;' />
+        <member alias='Core' value='&quot;core&quot;' />
+        <member alias='Mid-Market' value='&quot;mid-market&quot;' />
+      </members>
+    </column>
+    <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
+      <calculation class='tableau' formula='&quot;PoP&quot;' />
+      <aliases>
+        <alias key='&quot;Custom&quot;' value='Custom Range' />
+        <alias key='&quot;PoP&quot;' value='Period over Period' />
+        <alias key='&quot;YoY&quot;' value='Year over Year' />
+      </aliases>
+      <members>
+        <member alias='Year over Year' value='&quot;YoY&quot;' />
+        <member alias='Period over Period' value='&quot;PoP&quot;' />
+        <member alias='Custom Range' value='&quot;Custom&quot;' />
+      </members>
+    </column>
+    <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
+      <calculation class='tableau' formula='#2025-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
+      <calculation class='tableau' formula='#2025-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;AU&quot;' value='AU' />
+        <alias key='&quot;CA&quot;' value='CA' />
+        <alias key='&quot;GB&quot;' value='UK' />
+        <alias key='&quot;NZ&quot;' value='NZ' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='AU' value='&quot;AU&quot;' />
+        <member alias='NZ' value='&quot;NZ&quot;' />
+        <member alias='UK' value='&quot;GB&quot;' />
+        <member alias='CA' value='&quot;CA&quot;' />
+      </members>
+    </column>
+    <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+      <calculation class='tableau' formula='#2026-05-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+        <alias key='&quot;marketo&quot;' value='Marketo' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Marketo' value='&quot;marketo&quot;' />
+        <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
+      </members>
+    </column>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+        <alias key='&quot;Default&quot;' value='Default' />
+        <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+        <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+        <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+        <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+        <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Batch &amp; Blast' value='&quot;Batch and Blast&quot;' />
+        <member alias='Email Nurture' value='&quot;Email Nurture&quot;' />
+        <member alias='Sales Email' value='&quot;Sales Email&quot;' />
+        <member alias='Newsletter' value='&quot;Newsletter&quot;' />
+        <member alias='Event / Webinar' value='&quot;Event-Webinar&quot;' />
+        <member alias='Training / Hero Academy' value='&quot;Training/Hero Academy&quot;' />
+        <member alias='Default' value='&quot;Default&quot;' />
+      </members>
+    </column>
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
+      <range min='#2023-01-01#' />
+    </column>
+  </datasource-dependencies>
   <zones>
     <zone h='100000' id='1600' type-v2='layout-basic' w='100000' x='0' y='0'>
-<zone h='4888' id='1712' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#FFFFFF' fontname='Poppins' fontsize='13' bold='true'>Marketing Mission Control — Email Performance</run>
-  </formatted-text>
-</zone>
-<zone fixed-size='38' friendly-name='Navigation' h='4222' id='1713' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4888'>
-<zone friendly-name='Overview' h='4222' id='1714' type-v2='text' w='25000' x='0' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Overview</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Campaign Performance' h='4222' id='1715' type-v2='text' w='25000' x='25000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Campaign Performance</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Audience Breakdown' h='4222' id='1716' type-v2='text' w='25000' x='50000' y='4888'>
-  <formatted-text>
-    <run fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Audience Breakdown</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#1F1045' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone><zone friendly-name='Email Pipeline' h='4222' id='1717' type-v2='text' w='25000' x='75000' y='4888'>
-  <formatted-text>
-    <run bold='true' fontcolor='#ffffff' fontalignment='1' fontname='Poppins' fontsize='9'>Email → Pipeline</run>
-  </formatted-text>
-  <zone-style>
-    <format attr='background-color' value='#6B3FA0' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
-    <format attr='margin' value='4' />
-  </zone-style>
-</zone>
-<zone-style>
-  <format attr='background-color' value='#1F1045' />
-  <format attr='border-color' value='#000000' />
-  <format attr='border-style' value='none' />
-  <format attr='border-width' value='0' />
-  <format attr='margin' value='1' />
-</zone-style>
-</zone>
-<zone h='5333' id='1718' type-v2='layout-flow' w='100000' x='0' y='9110' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1719' type-v2='text' w='14285' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DATE RANGE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1720' type-v2='text' w='14285' x='14285' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PLATFORM</run>
-  </formatted-text>
-</zone><zone h='100000' id='1721' type-v2='text' w='14285' x='28570' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PROGRAM TYPE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1722' type-v2='text' w='14285' x='42855' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>DIRECTION</run>
-  </formatted-text>
-</zone><zone h='100000' id='1723' type-v2='text' w='14285' x='57140' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COUNTRY</run>
-  </formatted-text>
-</zone><zone h='100000' id='1724' type-v2='text' w='14285' x='71425' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>COMPANY SIZE</run>
-  </formatted-text>
-</zone><zone h='100000' id='1725' type-v2='text' w='14285' x='85710' y='0'>
-  <formatted-text>
-    <run fontcolor='#6B7280' fontname='Poppins' fontsize='10'>PRODUCT</run>
-  </formatted-text>
-</zone>
-</zone>
-<zone h='82000' id='1726' type-v2='layout-basic' w='100000' x='0' y='14443'>
-<zone h='4878' id='1700' type-v2='text' w='100000' x='0' y='0'>
-  <formatted-text>
-    <run fontcolor='#92400E' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
-  </formatted-text>
-</zone>
-<zone h='10840' id='1701' type-v2='layout-flow' w='100000' x='0' y='4878' param='horz' layout-strategy-id='distribute-evenly'>
-<zone h='100000' id='1702' name='[SC] Pipeline - Sends' w='20000' x='0' y='0' /><zone h='100000' id='1703' name='[SC] Pipeline - Opens' w='20000' x='20000' y='0' /><zone h='100000' id='1704' name='[SC] Pipeline - Clicks' w='20000' x='40000' y='0' /><zone h='100000' id='1705' name='[SC] Pipeline - MQLs' w='20000' x='60000' y='0' /><zone h='100000' id='1706' name='[SC] Pipeline - SAOs' w='20000' x='80000' y='0' />
-</zone>
-<zone h='84282' id='1707' type-v2='layout-basic' w='100000' x='0' y='15718'>
-<zone h='100000' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='0' /><zone h='59000' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='0' /><zone h='41000' id='1710' type-v2='text' w='35000' x='65000' y='59000'>
-  <formatted-text>
-    <run fontcolor='#4B5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
-  </formatted-text>
-</zone>
-</zone>
-</zone>
-<zone h='3557' id='1727' type-v2='text' w='100000' x='0' y='96443'>
-  <formatted-text>
-    <run fontcolor='#9CA3AF' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-  </formatted-text>
-</zone>
+      <zone friendly-name='Dashboard Container' h='3586' id='1740' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone friendly-name='HeroBanner' h='4192' id='1741' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3304' id='1742' type-v2='text' w='49121' x='293' y='444'>
+            <formatted-text>
+              <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
+              <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='3304' id='1743' type-v2='text' w='50292' x='49414' y='444'>
+            <formatted-text>
+              <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Email Pipeline</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#4b2b72' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='4' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1744' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+          <zone h='3334' id='1745' type-v2='dashboard-object' w='25037' x='0' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Overview</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1746' type-v2='dashboard-object' w='25036' x='25037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{A32A9061-EDF3-40B3-93CD-E1B12EA58AFA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Campaign Performance</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1747' type-v2='dashboard-object' w='24964' x='50073' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{009BEC44-BB31-41EF-B95B-51262EC806BA}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Audience Breakdown</caption>
+                <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
+                <format attr='background-color' value='#4b2b72' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3334' id='1748' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
+            <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
+              <button-visual-state>
+                <caption>Email &#8594; Pipeline</caption>
+                <button-caption-font-style bold='true' fontcolor='#ffffff' fontname='Tableau Bold' fontsize='9' />
+                <format attr='background-color' value='#7a48b9' />
+              </button-visual-state>
+            </button>
+            <zone-style>
+              <format attr='border-color' value='#ffffff' />
+              <format attr='border-style' value='solid' />
+              <format attr='border-width' value='1' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#4b2b72' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
+          <zone custom-title='true' h='3555' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+            <formatted-text>
+              <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='3555' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#eea7ff4e' />
+          </zone-style>
+        </zone>
+        <zone friendly-name='Pipeline Title' fixed-size='30' forceUpdate='true' h='3111' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
+          <zone forceUpdate='true' h='3111' id='1760' type-v2='text' w='100000' x='0' y='11333'>
+            <formatted-text>
+              <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>PIPELINE</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+              <format attr='background-color' value='#ccb4ed81' />
+            </zone-style>
+          </zone>
+        </zone>
+        <zone h='82000' id='1726' type-v2='layout-basic' w='100000' x='0' y='14444'>
+          <zone h='4878' id='1700' type-v2='text' w='100000' x='0' y='0'>
+            <formatted-text>
+              <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
+            </formatted-text>
+          </zone>
+          <zone h='10840' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4878'>
+            <zone h='100000' id='1702' name='[SC] Pipeline - Sends' w='20000' x='0' y='0' />
+            <zone h='100000' id='1703' name='[SC] Pipeline - Opens' w='20000' x='20000' y='0' />
+            <zone h='100000' id='1704' name='[SC] Pipeline - Clicks' w='20000' x='40000' y='0' />
+            <zone h='100000' id='1705' name='[SC] Pipeline - MQLs' w='20000' x='60000' y='0' />
+            <zone h='100000' id='1706' name='[SC] Pipeline - SAOs' w='20000' x='80000' y='0' />
+          </zone>
+          <zone h='84282' id='1707' type-v2='layout-basic' w='100000' x='0' y='15718'>
+            <zone h='100000' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='0' />
+            <zone h='59000' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='0' />
+            <zone h='41000' id='1710' type-v2='text' w='35000' x='65000' y='59000'>
+              <formatted-text>
+                <run fontcolor='#4b5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
+              </formatted-text>
+            </zone>
+          </zone>
+        </zone>
+        <zone h='3557' id='1727' type-v2='text' w='100000' x='0' y='96443'>
+          <formatted-text>
+            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
+          </formatted-text>
+        </zone>
+      </zone>
     </zone>
   </zones>
   <simple-id uuid='{E34C3FDB-EAC8-47DA-A4AF-673E85491A8F}' />
@@ -3181,18 +4098,36 @@ GROUP BY 1, 2, 3, 4</relation>
   </cards>
   <simple-id uuid='{C73E3170-EDA9-4AA5-9EF6-189313F021A7}' />
 </window>
-<window class='dashboard' name='Email Overview'>
+<window class='dashboard' maximized='true' name='Email Overview'>
   <viewpoints>
-    <viewpoint name='[SC] Sends' />
-    <viewpoint name='[SC] Opens' />
-    <viewpoint name='[SC] Clicks' />
-    <viewpoint name='[SC] Unsubscribes' />
-    <viewpoint name='[SC] Open Rate' />
-    <viewpoint name='[SC] CTR' />
-    <viewpoint name='[SC] CTOR' />
-    <viewpoint name='[SC] Unsub Rate' />
     <viewpoint name='[BC] Email Trend' />
-    <viewpoint name='[BC] Platform Split' />
+    <viewpoint name='[BC] Platform Split'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] CTOR'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] CTR'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Clicks'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Open Rate'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Opens'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Sends'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Unsub Rate'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[SC] Unsubscribes'>
+      <zoom type='fit-width' />
+    </viewpoint>
   </viewpoints>
   <active id='-1' />
   <simple-id uuid='{C5677F52-EC91-4676-970C-B2B74BC6CBAC}' />
@@ -3206,23 +4141,23 @@ GROUP BY 1, 2, 3, 4</relation>
 </window>
 <window class='dashboard' name='Email Audience Breakdown'>
   <viewpoints>
-    <viewpoint name='[BC] Country Breakdown' />
     <viewpoint name='[BC] Company Size Breakdown' />
-    <viewpoint name='[BC] Lifecycle Stage Breakdown' />
+    <viewpoint name='[BC] Country Breakdown' />
     <viewpoint name='[BC] Industry Breakdown' />
+    <viewpoint name='[BC] Lifecycle Stage Breakdown' />
   </viewpoints>
   <active id='-1' />
   <simple-id uuid='{009BEC44-BB31-41EF-B95B-51262EC806BA}' />
 </window>
 <window class='dashboard' name='Email Pipeline'>
   <viewpoints>
-    <viewpoint name='[SC] Pipeline - Sends' />
-    <viewpoint name='[SC] Pipeline - Opens' />
-    <viewpoint name='[SC] Pipeline - Clicks' />
-    <viewpoint name='[SC] Pipeline - MQLs' />
-    <viewpoint name='[SC] Pipeline - SAOs' />
     <viewpoint name='[BC] Pipeline Table' />
     <viewpoint name='[BC] Pipeline Trend' />
+    <viewpoint name='[SC] Pipeline - Clicks' />
+    <viewpoint name='[SC] Pipeline - MQLs' />
+    <viewpoint name='[SC] Pipeline - Opens' />
+    <viewpoint name='[SC] Pipeline - SAOs' />
+    <viewpoint name='[SC] Pipeline - Sends' />
   </viewpoints>
   <active id='-1' />
   <simple-id uuid='{6C7A0900-EC67-48CA-B906-CCEB95344A45}' />

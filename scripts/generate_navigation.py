@@ -3,10 +3,11 @@
 
 Writes:
   parts/navigation/nav-{slug}.xml   — standalone zone XML per dashboard (reference)
-  parts/dashboards/*.xml            — patches static text nav zones → button zones
+  parts/dashboards/*.xml            — patches nav strip zones in dashboard files
 
 The nav strip shows 4 tabs. On each dashboard, one tab is "active" (accent bg,
-bold) and the others are "inactive" (dark bg, regular weight).
+bold Tableau Bold) and the others are "inactive" (dark bg, regular weight).
+Navigation uses type-v2='dashboard-object' button zones with goto-sheet actions.
 
 Run once:
     python3 scripts/generate_navigation.py
@@ -20,19 +21,23 @@ ROOT = Path(__file__).resolve().parent.parent
 NAV_DIR = ROOT / "parts" / "navigation"
 DASH_DIR = ROOT / "parts" / "dashboards"
 
-# --- Colours (our palette) ---
-ACTIVE_BG = "#6B3FA0"    # accent purple — active/current tab
-INACTIVE_BG = "#1F1045"  # nav strip dark purple — inactive tabs
-NAV_STRIP_BG = "#1F1045" # outer container background
+# --- Colours (matched to user-edited TWB) ---
+ACTIVE_BG = "#7a48b9"    # accent purple — active/current tab
+INACTIVE_BG = "#4b2b72"  # hero banner dark purple — inactive tabs
+NAV_STRIP_BG = "#4b2b72" # outer container background
 TEXT_COLOR = "#ffffff"
-FONT = "Poppins"
 FONT_SIZE = "9"
 
-# Nav dimensions (900px tall dashboard: 4222 units = 38px)
-NAV_OUTER_H = "4222"
-NAV_OUTER_Y = "4888"   # starts right after the 44px hero banner (4888 units)
-# fixed-size is in pixels; is-fixed prevents the strip from growing/shrinking
-NAV_FIXED_SIZE = "38"
+# Nav dimensions (matched to user-edited TWB)
+NAV_OUTER_H = "3333"   # 30px
+NAV_OUTER_Y = "4192"   # absolute y — right after HeroBanner in vert flow
+NAV_FIXED_SIZE = "30"  # px, pinned height
+BUTTON_H = "3334"      # inner button zone height
+BUTTON_Y = "4222"      # absolute y of inner button zones
+
+# Tab widths and x-positions (must sum to 100000)
+TAB_WIDTHS = [25037, 25036, 24964, 24963]
+X_POSITIONS = [0, 25037, 50073, 75037]
 
 # --- The 4 tabs in order ---
 # (friendly_name, caption, window_uuid)
@@ -46,30 +51,33 @@ TABS = [
 # --- Per-dashboard config ---
 # (slug, dashboard_file, active_tab_index, outer_zone_id, inner_zone_ids)
 DASHBOARDS = [
-    ("overview",             "overview-dashboard.xml",             0, "1114", ["1115", "1116", "1117", "1118"]),
-    ("campaign-performance", "campaign-performance-dashboard.xml", 1, "1305", ["1306", "1307", "1308", "1309"]),
-    ("audience-breakdown",   "audience-breakdown-dashboard.xml",   2, "1508", ["1509", "1510", "1511", "1512"]),
-    ("pipeline",             "pipeline-dashboard.xml",             3, "1713", ["1714", "1715", "1716", "1717"]),
+    ("overview",             "overview-dashboard.xml",             0, "1131", ["1129", "1132", "1133", "1134"]),
+    ("campaign-performance", "campaign-performance-dashboard.xml", 1, "1344", ["1345", "1346", "1347", "1348"]),
+    ("audience-breakdown",   "audience-breakdown-dashboard.xml",   2, "1544", ["1545", "1546", "1547", "1548"]),
+    ("pipeline",             "pipeline-dashboard.xml",             3, "1744", ["1745", "1746", "1747", "1748"]),
 ]
-
-ZONE_WIDTH = 25000
-X_POSITIONS = [0, 25000, 50000, 75000]
 
 
 def button_zone_xml(friendly_name: str, caption: str, window_id: str,
-                    zone_id: str, x: int, is_active: bool) -> str:
+                    zone_id: str, x: int, w: int, is_active: bool) -> str:
     bg = ACTIVE_BG if is_active else INACTIVE_BG
-    bold_attr = f" bold='true'" if is_active else ""
+    if is_active:
+        font_style = f"bold='true' fontcolor='{TEXT_COLOR}' fontname='Tableau Bold' fontsize='{FONT_SIZE}'"
+    else:
+        font_style = f"fontcolor='{TEXT_COLOR}' fontsize='{FONT_SIZE}'"
     return f"""\
-<zone friendly-name='{friendly_name}' h='{NAV_OUTER_H}' id='{zone_id}' type-v2='text' w='{ZONE_WIDTH}' x='{x}' y='{NAV_OUTER_Y}'>
-  <formatted-text>
-    <run{bold_attr} fontcolor='{TEXT_COLOR}' fontalignment='1' fontname='{FONT}' fontsize='{FONT_SIZE}'>{caption}</run>
-  </formatted-text>
+<zone h='{BUTTON_H}' id='{zone_id}' type-v2='dashboard-object' w='{w}' x='{x}' y='{BUTTON_Y}'>
+  <button action='tabdoc:goto-sheet window-id=&quot;{window_id}&quot;' button-type='text'>
+    <button-visual-state>
+      <caption>{caption}</caption>
+      <button-caption-font-style {font_style} />
+      <format attr='background-color' value='{bg}' />
+    </button-visual-state>
+  </button>
   <zone-style>
-    <format attr='background-color' value='{bg}' />
-    <format attr='border-color' value='#000000' />
-    <format attr='border-style' value='none' />
-    <format attr='border-width' value='0' />
+    <format attr='border-color' value='#ffffff' />
+    <format attr='border-style' value='solid' />
+    <format attr='border-width' value='1' />
     <format attr='margin' value='4' />
   </zone-style>
 </zone>"""
@@ -78,25 +86,26 @@ def button_zone_xml(friendly_name: str, caption: str, window_id: str,
 def nav_strip_xml(outer_id: str, inner_ids: list[str], active_idx: int) -> str:
     """Returns the complete nav strip zone block."""
     buttons = []
-    for i, (tab_x, (friendly, caption, window_id)) in enumerate(zip(X_POSITIONS, TABS)):
+    for i, (tab_x, tab_w, (friendly, caption, window_id)) in enumerate(
+        zip(X_POSITIONS, TAB_WIDTHS, TABS)
+    ):
         buttons.append(button_zone_xml(
             friendly, caption, window_id,
-            inner_ids[i], tab_x, is_active=(i == active_idx),
+            inner_ids[i], tab_x, tab_w, is_active=(i == active_idx),
         ))
 
-    inner_xml = "".join(buttons)
+    inner_xml = "\n".join(buttons)
     return (
-        f"<zone fixed-size='{NAV_FIXED_SIZE}' friendly-name='Navigation'"
+        f"<zone friendly-name='Navigation' fixed-size='{NAV_FIXED_SIZE}'"
         f" h='{NAV_OUTER_H}' id='{outer_id}' is-fixed='true'"
         f" layout-strategy-id='distribute-evenly' param='horz'"
         f" type-v2='layout-flow' w='100000' x='0' y='{NAV_OUTER_Y}'>\n"
         f"{inner_xml}\n"
         f"<zone-style>\n"
-        f"  <format attr='background-color' value='{NAV_STRIP_BG}' />\n"
         f"  <format attr='border-color' value='#000000' />\n"
         f"  <format attr='border-style' value='none' />\n"
         f"  <format attr='border-width' value='0' />\n"
-        f"  <format attr='margin' value='1' />\n"
+        f"  <format attr='background-color' value='{NAV_STRIP_BG}' />\n"
         f"</zone-style>\n"
         f"</zone>"
     )
@@ -162,9 +171,9 @@ def write_nav_part(slug: str, active_idx: int,
         f"  last-modified: 2026-05-04\n"
         f"\n"
         f"  This zone is embedded verbatim in parts/dashboards/{slug}-dashboard.xml\n"
-        f"  within the outer layout-basic zone, replacing the static text nav strip.\n"
-        f"  Active tab uses background {ACTIVE_BG} (accent purple).\n"
-        f"  Inactive tabs use {INACTIVE_BG} (nav strip dark purple).\n"
+        f"  within the Dashboard Container vert layout-flow, as the second child\n"
+        f"  (after HeroBanner). Active tab uses background {ACTIVE_BG}.\n"
+        f"  Inactive tabs use {INACTIVE_BG}.\n"
         f"-->\n"
         f"{nav_strip_xml(outer_id, inner_ids, active_idx)}\n"
     )

@@ -1,0 +1,50 @@
+<!--
+  part-type: chrome
+  name: HeroBanner
+  caption: Hero Banner — Employment Hero branding + dashboard title
+  last-modified: 2026-05-04
+
+  Template zone structure for the hero banner used on all 4 dashboards.
+  Embedded directly inside the Dashboard Container vert layout-flow as
+  the first child zone.  Only the <run> title text and the zone IDs differ
+  per dashboard.
+
+  Colours:
+    background : #4b2b72  (deep purple)
+    EH logo    : #ffffff (Employment) + #f63eff (Hero)
+    title text : #ffffff, Tableau Block, bold, fontalignment='2'
+-->
+<zone friendly-name='HeroBanner' h='4192' id='{HERO_ID}' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+  <zone forceUpdate='true' h='3304' id='{EH_LOGO_ID}' type-v2='text' w='49121' x='293' y='444'>
+    <formatted-text>
+      <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
+      <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
+    </formatted-text>
+    <zone-style>
+      <format attr='border-color' value='#000000' />
+      <format attr='border-style' value='none' />
+      <format attr='border-width' value='0' />
+      <format attr='margin' value='4' />
+      <format attr='background-color' value='#4b2b72' />
+    </zone-style>
+  </zone>
+  <zone forceUpdate='true' h='3304' id='{TITLE_ID}' type-v2='text' w='50292' x='49414' y='444'>
+    <formatted-text>
+      <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - {DASHBOARD_TITLE}</run>
+    </formatted-text>
+    <zone-style>
+      <format attr='border-color' value='#000000' />
+      <format attr='border-style' value='none' />
+      <format attr='border-width' value='0' />
+      <format attr='margin' value='4' />
+      <format attr='background-color' value='#4b2b72' />
+    </zone-style>
+  </zone>
+  <zone-style>
+    <format attr='border-color' value='#000000' />
+    <format attr='border-style' value='none' />
+    <format attr='border-width' value='0' />
+    <format attr='margin' value='4' />
+    <format attr='background-color' value='#4b2b72' />
+  </zone-style>
+</zone>
