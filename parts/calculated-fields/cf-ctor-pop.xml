@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTOR PoP %]
+  caption: CTOR PoP %
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='CTOR PoP %' datatype='real' default-format='p0.00%' name='[CTOR PoP %]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([CTOR SP] - [CTOR LP]) / IIF([CTOR LP] = 0, NULL, [CTOR LP])' />
+</column>

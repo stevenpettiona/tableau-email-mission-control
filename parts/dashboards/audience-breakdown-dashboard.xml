@@ -22,7 +22,7 @@
     <datasource name='Parameters' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -92,7 +92,7 @@
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -206,7 +206,7 @@
           <zone h='3334' id='1548' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
               <button-visual-state>
-                <caption>Email &#8594; Pipeline</caption>
+                <caption>Email → Pipeline</caption>
                 <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
                 <format attr='background-color' value='#4b2b72' />
               </button-visual-state>
@@ -323,16 +323,25 @@
           </zone>
         </zone>
         <zone h='83556' id='1521' type-v2='layout-basic' w='100000' x='0' y='16444'>
-          <zone h='79932' id='1500' type-v2='layout-basic' w='100000' x='0' y='16444'>
-            <zone h='39965' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='16444' />
-            <zone h='39965' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='16444' />
-            <zone h='39967' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='56409' />
-            <zone h='39967' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='56409' />
-          </zone>
-          <zone h='3624' id='1505' type-v2='text' w='100000' x='0' y='96376'>
-            <formatted-text>
-              <run fontcolor='#6b7280' fontname='Poppins' fontsize='11'>Best performing segment will appear here once data is loaded</run>
-            </formatted-text>
+          <zone h='83556' id='1500' type-v2='layout-basic' w='100000' x='0' y='16444'>
+            <zone h='41777' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='16444' />
+            <zone h='41777' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='16444' />
+            <zone h='41779' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='58221'>
+              <zone-style>
+                <format attr='border-color' value='#eea7ff' />
+                <format attr='border-style' value='solid' />
+                <format attr='border-width' value='1' />
+                <format attr='margin' value='5' />
+              </zone-style>
+            </zone>
+            <zone h='41779' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='58221'>
+              <zone-style>
+                <format attr='border-color' value='#eea7ff' />
+                <format attr='border-style' value='solid' />
+                <format attr='border-width' value='1' />
+                <format attr='margin' value='5' />
+              </zone-style>
+            </zone>
           </zone>
         </zone>
       </zone>
@@ -344,11 +353,17 @@
 <!-- SECTION:WINDOW-ENTRY -->
 <window class='dashboard' name='Email Audience Breakdown'>
   <viewpoints>
-    <viewpoint name='[BC] Company Size Breakdown' />
-    <viewpoint name='[BC] Country Breakdown' />
+    <viewpoint name='[BC] Company Size Breakdown'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[BC] Country Breakdown'>
+      <zoom type='entire-view' />
+    </viewpoint>
     <viewpoint name='[BC] Industry Breakdown' />
-    <viewpoint name='[BC] Lifecycle Stage Breakdown' />
+    <viewpoint name='[BC] Lifecycle Stage Breakdown'>
+      <zoom type='entire-view' />
+    </viewpoint>
   </viewpoints>
-  <active id='-1' />
+  <active id='1502' />
   <simple-id uuid='{009BEC44-BB31-41EF-B95B-51262EC806BA}' />
 </window>

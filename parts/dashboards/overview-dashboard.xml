@@ -84,7 +84,7 @@
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
     </column>
-    <column alias='All' caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -120,8 +120,8 @@
         <member alias='Default' value='&quot;Default&quot;' />
       </members>
     </column>
-    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-01-01#'>
-      <calculation class='tableau' formula='#2026-01-01#' />
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
       <range min='#2023-01-01#' />
     </column>
   </datasource-dependencies>
@@ -211,7 +211,7 @@
           <zone h='3334' id='1134' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
               <button-visual-state>
-                <caption>Email &#8594; Pipeline</caption>
+                <caption>Email → Pipeline</caption>
                 <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
                 <format attr='background-color' value='#4b2b72' />
               </button-visual-state>
@@ -327,34 +327,106 @@
             </zone-style>
           </zone>
         </zone>
-        <zone friendly-name='Hero Metrics' h='7111' id='1100' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='16444'>
-          <zone h='7112' id='1101' name='[SC] Sends' w='12518' x='0' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+        <zone fixed-size='91' friendly-name='Hero Metrics' h='10111' id='1100' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='16444'>
+          <zone h='10112' id='1101' name='[SC] Sends' w='6296' x='0' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
           </zone>
-          <zone h='7112' id='1102' name='[SC] Opens' w='12519' x='12518' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1161' name='[LC] Sends Trend Sparkline' w='6296' x='6296' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
           </zone>
-          <zone h='7112' id='1103' name='[SC] Clicks' w='12518' x='25037' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1102' name='[SC] Opens' w='6295' x='12592' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
           </zone>
-          <zone h='7112' id='1104' name='[SC] Unsubscribes' w='12518' x='37555' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1162' name='[LC] Opens Trend Sparkline' w='6296' x='18887' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
           </zone>
-          <zone h='7112' id='1105' name='[SC] Open Rate' w='12519' x='50073' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1103' name='[SC] Clicks' w='6296' x='25183' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
           </zone>
-          <zone h='7112' id='1106' name='[SC] CTR' w='12518' x='62592' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1163' name='[LC] Clicks Trend Sparkline' w='6296' x='31479' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
           </zone>
-          <zone h='7112' id='1107' name='[SC] CTOR' w='12445' x='75110' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1104' name='[SC] Unsubscribes' w='6222' x='37775' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
           </zone>
-          <zone h='7112' id='1108' name='[SC] Unsub Rate' w='12445' x='87555' y='16444'>
-            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          <zone h='10112' id='1164' name='[LC] Unsubscribes Trend Sparkline' w='6223' x='43997' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='10112' id='1105' name='[SC] Open Rate' w='6222' x='50220' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
+          </zone>
+          <zone h='10112' id='1165' name='[LC] Open Rate Trend Sparkline' w='6223' x='56442' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='10112' id='1106' name='[SC] CTR' w='6222' x='62665' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
+          </zone>
+          <zone h='10112' id='1166' name='[LC] CTR Trend Sparkline' w='6223' x='68887' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='10112' id='1107' name='[SC] CTOR' w='6222' x='75110' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
+          </zone>
+          <zone h='10112' id='1167' name='[LC] CTOR Trend Sparkline' w='6223' x='81332' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='10112' id='1108' name='[SC] Unsub Rate' w='6222' x='87555' y='16444'>
+            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
+          </zone>
+          <zone h='10112' id='1168' name='[LC] Unsub Rate Trend Sparkline' w='6223' x='93777' y='16444'>
+            <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
           </zone>
         </zone>
-        <zone fixed-size='30' friendly-name='Send Metrics Title' h='3333' id='1155' param='horz' type-v2='layout-flow' w='100000' x='0' y='23555'>
-          <zone forceUpdate='true' h='3333' id='1156' type-v2='text' w='100000' x='0' y='23555'>
+        <zone fixed-size='30' friendly-name='Send Metrics Title' h='3333' id='1155' param='horz' type-v2='layout-flow' w='100000' x='0' y='26555'>
+          <zone forceUpdate='true' h='3333' id='1156' type-v2='text' w='100000' x='0' y='26555'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>SENDS</run>
             </formatted-text>
@@ -367,30 +439,36 @@
             </zone-style>
           </zone>
         </zone>
-        <zone friendly-name='Send Metrics' h='73112' id='1109' param='horz' type-v2='layout-flow' w='100000' x='0' y='26888'>
-          <zone h='73112' id='1110' name='[BC] Email Trend' w='63397' x='0' y='26888'>
-            <layout-cache fixed-size-w='1474' minheight='228' type-h='scalable' type-w='fixed' />
+        <zone friendly-name='Send Metrics' h='70112' id='1109' param='horz' type-v2='layout-flow' w='100000' x='0' y='29888'>
+          <zone fixed-size='991' h='70112' id='1110' is-fixed='true' name='[BC] Email Trend' w='73280' x='0' y='29888'>
+            <layout-cache minheight='149' type-h='scalable' type-w='fixed' />
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin-right' value='10' />
+            </zone-style>
           </zone>
-          <zone h='73112' id='1157' param='vert' type-v2='layout-flow' w='36603' x='63397' y='26888'>
-            <zone h='56000' id='1111' name='[BC] Platform Split' w='36603' x='63397' y='26888'>
-              <layout-cache cell-count-h='2' minwidth='180' non-cell-size-h='103' type-h='cell' type-w='scalable' />
+          <zone h='70112' id='1157' param='vert' type-v2='layout-flow' w='26720' x='73280' y='29888'>
+            <zone h='53000' id='1111' name='[BC] Platform Split' w='26720' x='73280' y='29888'>
+              <layout-cache cell-count-h='2' minwidth='180' non-cell-size-h='83' type-h='cell' type-w='scalable' />
             </zone>
-            <zone fixed-size='154' h='17111' id='1159' is-fixed='true' param='horz' type-v2='layout-flow' w='36603' x='63397' y='82888'>
-              <zone h='16889' id='1158' name='[BC] Platform Scorecard Marketo' w='18228' x='63470' y='82999'>
-                <layout-cache fixed-size-h='112' fixed-size-w='242' type-h='fixed' type-w='fixed' />
+            <zone fixed-size='154' h='17111' id='1159' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='26720' x='73280' y='82888'>
+              <zone h='16889' id='1158' name='[BC] Platform Scorecard Marketo' w='13323' x='73353' y='83000'>
+                <layout-cache cell-count-w='1' fixed-size-h='111' non-cell-size-w='100' type-h='fixed' type-w='cell' />
                 <zone-style>
                   <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
+                  <format attr='border-style' value='solid' />
+                  <format attr='border-width' value='1' />
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
-              <zone h='16889' id='1160' name='[BC] Platform Scorecard Braze B2B' w='18229' x='81698' y='82999'>
-                <layout-cache fixed-size-h='112' fixed-size-w='242' type-h='fixed' type-w='fixed' />
+              <zone h='16889' id='1160' name='[BC] Platform Scorecard Braze B2B' w='13251' x='86676' y='83000'>
+                <layout-cache cell-count-w='1' fixed-size-h='111' non-cell-size-w='100' type-h='fixed' type-w='cell' />
                 <zone-style>
                   <format attr='border-color' value='#000000' />
-                  <format attr='border-style' value='none' />
-                  <format attr='border-width' value='0' />
+                  <format attr='border-style' value='solid' />
+                  <format attr='border-width' value='1' />
                   <format attr='margin' value='4' />
                 </zone-style>
               </zone>
@@ -412,36 +490,72 @@
 <window class='dashboard' name='Email Overview'>
   <viewpoints>
     <viewpoint name='[BC] Email Trend' />
-    <viewpoint name='[BC] Platform Scorecard Braze B2B' />
-    <viewpoint name='[BC] Platform Scorecard Marketo' />
+    <viewpoint name='[BC] Platform Scorecard Braze B2B'>
+      <zoom type='fit-width' />
+    </viewpoint>
+    <viewpoint name='[BC] Platform Scorecard Marketo'>
+      <zoom type='fit-width' />
+    </viewpoint>
     <viewpoint name='[BC] Platform Split'>
       <zoom type='entire-view' />
     </viewpoint>
+    <viewpoint name='[LC] CTOR Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] CTR Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Clicks Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Open Rate Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Opens Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Sends Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Unsub Rate Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
+    <viewpoint name='[LC] Unsubscribes Trend Sparkline'>
+      <zoom type='entire-view' />
+      <floating-toolbar-visibility value='2' />
+    </viewpoint>
     <viewpoint name='[SC] CTOR'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] CTR'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Clicks'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Open Rate'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Opens'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Sends'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Unsub Rate'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Unsubscribes'>
-      <zoom type='fit-width' />
+      <zoom type='entire-view' />
     </viewpoint>
   </viewpoints>
-  <active id='-1' />
+  <active id='1111' />
   <simple-id uuid='{C5677F52-EC91-4676-970C-B2B74BC6CBAC}' />
 </window>

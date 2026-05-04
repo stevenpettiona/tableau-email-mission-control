@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Wons PoP %]
+  caption: Wons PoP %
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<column caption='Wons PoP %' datatype='real' default-format='p0.00%' name='[Wons PoP %]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Wons SP] - [Wons LY]) / IIF([Wons LY] = 0, NULL, [Wons LY])' />
+</column>

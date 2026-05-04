@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Dynamic SP]
+  caption: Dynamic SP
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Dynamic SP' datatype='real' default-format='p0.00%' name='[Calculation_2626799926677504]' role='measure' type='quantitative' visual-totals='Avg'>
+  <calculation class='tableau' formula='CASE [Parameters].[Direction (copy)] &#10;WHEN &apos;Open Rate&apos; THEN [Open Rate SP]&#10;WHEN &apos;CTR&apos; THEN [CTR SP]&#10;WHEN &apos;CTOR&apos; THEN [CTOR SP]&#10;WHEN &apos;Unsubscribe Rate&apos; THEN [Unsub Rate SP]&#10;END' />
+</column>

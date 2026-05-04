@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Opens PoP %]
+  caption: Opens PoP %
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Opens PoP %' datatype='real' default-format='p0.00%' name='[Opens PoP %]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Opens SP] - [Opens LP]) / IIF([Opens LP] = 0, NULL, [Opens LP])' />
+</column>

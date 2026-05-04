@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTR PoP %]
+  caption: CTR PoP %
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='CTR PoP %' datatype='real' default-format='p0.00%' name='[CTR PoP %]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([CTR SP] - [CTR LP]) / IIF([CTR LP] = 0, NULL, [CTR LP])' />
+</column>

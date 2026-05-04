@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [SAO ARR PoP %]
+  caption: SAO ARR PoP %
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<column caption='SAO ARR PoP %' datatype='real' default-format='p0.00%' name='[SAO ARR PoP %]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([SAO ARR SP] - [SAO ARR LY]) / IIF([SAO ARR LY] = 0, NULL, [SAO ARR LY])' />
+</column>
