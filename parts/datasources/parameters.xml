@@ -181,4 +181,18 @@
     <calculation class='tableau' formula='#2025-05-01#' />
     <range min='#2023-01-01#' />
   </column>
+  <column caption='Metric' datatype='string' name='[Direction (copy)]' param-domain-type='list' role='measure' type='nominal' value='&quot;Open Rate&quot;'>
+    <calculation class='tableau' formula='&quot;Open Rate&quot;' />
+    <aliases>
+      <alias key='&quot;CTOR&quot;' value='CTOR' />
+      <alias key='&quot;CTR&quot;' value='CTR' />
+      <alias key='&quot;Open Rate&quot;' value='Open Rate' />
+    </aliases>
+    <members>
+      <member alias='Open Rate' value='&quot;Open Rate&quot;' />
+      <member alias='CTR' value='&quot;CTR&quot;' />
+      <member alias='CTOR' value='&quot;CTOR&quot;' />
+      <member value='&quot;Unsubscribe Rate&quot;' />
+    </members>
+  </column>
 </datasource>

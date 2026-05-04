@@ -41,7 +41,7 @@ LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
-and f.event_timestamp >= &apos;20250101&apos;
+and f.event_timestamp >= &apos;20250501&apos;
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
       <relation connection='redshift.ds2conn' name='Pipeline Metrics' type='text'>SELECT
     m.dim_marketing_campaign_sk,
@@ -67,6 +67,7 @@ FROM mart.rpt_marketing_mofu_leads m
 LEFT JOIN mart.dim_marketing_campaign c
     ON m.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 WHERE m.dim_marketing_campaign_sk IS NOT NULL
+AND m.date >= &apos;2025-05-01&apos;
 GROUP BY m.dim_marketing_campaign_sk, c.campaign_name, m.date, m.country, m.employee_segment
 
 UNION ALL
@@ -95,6 +96,7 @@ FROM mart.rpt_marketing_bofu_opportunities b
 LEFT JOIN mart.dim_marketing_campaign c
     ON b.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 WHERE b.dim_marketing_campaign_sk IS NOT NULL
+and b.date >= &apos;2025-05-01&apos;
 GROUP BY b.dim_marketing_campaign_sk, c.campaign_name, b.date, b.country, b.employee_segment</relation>
     </relation>
     <object-graph>

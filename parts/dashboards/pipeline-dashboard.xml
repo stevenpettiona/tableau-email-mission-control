@@ -20,9 +20,10 @@
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
   <datasources>
     <datasource name='Parameters' />
+    <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -92,7 +93,7 @@
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -115,10 +116,13 @@
         <member alias='Default' value='&quot;Default&quot;' />
       </members>
     </column>
-    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
-      <calculation class='tableau' formula='#2026-02-01#' />
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+      <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
     </column>
+  </datasource-dependencies>
+  <datasource-dependencies datasource='federated.ehemailpipeline'>
+    <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
   </datasource-dependencies>
   <zones>
     <zone h='100000' id='1600' type-v2='layout-basic' w='100000' x='0' y='0'>
@@ -206,7 +210,7 @@
           <zone h='3334' id='1748' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
               <button-visual-state>
-                <caption>Email &#8594; Pipeline</caption>
+                <caption>Email → Pipeline</caption>
                 <button-caption-font-style bold='true' fontcolor='#ffffff' fontname='Tableau Bold' fontsize='9' />
                 <format attr='background-color' value='#7a48b9' />
               </button-visual-state>
@@ -225,10 +229,10 @@
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
-          <zone custom-title='true' h='5556' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
+        <zone friendly-name='Filters &amp; Parameters' h='5333' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5333' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
-              <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
+              <run fontname='Tableau Bold'>Country</run>
             </formatted-text>
             <zone-style>
               <format attr='border-color' value='#000000' />
@@ -237,7 +241,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
+          <zone h='5333' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -245,7 +249,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
+          <zone h='5333' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -253,7 +257,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
+          <zone h='5333' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -261,7 +265,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
+          <zone h='5333' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -269,7 +273,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
+          <zone h='5333' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -277,7 +281,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
+          <zone h='5333' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -285,7 +289,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
+          <zone h='5333' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -293,7 +297,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
+          <zone h='5333' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -308,8 +312,8 @@
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone fixed-size='30' friendly-name='Pipeline Title' h='3333' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
-          <zone forceUpdate='true' h='3333' id='1760' type-v2='text' w='100000' x='0' y='13111'>
+        <zone fixed-size='30' friendly-name='Pipeline Title' h='3333' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='12888'>
+          <zone forceUpdate='true' h='3333' id='1760' type-v2='text' w='100000' x='0' y='12888'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>PIPELINE</run>
             </formatted-text>
@@ -322,23 +326,23 @@
             </zone-style>
           </zone>
         </zone>
-        <zone h='83556' id='1726' type-v2='layout-basic' w='100000' x='0' y='16444'>
-          <zone h='4075' id='1700' type-v2='text' w='100000' x='0' y='16444'>
+        <zone h='83779' id='1726' type-v2='layout-basic' w='100000' x='0' y='16221'>
+          <zone h='4083' id='1700' type-v2='text' w='100000' x='0' y='16221'>
             <formatted-text>
               <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
             </formatted-text>
           </zone>
-          <zone h='9057' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20519'>
-            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='20059' x='0' y='20556' />
-            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='19985' x='20059' y='20556' />
-            <zone h='9000' id='1704' name='[SC] Pipeline - Clicks' w='19985' x='40044' y='20556' />
-            <zone h='9000' id='1705' name='[SC] Pipeline - MQLs' w='19986' x='60029' y='20556' />
-            <zone h='9000' id='1706' name='[SC] Pipeline - SAOs' w='19985' x='80015' y='20556' />
+          <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='20059' x='0' y='20333' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='19985' x='20059' y='20333' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - Clicks' w='19985' x='40044' y='20333' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - MQLs' w='19986' x='60029' y='20333' />
+            <zone h='9000' id='1706' name='[SC] Pipeline - SAOs' w='19985' x='80015' y='20333' />
           </zone>
-          <zone h='70424' id='1707' type-v2='layout-basic' w='100000' x='0' y='29576'>
-            <zone h='70424' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='29576' />
-            <zone h='41549' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29576' />
-            <zone h='28875' id='1710' type-v2='text' w='35000' x='65000' y='71125'>
+          <zone h='70614' id='1707' type-v2='layout-basic' w='100000' x='0' y='29386'>
+            <zone h='70614' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='29386' />
+            <zone h='41659' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29386' />
+            <zone h='28955' id='1710' type-v2='text' w='35000' x='65000' y='71045'>
               <formatted-text>
                 <run fontcolor='#4b5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
               </formatted-text>
@@ -347,6 +351,7 @@
         </zone>
       </zone>
     </zone>
+    <zone h='2111' id='1761' mode='typeinlist' name='[TB] Pipeline Table' param='[federated.ehemailpipeline].[campaign_name]' type-v2='filter' values='database' w='24012' x='75622' y='13556' />
   </zones>
   <simple-id uuid='{E34C3FDB-EAC8-47DA-A4AF-673E85491A8F}' />
 </dashboard>
@@ -354,13 +359,27 @@
 <!-- SECTION:WINDOW-ENTRY -->
 <window class='dashboard' maximized='true' name='Email Pipeline'>
   <viewpoints>
-    <viewpoint name='[BC] Pipeline Table' />
-    <viewpoint name='[BC] Pipeline Trend' />
-    <viewpoint name='[SC] Pipeline - Clicks' />
-    <viewpoint name='[SC] Pipeline - MQLs' />
-    <viewpoint name='[SC] Pipeline - Opens' />
-    <viewpoint name='[SC] Pipeline - SAOs' />
-    <viewpoint name='[SC] Pipeline - Sends' />
+    <viewpoint name='[BC] Pipeline Trend'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Clicks'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - MQLs'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Opens'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - SAOs'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Sends'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[TB] Pipeline Table'>
+      <zoom type='fit-width' />
+    </viewpoint>
   </viewpoints>
   <active id='-1' />
   <simple-id uuid='{6C7A0900-EC67-48CA-B906-CCEB95344A45}' />

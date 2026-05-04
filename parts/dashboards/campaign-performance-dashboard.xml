@@ -328,11 +328,11 @@
           </zone>
         </zone>
         <zone h='83556' id='1318' type-v2='layout-basic' w='100000' x='0' y='16444'>
-          <zone h='83556' id='1302' name='[BC] Campaign Table' show-title='false' w='100000' x='0' y='16444' />
+          <zone h='83556' id='1302' name='[TB] Campaign Table' show-title='false' w='100000' x='0' y='16444' />
         </zone>
       </zone>
     </zone>
-    <zone h='1667' id='1361' mode='typeinlist' name='[BC] Campaign Table' param='[federated.ehemailengagement].[none:campaign_name:nk]' type-v2='filter' values='database' w='27379' x='72108' y='13778' />
+    <zone h='1667' id='1361' mode='typeinlist' name='[TB] Campaign Table' param='[federated.ehemailengagement].[none:campaign_name:nk]' type-v2='filter' values='database' w='27379' x='72108' y='13778' />
   </zones>
   <simple-id uuid='{3C0C1FAB-C0D5-4F0B-8C98-C8F2B37EC364}' />
 </dashboard>
@@ -340,7 +340,7 @@
 <!-- SECTION:WINDOW-ENTRY -->
 <window class='dashboard' name='Email Campaign Performance'>
   <viewpoints>
-    <viewpoint name='[BC] Campaign Table'>
+    <viewpoint name='[TB] Campaign Table'>
       <zoom type='fit-width' />
       <selection-collection>
         <node-selection select-tuples='false'>

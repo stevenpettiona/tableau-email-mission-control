@@ -63,7 +63,6 @@ group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
       <map key='[company_size]' value='[Email Engagement].[company_size]' />
       <map key='[industry]' value='[Email Engagement].[industry]' />
       <map key='[lifecycle_stage]' value='[Email Engagement].[lifecycle_stage]' />
-      <map key='[mql_score]' value='[Email Engagement].[mql_score]' />
     </cols>
   </connection>
   <aliases enabled='yes' />
@@ -88,6 +87,5 @@ group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
   <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
   <column caption='Industry' datatype='string' name='[industry]' role='dimension' type='nominal' />
   <column caption='Lifecycle Stage' datatype='string' name='[lifecycle_stage]' role='dimension' type='nominal' />
-  <column caption='MQL Score' datatype='real' name='[mql_score]' role='measure' type='quantitative' />
   <!-- INJECT:calculated-fields -->
 </datasource>

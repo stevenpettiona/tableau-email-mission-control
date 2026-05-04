@@ -22,10 +22,10 @@
   (between the comment block and the end of the part) and re-compile.
 
   Action 5 — Filter: "Campaign Row → Overview Trend"
-    Source: [BC] Campaign Table / Target: [BC] Email Trend / Field: [campaign_name]
+    Source: [TB] Campaign Table / Target: [BC] Email Trend / Field: [campaign_name]
 
   Action 6 — Filter: "Pipeline Row → Pipeline Trend"
-    Source: [BC] Pipeline Table / Target: [BC] Pipeline Trend / Field: [campaign_name]
+    Source: [TB] Pipeline Table / Target: [BC] Pipeline Trend / Field: [campaign_name]
 
   Action 7-10 — Highlight cross-filter on Audience Breakdown:
     Country / Company Size / Lifecycle Stage / Industry — each highlights the
