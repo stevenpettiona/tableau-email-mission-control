@@ -13,8 +13,8 @@
       </named-connection>
     </named-connections>
     <relation connection='redshift.ds1conn' name='Email Engagement' type='text'>SELECT
-    f.event_id,
-    f.event_timestamp,
+    count(distinct f.event_id) as event_count,
+    DATE_TRUNC('day', f.event_timestamp)::DATE as email_date,
     DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
     DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
     f.event_type,
@@ -32,18 +32,19 @@
     a.marketo_geo_code                            AS country,
     a.sf_estimated_company_size_category          AS company_size,
     a.marketo_industry                            AS industry,
-    a.marketo_lifecycle_stage                     AS lifecycle_stage,
-    a.marketo_mql_score                           AS mql_score
+    a.marketo_lifecycle_stage                     AS lifecycle_stage
 FROM mart.fct_marketing_email_engagement f
 LEFT JOIN mart.dim_marketing_campaign c
     ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
-WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)</relation>
+WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
+and f.event_timestamp >= &apos;20250101&apos;
+group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
     <cols>
-      <map key='[event_id]' value='[Email Engagement].[event_id]' />
-      <map key='[event_timestamp]' value='[Email Engagement].[event_timestamp]' />
+      <map key='[event_count]' value='[Email Engagement].[event_count]' />
+      <map key='[event_timestamp]' value='[Email Engagement].[email_date]' />
       <map key='[event_week]' value='[Email Engagement].[event_week]' />
       <map key='[event_month]' value='[Email Engagement].[event_month]' />
       <map key='[event_type]' value='[Email Engagement].[event_type]' />
@@ -67,7 +68,7 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
   </connection>
   <aliases enabled='yes' />
   <!-- Source columns -->
-  <column datatype='string' hidden='true' name='[event_id]' role='dimension' type='nominal' />
+  <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
   <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
   <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
   <column caption='Event Month' datatype='date' name='[event_month]' role='dimension' type='ordinal' />

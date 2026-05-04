@@ -39,12 +39,12 @@
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
         <column-instance column='[company_size]' derivation='None' name='[none:company_size:nk]' pivot='key' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
-        <column caption='Unsub Rate' datatype='real' name='[Unsub Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Unsub Rate]' derivation='User' name='[usr:Unsub Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Unsub Rate SP' datatype='real' default-format='p0.00%' name='[Unsub Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate SP]' derivation='User' name='[usr:Unsub Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:company_size:nk]</column>
@@ -69,7 +69,7 @@
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Open Rate:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Open Rate SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:company_size:nk]</cols>
   </table>
   <simple-id uuid='{100722D9-E4D6-4084-AE08-57520B655FFC}' />

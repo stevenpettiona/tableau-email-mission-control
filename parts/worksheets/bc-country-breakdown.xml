@@ -39,10 +39,10 @@
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
         <column-instance column='[country]' derivation='None' name='[none:country:nk]' pivot='key' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:country:nk]</column>
@@ -68,7 +68,7 @@
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:country:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Open Rate:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Open Rate SP:qk]</cols>
   </table>
   <simple-id uuid='{19551EB1-6E3E-4D24-B560-C5D1FBFA9403}' />
 </worksheet>

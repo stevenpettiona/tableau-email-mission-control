@@ -22,7 +22,7 @@
     <datasource name='Parameters' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -92,7 +92,7 @@
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -122,9 +122,9 @@
   </datasource-dependencies>
   <zones>
     <zone h='100000' id='1600' type-v2='layout-basic' w='100000' x='0' y='0'>
-      <zone friendly-name='Dashboard Container' h='3586' id='1740' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
-        <zone friendly-name='HeroBanner' h='4192' id='1741' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3304' id='1742' type-v2='text' w='49121' x='293' y='444'>
+      <zone friendly-name='Dashboard Container' h='100000' id='1740' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
+        <zone friendly-name='HeroBanner' h='4222' id='1741' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3334' id='1742' type-v2='text' w='49561' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -137,7 +137,7 @@
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3304' id='1743' type-v2='text' w='50292' x='49414' y='444'>
+          <zone forceUpdate='true' h='3334' id='1743' type-v2='text' w='49853' x='49854' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Email Pipeline</run>
             </formatted-text>
@@ -157,7 +157,7 @@
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1744' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone fixed-size='30' friendly-name='Navigation' h='3333' id='1744' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4222'>
           <zone h='3334' id='1745' type-v2='dashboard-object' w='25037' x='0' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
               <button-visual-state>
@@ -225,8 +225,8 @@
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
-          <zone custom-title='true' h='3555' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -237,7 +237,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+          <zone h='5556' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -245,7 +245,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+          <zone h='5556' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -253,7 +253,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+          <zone h='5556' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -261,7 +261,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+          <zone h='5556' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -269,7 +269,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+          <zone h='5556' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -277,7 +277,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+          <zone h='5556' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -285,7 +285,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+          <zone h='5556' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -293,7 +293,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+          <zone h='5556' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -308,8 +308,8 @@
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone friendly-name='Pipeline Title' fixed-size='30' forceUpdate='true' h='3111' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
-          <zone forceUpdate='true' h='3111' id='1760' type-v2='text' w='100000' x='0' y='11333'>
+        <zone fixed-size='30' friendly-name='Pipeline Title' h='3333' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
+          <zone forceUpdate='true' h='3333' id='1760' type-v2='text' w='100000' x='0' y='13111'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>PIPELINE</run>
             </formatted-text>
@@ -322,33 +322,28 @@
             </zone-style>
           </zone>
         </zone>
-        <zone h='82000' id='1726' type-v2='layout-basic' w='100000' x='0' y='14444'>
-          <zone h='4878' id='1700' type-v2='text' w='100000' x='0' y='0'>
+        <zone h='83556' id='1726' type-v2='layout-basic' w='100000' x='0' y='16444'>
+          <zone h='4075' id='1700' type-v2='text' w='100000' x='0' y='16444'>
             <formatted-text>
               <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
             </formatted-text>
           </zone>
-          <zone h='10840' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4878'>
-            <zone h='100000' id='1702' name='[SC] Pipeline - Sends' w='20000' x='0' y='0' />
-            <zone h='100000' id='1703' name='[SC] Pipeline - Opens' w='20000' x='20000' y='0' />
-            <zone h='100000' id='1704' name='[SC] Pipeline - Clicks' w='20000' x='40000' y='0' />
-            <zone h='100000' id='1705' name='[SC] Pipeline - MQLs' w='20000' x='60000' y='0' />
-            <zone h='100000' id='1706' name='[SC] Pipeline - SAOs' w='20000' x='80000' y='0' />
+          <zone h='9057' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20519'>
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='20059' x='0' y='20556' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='19985' x='20059' y='20556' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - Clicks' w='19985' x='40044' y='20556' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - MQLs' w='19986' x='60029' y='20556' />
+            <zone h='9000' id='1706' name='[SC] Pipeline - SAOs' w='19985' x='80015' y='20556' />
           </zone>
-          <zone h='84282' id='1707' type-v2='layout-basic' w='100000' x='0' y='15718'>
-            <zone h='100000' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='0' />
-            <zone h='59000' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='0' />
-            <zone h='41000' id='1710' type-v2='text' w='35000' x='65000' y='59000'>
+          <zone h='70424' id='1707' type-v2='layout-basic' w='100000' x='0' y='29576'>
+            <zone h='70424' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='29576' />
+            <zone h='41549' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29576' />
+            <zone h='28875' id='1710' type-v2='text' w='35000' x='65000' y='71125'>
               <formatted-text>
                 <run fontcolor='#4b5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
               </formatted-text>
             </zone>
           </zone>
-        </zone>
-        <zone h='3557' id='1727' type-v2='text' w='100000' x='0' y='96443'>
-          <formatted-text>
-            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-          </formatted-text>
         </zone>
       </zone>
     </zone>
@@ -357,7 +352,7 @@
 </dashboard>
 
 <!-- SECTION:WINDOW-ENTRY -->
-<window class='dashboard' name='Email Pipeline'>
+<window class='dashboard' maximized='true' name='Email Pipeline'>
   <viewpoints>
     <viewpoint name='[BC] Pipeline Table' />
     <viewpoint name='[BC] Pipeline Trend' />

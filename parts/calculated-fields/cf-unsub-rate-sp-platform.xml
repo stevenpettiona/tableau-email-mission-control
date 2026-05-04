@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Unsub Rate - SP - Platform]
+  caption: Unsub Rate - SP - Platform
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='Unsub Rate - SP - Platform' datatype='real' default-format='p0.00%' name='[Unsub Rate - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Unsubscribes - SP - Platform] / IIF([Sends - SP - Platform] = 0, NULL, [Sends - SP - Platform])' />
+</column>

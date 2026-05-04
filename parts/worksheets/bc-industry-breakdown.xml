@@ -39,10 +39,10 @@
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Industry' datatype='string' name='[industry]' role='dimension' type='nominal' />
         <column-instance column='[industry]' derivation='None' name='[none:industry:nk]' pivot='key' type='nominal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:industry:nk]</column>
@@ -57,7 +57,7 @@
         </view>
         <mark class='Bar' />
         <encodings>
-          <color column='[federated.ehemailengagement].[usr:Open Rate:qk]' />
+          <color column='[federated.ehemailengagement].[usr:Open Rate SP:qk]' />
         </encodings>
         <style>
           <style-rule element='mark'>
@@ -68,7 +68,7 @@
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:industry:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Sends:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Sends SP:qk]</cols>
   </table>
   <simple-id uuid='{E6232FCC-98DD-4A79-BACA-40A6A9832E0E}' />
 </worksheet>

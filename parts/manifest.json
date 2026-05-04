@@ -41,7 +41,22 @@
     "calculated-fields/cf-open-rate-delta.xml",
     "calculated-fields/cf-ctr-delta.xml",
     "calculated-fields/cf-ctor-delta.xml",
-    "calculated-fields/cf-unsub-rate-delta.xml"
+    "calculated-fields/cf-unsub-rate-delta.xml",
+    "calculated-fields/cf-sends-sp-platform.xml",
+    "calculated-fields/cf-opens-sp-platform.xml",
+    "calculated-fields/cf-clicks-sp-platform.xml",
+    "calculated-fields/cf-unsubscribes-sp-platform.xml",
+    "calculated-fields/cf-open-rate-sp-platform.xml",
+    "calculated-fields/cf-ctr-sp-platform.xml",
+    "calculated-fields/cf-unsub-rate-sp-platform.xml",
+    "calculated-fields/cf-saos-sp.xml",
+    "calculated-fields/cf-wons-sp.xml",
+    "calculated-fields/cf-sao-arr-sp.xml",
+    "calculated-fields/cf-won-arr-sp.xml",
+    "calculated-fields/cf-saos-ly.xml",
+    "calculated-fields/cf-wons-ly.xml",
+    "calculated-fields/cf-sao-arr-ly.xml",
+    "calculated-fields/cf-won-arr-ly.xml"
   ],
   "datasources": [
     "datasources/parameters.xml",
@@ -71,7 +86,9 @@
     "worksheets/bc-industry-breakdown.xml",
     "worksheets/sk-campaign-trend-sparkline.xml",
     "worksheets/bc-pipeline-trend.xml",
-    "worksheets/bc-pipeline-table.xml"
+    "worksheets/bc-pipeline-table.xml",
+    "worksheets/bc-platform-scorecard-marketo.xml",
+    "worksheets/bc-platform-scorecard-braze-b2b.xml"
   ],
   "dashboards": [
     "dashboards/overview-dashboard.xml",

@@ -5,6 +5,6 @@
   datasource: ds1
   last-modified: 2026-05-01
 -->
-<column caption='Unsub Rate' datatype='real' default-format='0.0%' name='[Unsub Rate]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END))' />
+<column caption='Unsub Rate' datatype='real' default-format='p0.00%' name='[Unsub Rate]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END))' />
 </column>

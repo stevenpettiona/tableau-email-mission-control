@@ -6,5 +6,5 @@
   last-modified: 2026-05-01
 -->
 <column caption='Open Rate Traffic Light' datatype='string' name='[Traffic Light - Open Rate]' role='dimension' type='nominal'>
-  <calculation class='tableau' formula='IF COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.25 THEN &quot;Green&quot; ELSEIF COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.15 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
+  <calculation class='tableau' formula='IF SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.25 THEN &quot;Green&quot; ELSEIF SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.15 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
 </column>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [CTR - SP - Platform]
+  caption: CTR - SP - Platform
+  datasource: ds1
+  last-modified: 2026-05-04
+-->
+<column caption='CTR - SP - Platform' datatype='real' default-format='p0.00%' name='[CTR - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Clicks - SP - Platform] / IIF([Sends - SP - Platform] = 0, NULL, [Sends - SP - Platform])' />
+</column>

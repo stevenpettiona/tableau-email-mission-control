@@ -220,8 +220,8 @@
       </named-connection>
     </named-connections>
     <relation connection='redshift.ds1conn' name='Email Engagement' type='text'>SELECT
-    f.event_id,
-    f.event_timestamp,
+    count(distinct f.event_id) as event_count,
+    DATE_TRUNC('day', f.event_timestamp)::DATE as email_date,
     DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
     DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
     f.event_type,
@@ -239,18 +239,19 @@
     a.marketo_geo_code                            AS country,
     a.sf_estimated_company_size_category          AS company_size,
     a.marketo_industry                            AS industry,
-    a.marketo_lifecycle_stage                     AS lifecycle_stage,
-    a.marketo_mql_score                           AS mql_score
+    a.marketo_lifecycle_stage                     AS lifecycle_stage
 FROM mart.fct_marketing_email_engagement f
 LEFT JOIN mart.dim_marketing_campaign c
     ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
-WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)</relation>
+WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
+and f.event_timestamp >= &apos;20250101&apos;
+group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
     <cols>
-      <map key='[event_id]' value='[Email Engagement].[event_id]' />
-      <map key='[event_timestamp]' value='[Email Engagement].[event_timestamp]' />
+      <map key='[event_count]' value='[Email Engagement].[event_count]' />
+      <map key='[event_timestamp]' value='[Email Engagement].[email_date]' />
       <map key='[event_week]' value='[Email Engagement].[event_week]' />
       <map key='[event_month]' value='[Email Engagement].[event_month]' />
       <map key='[event_type]' value='[Email Engagement].[event_type]' />
@@ -274,7 +275,7 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
   </connection>
   <aliases enabled='yes' />
   <!-- Source columns -->
-  <column datatype='string' hidden='true' name='[event_id]' role='dimension' type='nominal' />
+  <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
   <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
   <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
   <column caption='Event Month' datatype='date' name='[event_month]' role='dimension' type='ordinal' />
@@ -296,40 +297,40 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
   <column caption='Lifecycle Stage' datatype='string' name='[lifecycle_stage]' role='dimension' type='nominal' />
   <column caption='MQL Score' datatype='real' name='[mql_score]' role='measure' type='quantitative' />
   <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)' />
 </column>
   <column caption='Opens' datatype='integer' name='[Opens]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END)' />
 </column>
   <column caption='Clicks' datatype='integer' name='[Clicks]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Click&quot; THEN [event_count] END)' />
 </column>
   <column caption='Unsubscribes' datatype='integer' name='[Unsubscribes]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_count] END)' />
 </column>
-  <column caption='Open Rate' datatype='real' default-format='0.0%' name='[Open Rate]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END))' />
+  <column caption='Open Rate' datatype='real' default-format='p0.00%' name='[Open Rate]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END))' />
 </column>
-  <column caption='CTR' datatype='real' default-format='0.0%' name='[CTR]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END))' />
+  <column caption='CTR' datatype='real' default-format='p0.00%' name='[CTR]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Click&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END))' />
 </column>
-  <column caption='CTOR' datatype='real' default-format='0.0%' name='[CTOR]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END))' />
+  <column caption='CTOR' datatype='real' default-format='p0.00%' name='[CTOR]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Click&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END))' />
 </column>
-  <column caption='Unsub Rate' datatype='real' default-format='0.0%' name='[Unsub Rate]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END))' />
+  <column caption='Unsub Rate' datatype='real' default-format='p0.00%' name='[Unsub Rate]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END))' />
 </column>
   <column caption='Unsub Rate Alert' datatype='boolean' name='[Unsub Rate Alert]' role='dimension' type='nominal'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt; 0.005' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt; 0.005' />
 </column>
   <column caption='Open Rate Traffic Light' datatype='string' name='[Traffic Light - Open Rate]' role='dimension' type='nominal'>
-  <calculation class='tableau' formula='IF COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.25 THEN &quot;Green&quot; ELSEIF COUNTD(IF [event_type]=&quot;Open&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.15 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
+  <calculation class='tableau' formula='IF SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.25 THEN &quot;Green&quot; ELSEIF SUM(IF [event_type]=&quot;Open&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.15 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
 </column>
   <column caption='CTR Traffic Light' datatype='string' name='[Traffic Light - CTR]' role='dimension' type='nominal'>
-  <calculation class='tableau' formula='IF COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.03 THEN &quot;Green&quot; ELSEIF COUNTD(IF [event_type]=&quot;Click&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt;= 0.01 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
+  <calculation class='tableau' formula='IF SUM(IF [event_type]=&quot;Click&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.03 THEN &quot;Green&quot; ELSEIF SUM(IF [event_type]=&quot;Click&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt;= 0.01 THEN &quot;Amber&quot; ELSE &quot;Red&quot; END' />
 </column>
   <column caption='Unsub Traffic Light' datatype='string' name='[Traffic Light - Unsub]' role='dimension' type='nominal'>
-  <calculation class='tableau' formula='IF COUNTD(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_id] END) / IIF(COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END) = 0, NULL, COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)) &gt; 0.005 THEN &quot;Red&quot; ELSE &quot;Green&quot; END' />
+  <calculation class='tableau' formula='IF SUM(IF [event_type]=&quot;Unsubscribe&quot; THEN [event_count] END) / IIF(SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END) = 0, NULL, SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)) &gt; 0.005 THEN &quot;Red&quot; ELSE &quot;Green&quot; END' />
 </column>
   <column caption='Program Type Badge' datatype='string' name='[Program Type Badge]' role='dimension' type='nominal'>
   <calculation class='tableau' formula='CASE [program_type] WHEN &quot;Batch and Blast&quot; THEN &quot;BB&quot; WHEN &quot;Email Nurture&quot; THEN &quot;EN&quot; WHEN &quot;Sales Email&quot; THEN &quot;SE&quot; WHEN &quot;Newsletter&quot; THEN &quot;NL&quot; WHEN &quot;Event-Webinar&quot; THEN &quot;EV&quot; WHEN &quot;Training/Hero Academy&quot; THEN &quot;TR&quot; ELSE &quot;DE&quot; END' />
@@ -344,51 +345,51 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
   <calculation class='tableau' formula='IF [Parameters].[Compare Period] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) ELSEIF [Parameters].[Compare Period] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -1, [Parameters].[Start Date]) ELSE [Parameters].[Comparison End] END' />
 </column>
   <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Opens SP' datatype='integer' name='[Opens SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Clicks SP' datatype='integer' name='[Clicks SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Unsubscribes SP' datatype='integer' name='[Unsubscribes SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Sends LP' datatype='integer' name='[Sends LP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Opens LP' datatype='integer' name='[Opens LP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Clicks LP' datatype='integer' name='[Clicks LP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
   <column caption='Unsubscribes LP' datatype='integer' name='[Unsubscribes LP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>
-  <column caption='Open Rate SP' datatype='real' default-format='0.0%' name='[Open Rate SP]' role='measure' type='quantitative'>
+  <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Opens SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
 </column>
-  <column caption='CTR SP' datatype='real' default-format='0.0%' name='[CTR SP]' role='measure' type='quantitative'>
+  <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Clicks SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
 </column>
-  <column caption='CTOR SP' datatype='real' default-format='0.0%' name='[CTOR SP]' role='measure' type='quantitative'>
+  <column caption='CTOR SP' datatype='real' default-format='p0.00%' name='[CTOR SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Clicks SP] / IIF([Opens SP] = 0, NULL, [Opens SP])' />
 </column>
-  <column caption='Unsub Rate SP' datatype='real' default-format='0.0%' name='[Unsub Rate SP]' role='measure' type='quantitative'>
+  <column caption='Unsub Rate SP' datatype='real' default-format='p0.00%' name='[Unsub Rate SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Unsubscribes SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
 </column>
-  <column caption='Open Rate LP' datatype='real' default-format='0.0%' name='[Open Rate LP]' role='measure' type='quantitative'>
+  <column caption='Open Rate LP' datatype='real' default-format='p0.00%' name='[Open Rate LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Opens LP] / IIF([Sends LP] = 0, NULL, [Sends LP])' />
 </column>
-  <column caption='CTR LP' datatype='real' default-format='0.0%' name='[CTR LP]' role='measure' type='quantitative'>
+  <column caption='CTR LP' datatype='real' default-format='p0.00%' name='[CTR LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Clicks LP] / IIF([Sends LP] = 0, NULL, [Sends LP])' />
 </column>
-  <column caption='CTOR LP' datatype='real' default-format='0.0%' name='[CTOR LP]' role='measure' type='quantitative'>
+  <column caption='CTOR LP' datatype='real' default-format='p0.00%' name='[CTOR LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Clicks LP] / IIF([Opens LP] = 0, NULL, [Opens LP])' />
 </column>
-  <column caption='Unsub Rate LP' datatype='real' default-format='0.0%' name='[Unsub Rate LP]' role='measure' type='quantitative'>
+  <column caption='Unsub Rate LP' datatype='real' default-format='p0.00%' name='[Unsub Rate LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Unsubscribes LP] / IIF([Sends LP] = 0, NULL, [Sends LP])' />
 </column>
   <column caption='Sends Δ' datatype='real' default-format='p0.00%' name='[Sends Δ]' role='measure' type='quantitative'>
@@ -415,6 +416,27 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
   <column caption='Unsub Rate Δ' datatype='real' default-format='p0.00%' name='[Unsub Rate Δ]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='([Unsub Rate SP] - [Unsub Rate LP]) / IIF([Unsub Rate LP] = 0, NULL, [Unsub Rate LP])' />
 </column>
+  <column caption='Sends - SP - Platform' datatype='integer' name='[Sends - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+</column>
+  <column caption='Opens - SP - Platform' datatype='integer' name='[Opens - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+</column>
+  <column caption='Clicks - SP - Platform' datatype='integer' name='[Clicks - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+</column>
+  <column caption='Unsubscribes - SP - Platform' datatype='integer' name='[Unsubscribes - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+</column>
+  <column caption='Open Rate - SP - Platform' datatype='real' default-format='p0.00%' name='[Open Rate - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Opens - SP - Platform] / IIF([Sends - SP - Platform] = 0, NULL, [Sends - SP - Platform])' />
+</column>
+  <column caption='CTR - SP - Platform' datatype='real' default-format='p0.00%' name='[CTR - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Clicks - SP - Platform] / IIF([Sends - SP - Platform] = 0, NULL, [Sends - SP - Platform])' />
+</column>
+  <column caption='Unsub Rate - SP - Platform' datatype='real' default-format='p0.00%' name='[Unsub Rate - SP - Platform]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Unsubscribes - SP - Platform] / IIF([Sends - SP - Platform] = 0, NULL, [Sends - SP - Platform])' />
+</column>
 </datasource>
 
 <datasource caption='EH Email Pipeline' inline='true' name='federated.ehemailpipeline' version='18.1'>
@@ -426,8 +448,8 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
     </named-connections>
     <relation type='collection'>
       <relation connection='redshift.ds2conn' name='Email Events' type='text'>SELECT
-    f.event_id,
-    f.event_timestamp,
+    count(distinct f.event_id) as event_count,
+    DATE_TRUNC('day', f.event_timestamp)::DATE as email_date,
     DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
     DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
     f.event_type,
@@ -445,15 +467,16 @@ WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos
     a.marketo_geo_code                            AS country,
     a.sf_estimated_company_size_category          AS company_size,
     a.marketo_industry                            AS industry,
-    a.marketo_lifecycle_stage                     AS lifecycle_stage,
-    a.marketo_mql_score                           AS mql_score
+    a.marketo_lifecycle_stage                     AS lifecycle_stage
 FROM mart.fct_marketing_email_engagement f
 LEFT JOIN mart.dim_marketing_campaign c
     ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
-WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)</relation>
+WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
+and f.event_timestamp >= &apos;20250101&apos;
+group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
       <relation connection='redshift.ds2conn' name='Program MQLs' type='text'>SELECT
     dim_marketing_campaign_sk,
     date              AS mql_date,
@@ -466,15 +489,24 @@ FROM mart.rpt_marketing_mofu_leads
 WHERE dim_marketing_campaign_sk IS NOT NULL
 GROUP BY 1, 2, 3, 4</relation>
       <relation connection='redshift.ds2conn' name='Program SAOs' type='text'>SELECT
-    dim_marketing_campaign_sk,
-    date              AS sao_date,
-    country           AS sao_country,
-    employee_segment  AS sao_segment,
-    SUM(sao_count)    AS saos,
-    SUM(sao_arr)      AS sao_arr_aud
-FROM mart.rpt_marketing_bofu_opportunities
-WHERE dim_marketing_campaign_sk IS NOT NULL
-GROUP BY 1, 2, 3, 4</relation>
+    b.dim_marketing_campaign_sk,
+    c.campaign_name,
+    b.date                                         AS sao_date,
+    b.country                                      AS sao_country,
+    b.employee_segment                             AS sao_segment,
+    SUM(b.sao_count)                               AS saos,
+    SUM(b.won_count)                               AS wons,
+    SUM(b.sao_arr)                                 AS sao_arr_aud,
+    SUM(b.won_arr)                                 AS won_arr,
+    SUM(b.sao_weighted_with_unattributed_cust)     AS saos_weighted_cust,
+    SUM(b.won_weighted_with_unattributed_cust)     AS wons_weighted_cust,
+    SUM(b.sao_arr_weighted_with_unattributed_cust) AS sao_arr_weighted_cust,
+    SUM(b.won_arr_weighted_with_unattributed_cust) AS won_arr_weighted_cust
+FROM mart.rpt_marketing_bofu_opportunities b
+LEFT JOIN mart.dim_marketing_campaign c
+    ON b.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+WHERE b.dim_marketing_campaign_sk IS NOT NULL
+GROUP BY 1, 2, 3, 4, 5</relation>
     </relation>
     <object-graph>
       <objects>
@@ -514,8 +546,8 @@ GROUP BY 1, 2, 3, 4</relation>
       </relationships>
     </object-graph>
     <cols>
-      <map key='[event_id]' value='[Email Events].[event_id]' />
-      <map key='[event_timestamp]' value='[Email Events].[event_timestamp]' />
+      <map key='[event_count]' value='[Email Events].[event_count]' />
+      <map key='[event_timestamp]' value='[Email Events].[email_date]' />
       <map key='[event_week]' value='[Email Events].[event_week]' />
       <map key='[event_month]' value='[Email Events].[event_month]' />
       <map key='[event_type]' value='[Email Events].[event_type]' />
@@ -535,16 +567,23 @@ GROUP BY 1, 2, 3, 4</relation>
       <map key='[leads]' value='[Program MQLs].[leads]' />
       <map key='[recycled_mqls]' value='[Program MQLs].[recycled_mqls]' />
       <map key='[dim_marketing_campaign_sk (Program SAOs)]' value='[Program SAOs].[dim_marketing_campaign_sk]' />
+      <map key='[campaign_name (Program SAOs)]' value='[Program SAOs].[campaign_name]' />
       <map key='[sao_date]' value='[Program SAOs].[sao_date]' />
       <map key='[sao_country]' value='[Program SAOs].[sao_country]' />
       <map key='[sao_segment]' value='[Program SAOs].[sao_segment]' />
       <map key='[saos]' value='[Program SAOs].[saos]' />
+      <map key='[wons]' value='[Program SAOs].[wons]' />
       <map key='[sao_arr_aud]' value='[Program SAOs].[sao_arr_aud]' />
+      <map key='[won_arr]' value='[Program SAOs].[won_arr]' />
+      <map key='[saos_weighted_cust]' value='[Program SAOs].[saos_weighted_cust]' />
+      <map key='[wons_weighted_cust]' value='[Program SAOs].[wons_weighted_cust]' />
+      <map key='[sao_arr_weighted_cust]' value='[Program SAOs].[sao_arr_weighted_cust]' />
+      <map key='[won_arr_weighted_cust]' value='[Program SAOs].[won_arr_weighted_cust]' />
     </cols>
   </connection>
   <aliases enabled='yes' />
   <!-- Email Events columns -->
-  <column datatype='string' hidden='true' name='[event_id]' role='dimension' type='nominal' />
+  <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
   <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
   <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
   <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
@@ -562,13 +601,44 @@ GROUP BY 1, 2, 3, 4</relation>
   <column caption='Leads' datatype='integer' name='[leads]' role='measure' type='quantitative' />
   <column caption='Recycled MQLs' datatype='integer' name='[recycled_mqls]' role='measure' type='quantitative' />
   <!-- Program SAOs columns -->
+  <column caption='Program Name (SAOs)' datatype='string' hidden='true' name='[campaign_name (Program SAOs)]' role='dimension' type='nominal' />
   <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
   <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
   <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
   <column caption='SAOs' datatype='integer' name='[saos]' role='measure' type='quantitative' />
+  <column caption='Wons' datatype='real' name='[wons]' role='measure' type='quantitative' />
   <column caption='SAO ARR (AUD)' datatype='real' default-format='&quot;$&quot;#,##0' name='[sao_arr_aud]' role='measure' type='quantitative' />
-  <column caption='SAO Rate (MQL&#8594;SAO)' datatype='real' default-format='0.0%' name='[SAO Rate]' role='measure' type='quantitative'>
+  <column caption='Won ARR' datatype='real' default-format='&quot;$&quot;#,##0' name='[won_arr]' role='measure' type='quantitative' />
+  <column caption='SAOs (Weighted Custom)' datatype='real' name='[saos_weighted_cust]' role='measure' type='quantitative' />
+  <column caption='Wons (Weighted Custom)' datatype='real' name='[wons_weighted_cust]' role='measure' type='quantitative' />
+  <column caption='SAO ARR (Weighted Custom)' datatype='real' default-format='&quot;$&quot;#,##0' name='[sao_arr_weighted_cust]' role='measure' type='quantitative' />
+  <column caption='Won ARR (Weighted Custom)' datatype='real' default-format='&quot;$&quot;#,##0' name='[won_arr_weighted_cust]' role='measure' type='quantitative' />
+  <column caption='SAO Rate (MQL&#8594;SAO)' datatype='real' default-format='p0.00%' name='[SAO Rate]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM([saos]) / IIF(SUM([mqls]) = 0, NULL, SUM([mqls]))' />
+</column>
+  <column caption='SAOs SP' datatype='real' name='[SAOs SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [saos_weighted_cust] END)' />
+</column>
+  <column caption='Wons SP' datatype='real' name='[Wons SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [wons_weighted_cust] END)' />
+</column>
+  <column caption='SAO ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[SAO ARR SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [sao_arr_weighted_cust] END)' />
+</column>
+  <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [won_arr_weighted_cust] END)' />
+</column>
+  <column caption='SAOs LY' datatype='real' name='[SAOs LY]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [saos_weighted_cust] END)' />
+</column>
+  <column caption='Wons LY' datatype='real' name='[Wons LY]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [wons_weighted_cust] END)' />
+</column>
+  <column caption='SAO ARR LY' datatype='real' default-format='&quot;$&quot;#,##0' name='[SAO ARR LY]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [sao_arr_weighted_cust] END)' />
+</column>
+  <column caption='Won ARR LY' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR LY]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [won_arr_weighted_cust] END)' />
 </column>
 </datasource>
 
@@ -1604,12 +1674,12 @@ GROUP BY 1, 2, 3, 4</relation>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:event_week:ok]</column>
@@ -1628,7 +1698,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </view>
         <mark class='Bar' />
         <encodings>
-          <color column='[federated.ehemailengagement].[usr:Open Rate:qk]' />
+          <color column='[federated.ehemailengagement].[usr:Open Rate SP:qk]' />
         </encodings>
         <style>
           <style-rule element='mark'>
@@ -1638,7 +1708,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Sends:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Sends SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{568CFFE5-0DD7-4C81-BF72-A0FA802584F9}' />
@@ -1647,7 +1717,7 @@ GROUP BY 1, 2, 3, 4</relation>
   <layout-options>
     <title>
       <formatted-text>
-        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>PLATFORM SPLIT</run>
+        <run bold='true' fontalignment='1' fontcolor='#6b3fa0' fontname='Poppins' fontsize='8'>PLATFORM SPLIT</run>
       </formatted-text>
     </title>
   </layout-options>
@@ -1655,35 +1725,95 @@ GROUP BY 1, 2, 3, 4</relation>
     <view>
       <datasources>
         <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
-        <datasource caption='Parameters' name='Parameters' />
+        <datasource name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
-        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
-        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
-        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
-        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
-        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
-        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
-        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;core&quot;' value='Core' />
+            <alias key='&quot;micro&quot;' value='Micro' />
+            <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+          </aliases>
+        </column>
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Inbound&quot;' value='Inbound' />
+            <alias key='&quot;Outbound&quot;' value='Outbound' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;&quot;' value='Not Specified' />
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;CHR&quot;' value='CHR' />
+            <alias key='&quot;EAP&quot;' value='EAP' />
+            <alias key='&quot;GC&quot;' value='GC' />
+            <alias key='&quot;HRA&quot;' value='HRA' />
+            <alias key='&quot;LMS&quot;' value='LMS' />
+            <alias key='&quot;MP&quot;' value='MP' />
+          </aliases>
+        </column>
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailengagement'>
-        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+        <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
+        <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+        <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
         <column-instance column='[platform]' derivation='None' name='[none:platform:nk]' pivot='key' type='nominal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
-          <slices>
-            <column>[federated.ehemailengagement].[none:platform:nk]</column>
-          </slices>
       <aggregation value='true' />
     </view>
     <style />
@@ -1704,8 +1834,8 @@ GROUP BY 1, 2, 3, 4</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Sends:qk]</rows>
-    <cols>[federated.ehemailengagement].[none:platform:nk]</cols>
+    <rows>[federated.ehemailengagement].[none:platform:nk]</rows>
+    <cols>[federated.ehemailengagement].[usr:Sends SP:qk]</cols>
   </table>
   <simple-id uuid='{C13B17E9-4CCA-4E6A-BE15-E2081718EA22}' />
 </worksheet>
@@ -1713,7 +1843,7 @@ GROUP BY 1, 2, 3, 4</relation>
   <layout-options>
     <title>
       <formatted-text>
-        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>CAMPAIGN TABLE</run>
+        <run bold='true' fontalignment='1' fontcolor='#6b3fa0' fontname='Poppins' fontsize='8'>CAMPAIGN TABLE</run>
       </formatted-text>
     </title>
   </layout-options>
@@ -1721,63 +1851,169 @@ GROUP BY 1, 2, 3, 4</relation>
     <view>
       <datasources>
         <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
-        <datasource caption='Parameters' name='Parameters' />
+        <datasource name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
-        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
-        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
-        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
-        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
-        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
-        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
-        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;core&quot;' value='Core' />
+            <alias key='&quot;micro&quot;' value='Micro' />
+            <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+          </aliases>
+        </column>
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Inbound&quot;' value='Inbound' />
+            <alias key='&quot;Outbound&quot;' value='Outbound' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column alias='Braze B2B' caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;braze b2b&quot;'>
+          <calculation class='tableau' formula='&quot;braze b2b&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;&quot;' value='Not Specified' />
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;CHR&quot;' value='CHR' />
+            <alias key='&quot;EAP&quot;' value='EAP' />
+            <alias key='&quot;GC&quot;' value='GC' />
+            <alias key='&quot;HRA&quot;' value='HRA' />
+            <alias key='&quot;LMS&quot;' value='LMS' />
+            <alias key='&quot;MP&quot;' value='MP' />
+          </aliases>
+        </column>
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='CTOR SP' datatype='real' default-format='p0.00%' name='[CTOR SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Clicks SP] / IIF([Opens SP] = 0, NULL, [Opens SP])' />
+        </column>
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Clicks SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+        </column>
+        <column caption='Clicks SP' datatype='integer' name='[Clicks SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Opens SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+        </column>
+        <column caption='Opens SP' datatype='integer' name='[Opens SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Sub-Campaign Display' datatype='string' name='[Sub Campaign Display]' role='dimension' type='nominal'>
+          <calculation class='tableau' formula='IF [sub_campaign_name] = &quot;no associated sub-campaign&quot; THEN &quot;—&quot; ELSE [sub_campaign_name] END' />
+        </column>
+        <column caption='Unsub Rate SP' datatype='real' default-format='p0.00%' name='[Unsub Rate SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Unsubscribes SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+        </column>
+        <column caption='Unsubscribes SP' datatype='integer' name='[Unsubscribes SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
         <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
-        <column caption='Sub-Campaign Display' datatype='string' name='[Sub Campaign Display]' role='dimension' type='nominal' />
-        <column caption='Program Type Badge' datatype='string' name='[Program Type Badge]' role='dimension' type='nominal' />
+        <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+        <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
+        <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+        <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
+        <column-instance column='[campaign_name]' derivation='None' name='[none:campaign_name:nk]' pivot='key' type='nominal' />
         <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
-        <column caption='Program Launch Month' datatype='date' name='[campaign_year_month]' role='dimension' type='ordinal' />
-        <column-instance column='[campaign_year_month]' derivation='None' name='[none:campaign_year_month:ok]' pivot='key' type='ordinal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Opens' datatype='integer' name='[Opens]' role='measure' type='quantitative' />
-        <column-instance column='[Opens]' derivation='User' name='[usr:Opens:qk]' pivot='key' type='quantitative' />
-        <column caption='Clicks' datatype='integer' name='[Clicks]' role='measure' type='quantitative' />
-        <column-instance column='[Clicks]' derivation='User' name='[usr:Clicks:qk]' pivot='key' type='quantitative' />
-        <column caption='Unsubscribes' datatype='integer' name='[Unsubscribes]' role='measure' type='quantitative' />
-        <column-instance column='[Unsubscribes]' derivation='User' name='[usr:Unsubscribes:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
-        <column caption='CTOR' datatype='real' name='[CTOR]' role='measure' type='quantitative' />
-        <column-instance column='[CTOR]' derivation='User' name='[usr:CTOR:qk]' pivot='key' type='quantitative' />
-        <column caption='Unsub Rate' datatype='real' name='[Unsub Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Unsub Rate]' derivation='User' name='[usr:Unsub Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+        <column caption='Sub-Campaign' datatype='string' name='[sub_campaign_name]' role='dimension' type='nominal' />
+        <column-instance column='[CTOR SP]' derivation='User' name='[usr:CTOR SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Clicks SP]' derivation='User' name='[usr:Clicks SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Opens SP]' derivation='User' name='[usr:Opens SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Unsub Rate SP]' derivation='User' name='[usr:Unsub Rate SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Unsubscribes SP]' derivation='User' name='[usr:Unsubscribes SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <filter class='categorical' column='[federated.ehemailengagement].[:Measure Names]'>
-        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Sends:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Opens:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Clicks:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsubscribes:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Open Rate:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTR:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTOR:qk]&quot;' />
-              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsub Rate:qk]&quot;' />
+        <groupfilter function='union' user:op='manual'>
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Sends SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Clicks SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTOR SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTR SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Open Rate SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Opens SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsub Rate SP:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsubscribes SP:qk]&quot;' />
         </groupfilter>
       </filter>
-          <slices>
-            <column>[federated.ehemailengagement].[:Measure Names]</column>
-          </slices>
+      <manual-sort column='[federated.ehemailengagement].[:Measure Names]' direction='ASC'>
+        <dictionary>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Sends SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Clicks SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Opens SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Unsubscribes SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:CTR SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:CTOR SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Open Rate SP:qk]&quot;</bucket>
+          <bucket>&quot;[federated.ehemailengagement].[usr:Unsub Rate SP:qk]&quot;</bucket>
+        </dictionary>
+      </manual-sort>
+      <filter class='categorical' column='[federated.ehemailengagement].[campaign_name]' kind='hide'>
+        <groupfilter function='except' user:ui-domain='relevant' user:ui-enumeration='exclusive' user:ui-manual-selection='true' user:ui-manual-selection-all-when-empty='true' user:ui-marker='enumerate'>
+          <groupfilter function='level-members' level='[campaign_name]' />
+          <groupfilter function='member' level='[campaign_name]' member='%null%' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.ehemailengagement].[none:campaign_name:nk]'>
+        <groupfilter function='level-members' level='[none:campaign_name:nk]' user:ui-manual-selection='true' user:ui-manual-selection-all-when-empty='true' user:ui-manual-selection-is-empty='true' user:ui-marker='enumerate' />
+      </filter>
+      <filter class='quantitative' column='[federated.ehemailengagement].[usr:Sends SP:qk]' included-values='in-range'>
+        <min>1</min>
+      </filter>
+      <slices>
+        <column>[federated.ehemailengagement].[:Measure Names]</column>
+        <column>[federated.ehemailengagement].[none:campaign_name:nk]</column>
+        <column>[federated.ehemailengagement].[usr:Sends SP:qk]</column>
+      </slices>
       <aggregation value='true' />
     </view>
     <style>
@@ -1806,6 +2042,19 @@ GROUP BY 1, 2, 3, 4</relation>
         <format attr='text-align' value='center' />
         <format attr='color' field='[federated.ehemailengagement].[:Measure Names]' value='#ffffff' />
       </style-rule>
+      <style-rule element='quick-filter'>
+        <format attr='title' field='[federated.ehemailengagement].[none:campaign_name:nk]' value='Program'>
+          <formatted-text>
+            <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Program</run>
+          </formatted-text>
+        </format>
+      </style-rule>
+      <_.fcp.IndividualControlFormatting.true...style-rule element='quick-filter-title'>
+        <_.fcp.IndividualControlFormatting.true...format attr='font-size' field='[federated.ehemailengagement].[none:campaign_name:nk]' value='8' />
+        <_.fcp.IndividualControlFormatting.true...format attr='color' field='[federated.ehemailengagement].[none:campaign_name:nk]' value='#4b2b72' />
+        <_.fcp.IndividualControlFormatting.true...format attr='font-weight' field='[federated.ehemailengagement].[none:campaign_name:nk]' value='bold' />
+        <_.fcp.IndividualControlFormatting.true...format attr='font-family' field='[federated.ehemailengagement].[none:campaign_name:nk]' value='Tableau Bold' />
+      </_.fcp.IndividualControlFormatting.true...style-rule>
     </style>
     <panes>
       <pane selection-relaxation-option='selection-relaxation-allow'>
@@ -1824,7 +2073,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[campaign_name] / [federated.ehemailengagement].[Sub Campaign Display] / [federated.ehemailengagement].[Program Type Badge] / [federated.ehemailengagement].[platform] / [federated.ehemailengagement].[none:campaign_year_month:ok]</rows>
+    <rows>([federated.ehemailengagement].[campaign_name] / [federated.ehemailengagement].[Sub Campaign Display])</rows>
     <cols>[federated.ehemailengagement].[:Measure Names]</cols>
   </table>
   <simple-id uuid='{EA4EAD14-171C-4ED8-81C4-B00C5D13E168}' />
@@ -1862,10 +2111,10 @@ GROUP BY 1, 2, 3, 4</relation>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
         <column-instance column='[country]' derivation='None' name='[none:country:nk]' pivot='key' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:country:nk]</column>
@@ -1891,7 +2140,7 @@ GROUP BY 1, 2, 3, 4</relation>
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:country:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Open Rate:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Open Rate SP:qk]</cols>
   </table>
   <simple-id uuid='{19551EB1-6E3E-4D24-B560-C5D1FBFA9403}' />
 </worksheet>
@@ -1928,12 +2177,12 @@ GROUP BY 1, 2, 3, 4</relation>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
         <column-instance column='[company_size]' derivation='None' name='[none:company_size:nk]' pivot='key' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
-        <column caption='Unsub Rate' datatype='real' name='[Unsub Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Unsub Rate]' derivation='User' name='[usr:Unsub Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Unsub Rate SP' datatype='real' default-format='p0.00%' name='[Unsub Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate SP]' derivation='User' name='[usr:Unsub Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:company_size:nk]</column>
@@ -1958,7 +2207,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Open Rate:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Open Rate SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:company_size:nk]</cols>
   </table>
   <simple-id uuid='{100722D9-E4D6-4084-AE08-57520B655FFC}' />
@@ -1996,12 +2245,12 @@ GROUP BY 1, 2, 3, 4</relation>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Lifecycle Stage' datatype='string' name='[lifecycle_stage]' role='dimension' type='nominal' />
         <column-instance column='[lifecycle_stage]' derivation='None' name='[none:lifecycle_stage:nk]' pivot='key' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:lifecycle_stage:nk]</column>
@@ -2027,7 +2276,7 @@ GROUP BY 1, 2, 3, 4</relation>
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:lifecycle_stage:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Open Rate:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Open Rate SP:qk]</cols>
   </table>
   <simple-id uuid='{01C0E93B-06D2-42A9-96A2-9D3DD278593B}' />
 </worksheet>
@@ -2064,10 +2313,10 @@ GROUP BY 1, 2, 3, 4</relation>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Industry' datatype='string' name='[industry]' role='dimension' type='nominal' />
         <column-instance column='[industry]' derivation='None' name='[none:industry:nk]' pivot='key' type='nominal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:industry:nk]</column>
@@ -2082,7 +2331,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </view>
         <mark class='Bar' />
         <encodings>
-          <color column='[federated.ehemailengagement].[usr:Open Rate:qk]' />
+          <color column='[federated.ehemailengagement].[usr:Open Rate SP:qk]' />
         </encodings>
         <style>
           <style-rule element='mark'>
@@ -2093,7 +2342,7 @@ GROUP BY 1, 2, 3, 4</relation>
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:industry:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Sends:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Sends SP:qk]</cols>
   </table>
   <simple-id uuid='{E6232FCC-98DD-4A79-BACA-40A6A9832E0E}' />
 </worksheet>
@@ -2129,8 +2378,8 @@ GROUP BY 1, 2, 3, 4</relation>
         <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
         <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:campaign_name:nk]</column>
@@ -2156,7 +2405,7 @@ GROUP BY 1, 2, 3, 4</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Open Rate:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Open Rate SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{9E8C44AC-047F-483A-A5D9-26CA4672D306}' />
@@ -2335,6 +2584,174 @@ GROUP BY 1, 2, 3, 4</relation>
   </table>
   <simple-id uuid='{9E7E0DF7-1A4C-4604-87E7-667C47F8AC70}' />
 </worksheet>
+<worksheet name='[BC] Platform Scorecard Marketo'>
+  <layout-options>
+    <title>
+      <formatted-text>
+        <run bold='true' fontalignment='0' fontname='Poppins' fontsize='10'>Marketo</run>
+      </formatted-text>
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
+        <datasource caption='Parameters' name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Sends' datatype='integer' name='[Sends - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Sends - SP - Platform]' derivation='User' name='[usr:Sends - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='Open' datatype='real' default-format='p0.00%' name='[Open Rate - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate - SP - Platform]' derivation='User' name='[usr:Open Rate - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR' datatype='real' default-format='p0.00%' name='[CTR - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[CTR - SP - Platform]' derivation='User' name='[usr:CTR - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='Unsub' datatype='real' default-format='p0.00%' name='[Unsub Rate - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate - SP - Platform]' derivation='User' name='[usr:Unsub Rate - SP - Platform:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <filter class='categorical' column='[federated.ehemailengagement].[:Measure Names]'>
+        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Sends - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Open Rate - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTR - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsub Rate - SP - Platform:qk]&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.ehemailengagement].[platform]'>
+        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[platform]' member='&quot;marketo&quot;' />
+        </groupfilter>
+      </filter>
+      <slices>
+        <column>[federated.ehemailengagement].[:Measure Names]</column>
+      </slices>
+      <aggregation value='true' />
+    </view>
+    <style>
+      <style-rule element='cell'>
+        <format attr='text-align' value='right' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='text-align' value='left' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+    </style>
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Text' />
+        <encodings>
+          <text column='[federated.ehemailengagement].[Multiple Values]' />
+        </encodings>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows>[federated.ehemailengagement].[:Measure Names]</rows>
+    <cols />
+  </table>
+  <simple-id uuid='{F1A2B3C4-D5E6-4F70-8192-A3B4C5D6E7F8}' />
+</worksheet>
+<worksheet name='[BC] Platform Scorecard Braze B2B'>
+  <layout-options>
+    <title>
+      <formatted-text>
+        <run bold='true' fontalignment='0' fontname='Poppins' fontsize='10'>Braze B2B</run>
+      </formatted-text>
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
+        <datasource caption='Parameters' name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Sends' datatype='integer' name='[Sends - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Sends - SP - Platform]' derivation='User' name='[usr:Sends - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='Open' datatype='real' default-format='p0.00%' name='[Open Rate - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate - SP - Platform]' derivation='User' name='[usr:Open Rate - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR' datatype='real' default-format='p0.00%' name='[CTR - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[CTR - SP - Platform]' derivation='User' name='[usr:CTR - SP - Platform:qk]' pivot='key' type='quantitative' />
+        <column caption='Unsub' datatype='real' default-format='p0.00%' name='[Unsub Rate - SP - Platform]' role='measure' type='quantitative' />
+        <column-instance column='[Unsub Rate - SP - Platform]' derivation='User' name='[usr:Unsub Rate - SP - Platform:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <filter class='categorical' column='[federated.ehemailengagement].[:Measure Names]'>
+        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Sends - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Open Rate - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:CTR - SP - Platform:qk]&quot;' />
+          <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.ehemailengagement].[usr:Unsub Rate - SP - Platform:qk]&quot;' />
+        </groupfilter>
+      </filter>
+      <filter class='categorical' column='[federated.ehemailengagement].[platform]'>
+        <groupfilter function='union' user:ui-domain='relevant' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
+          <groupfilter function='member' level='[platform]' member='&quot;braze b2b&quot;' />
+        </groupfilter>
+      </filter>
+      <slices>
+        <column>[federated.ehemailengagement].[:Measure Names]</column>
+      </slices>
+      <aggregation value='true' />
+    </view>
+    <style>
+      <style-rule element='cell'>
+        <format attr='text-align' value='right' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='text-align' value='left' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+    </style>
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Text' />
+        <encodings>
+          <text column='[federated.ehemailengagement].[Multiple Values]' />
+        </encodings>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows>[federated.ehemailengagement].[:Measure Names]</rows>
+    <cols />
+  </table>
+  <simple-id uuid='{D3E4F5A6-B7C8-4D92-A013-C5D6E7F8A9B0}' />
+</worksheet>
   </worksheets>
   <dashboards>
     <dashboard enable-sort-zone-taborder='true' name='Email Overview'>
@@ -2415,7 +2832,7 @@ GROUP BY 1, 2, 3, 4</relation>
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
     </column>
-    <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -2451,16 +2868,16 @@ GROUP BY 1, 2, 3, 4</relation>
         <member alias='Default' value='&quot;Default&quot;' />
       </members>
     </column>
-    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
-      <calculation class='tableau' formula='#2026-02-01#' />
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-01-01#'>
+      <calculation class='tableau' formula='#2026-01-01#' />
       <range min='#2023-01-01#' />
     </column>
   </datasource-dependencies>
   <zones>
     <zone h='100000' id='1000' type-v2='layout-basic' w='100000' x='0' y='0'>
-      <zone friendly-name='Dashboard Container' h='3586' id='1130' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
-        <zone friendly-name='HeroBanner' h='4192' id='1151' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3304' id='1149' type-v2='text' w='49121' x='293' y='444'>
+      <zone friendly-name='Dashboard Container' h='100000' id='1130' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
+        <zone friendly-name='HeroBanner' h='4222' id='1151' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3334' id='1149' type-v2='text' w='49121' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -2473,7 +2890,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3304' id='1150' type-v2='text' w='50292' x='49414' y='444'>
+          <zone forceUpdate='true' h='3334' id='1150' type-v2='text' w='50292' x='49414' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Email Overview</run>
             </formatted-text>
@@ -2493,7 +2910,7 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1131' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone fixed-size='30' friendly-name='Navigation' h='3333' id='1131' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4222'>
           <zone h='3334' id='1129' type-v2='dashboard-object' w='25037' x='0' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
               <button-visual-state>
@@ -2561,8 +2978,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1139' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
-          <zone custom-title='true' h='3555' id='1141' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1139' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1141' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -2573,7 +2990,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1140' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+          <zone h='5556' id='1140' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2581,7 +2998,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1142' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+          <zone h='5556' id='1142' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2589,7 +3006,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1143' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+          <zone h='5556' id='1143' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2597,7 +3014,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1144' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+          <zone h='5556' id='1144' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2605,7 +3022,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1145' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+          <zone h='5556' id='1145' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2613,7 +3030,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1146' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+          <zone h='5556' id='1146' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2621,7 +3038,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1147' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+          <zone h='5556' id='1147' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2629,7 +3046,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1148' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+          <zone h='5556' id='1148' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2644,8 +3061,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone friendly-name='Hero Metrics Title' fixed-size='30' forceUpdate='true' h='3111' id='1153' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
-          <zone forceUpdate='true' h='3111' id='1154' type-v2='text' w='100000' x='0' y='11333'>
+        <zone fixed-size='30' friendly-name='Hero Metrics Title' h='3333' id='1153' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
+          <zone forceUpdate='true' h='3333' id='1154' type-v2='text' w='100000' x='0' y='13111'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>HERO METRICS</run>
             </formatted-text>
@@ -2658,18 +3075,34 @@ GROUP BY 1, 2, 3, 4</relation>
             </zone-style>
           </zone>
         </zone>
-        <zone friendly-name='Hero Metrics' h='8778' id='1100' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='14444'>
-          <zone h='8778' id='1101' name='[SC] Sends' w='12518' x='0' y='14444' />
-          <zone h='8778' id='1102' name='[SC] Opens' w='12519' x='12518' y='14444' />
-          <zone h='8778' id='1103' name='[SC] Clicks' w='12518' x='25037' y='14444' />
-          <zone h='8778' id='1104' name='[SC] Unsubscribes' w='12518' x='37555' y='14444' />
-          <zone h='8778' id='1105' name='[SC] Open Rate' w='12519' x='50073' y='14444' />
-          <zone h='8778' id='1106' name='[SC] CTR' w='12518' x='62592' y='14444' />
-          <zone h='8778' id='1107' name='[SC] CTOR' w='12445' x='75110' y='14444' />
-          <zone h='8778' id='1108' name='[SC] Unsub Rate' w='12445' x='87555' y='14444' />
+        <zone friendly-name='Hero Metrics' h='7111' id='1100' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='16444'>
+          <zone h='7112' id='1101' name='[SC] Sends' w='12518' x='0' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1102' name='[SC] Opens' w='12519' x='12518' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1103' name='[SC] Clicks' w='12518' x='25037' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1104' name='[SC] Unsubscribes' w='12518' x='37555' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1105' name='[SC] Open Rate' w='12519' x='50073' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1106' name='[SC] CTR' w='12518' x='62592' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1107' name='[SC] CTOR' w='12445' x='75110' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
+          <zone h='7112' id='1108' name='[SC] Unsub Rate' w='12445' x='87555' y='16444'>
+            <layout-cache fixed-size-h='64' type-h='fixed' type-w='fixed' />
+          </zone>
         </zone>
-        <zone friendly-name='Send Metrics Title' fixed-size='30' forceUpdate='true' h='3111' id='1155' param='horz' type-v2='layout-flow' w='100000' x='0' y='23222'>
-          <zone forceUpdate='true' h='3111' id='1156' type-v2='text' w='100000' x='0' y='23222'>
+        <zone fixed-size='30' friendly-name='Send Metrics Title' h='3333' id='1155' param='horz' type-v2='layout-flow' w='100000' x='0' y='23555'>
+          <zone forceUpdate='true' h='3333' id='1156' type-v2='text' w='100000' x='0' y='23555'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>SENDS</run>
             </formatted-text>
@@ -2682,9 +3115,40 @@ GROUP BY 1, 2, 3, 4</relation>
             </zone-style>
           </zone>
         </zone>
-        <zone friendly-name='Send Metrics' h='73035' id='1109' param='horz' type-v2='layout-flow' w='100000' x='0' y='26333'>
-          <zone h='73035' id='1110' name='[BC] Email Trend' w='78843' x='0' y='26333' />
-          <zone h='73035' id='1111' name='[BC] Platform Split' w='21157' x='78843' y='26333' />
+        <zone friendly-name='Send Metrics' h='73112' id='1109' param='horz' type-v2='layout-flow' w='100000' x='0' y='26888'>
+          <zone h='73112' id='1110' name='[BC] Email Trend' w='63397' x='0' y='26888'>
+            <layout-cache fixed-size-w='1474' minheight='228' type-h='scalable' type-w='fixed' />
+          </zone>
+          <zone h='73112' id='1157' param='vert' type-v2='layout-flow' w='36603' x='63397' y='26888'>
+            <zone h='56000' id='1111' name='[BC] Platform Split' w='36603' x='63397' y='26888'>
+              <layout-cache cell-count-h='2' minwidth='180' non-cell-size-h='103' type-h='cell' type-w='scalable' />
+            </zone>
+            <zone fixed-size='154' h='17111' id='1159' is-fixed='true' param='horz' type-v2='layout-flow' w='36603' x='63397' y='82888'>
+              <zone h='16889' id='1158' name='[BC] Platform Scorecard Marketo' w='18228' x='63470' y='82999'>
+                <layout-cache fixed-size-h='112' fixed-size-w='242' type-h='fixed' type-w='fixed' />
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone h='16889' id='1160' name='[BC] Platform Scorecard Braze B2B' w='18229' x='81698' y='82999'>
+                <layout-cache fixed-size-h='112' fixed-size-w='242' type-h='fixed' type-w='fixed' />
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#b4b4b4' />
+                <format attr='border-style' value='solid' />
+                <format attr='border-width' value='1' />
+              </zone-style>
+            </zone>
+          </zone>
         </zone>
       </zone>
     </zone>
@@ -2705,9 +3169,10 @@ GROUP BY 1, 2, 3, 4</relation>
   <size maxheight='900' maxwidth='1366' minheight='900' minwidth='1366' />
   <datasources>
     <datasource name='Parameters' />
+    <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -2777,7 +3242,7 @@ GROUP BY 1, 2, 3, 4</relation>
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -2805,11 +3270,15 @@ GROUP BY 1, 2, 3, 4</relation>
       <range min='#2023-01-01#' />
     </column>
   </datasource-dependencies>
+  <datasource-dependencies datasource='federated.ehemailengagement'>
+    <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
+    <column-instance column='[campaign_name]' derivation='None' name='[none:campaign_name:nk]' pivot='key' type='nominal' />
+  </datasource-dependencies>
   <zones>
     <zone h='100000' id='1200' type-v2='layout-basic' w='100000' x='0' y='0'>
-      <zone friendly-name='Dashboard Container' h='3586' id='1340' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
-        <zone friendly-name='HeroBanner' h='4192' id='1341' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3304' id='1342' type-v2='text' w='49121' x='293' y='444'>
+      <zone friendly-name='Dashboard Container' h='100000' id='1340' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
+        <zone friendly-name='HeroBanner' h='4222' id='1341' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3334' id='1342' type-v2='text' w='48389' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -2822,7 +3291,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3304' id='1343' type-v2='text' w='50292' x='49414' y='444'>
+          <zone forceUpdate='true' h='3334' id='1343' type-v2='text' w='51024' x='48682' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Campaign Performance</run>
             </formatted-text>
@@ -2842,7 +3311,7 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1344' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone fixed-size='30' friendly-name='Navigation' h='3333' id='1344' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4222'>
           <zone h='3334' id='1345' type-v2='dashboard-object' w='25037' x='0' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
               <button-visual-state>
@@ -2910,8 +3379,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1349' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
-          <zone custom-title='true' h='3555' id='1350' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1349' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1350' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -2922,7 +3391,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1351' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+          <zone h='5556' id='1351' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2930,7 +3399,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1352' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+          <zone h='5556' id='1352' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2938,7 +3407,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1353' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+          <zone h='5556' id='1353' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2946,7 +3415,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1354' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+          <zone h='5556' id='1354' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2954,7 +3423,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1355' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+          <zone h='5556' id='1355' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2962,7 +3431,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1356' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+          <zone h='5556' id='1356' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2970,7 +3439,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1357' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+          <zone h='5556' id='1357' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2978,7 +3447,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1358' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+          <zone h='5556' id='1358' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -2993,8 +3462,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone friendly-name='Campaign Table Title' fixed-size='30' forceUpdate='true' h='3111' id='1359' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
-          <zone forceUpdate='true' h='3111' id='1360' type-v2='text' w='100000' x='0' y='11333'>
+        <zone fixed-size='30' friendly-name='Campaign Table Title' h='3333' id='1359' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
+          <zone forceUpdate='true' h='3333' id='1360' type-v2='text' w='100000' x='0' y='13111'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>CAMPAIGN TABLE</run>
             </formatted-text>
@@ -3007,26 +3476,12 @@ GROUP BY 1, 2, 3, 4</relation>
             </zone-style>
           </zone>
         </zone>
-        <zone h='82000' id='1318' type-v2='layout-basic' w='100000' x='0' y='14444'>
-          <zone h='4878' id='1300' type-v2='text' w='100000' x='0' y='0'>
-            <formatted-text>
-              <run fontcolor='#6b7280' fontname='Poppins' fontsize='10'>ALL  |  BATCH &amp; BLAST  |  EMAIL NURTURE  |  SALES EMAIL  |  NEWSLETTER  |  EVENT / WEBINAR  |  TRAINING  |  DEFAULT</run>
-            </formatted-text>
-          </zone>
-          <zone h='4336' id='1301' type-v2='text' w='100000' x='0' y='4878'>
-            <formatted-text>
-              <run fontcolor='#6b7280' fontname='Poppins' fontsize='11'>Showing all programs</run>
-            </formatted-text>
-          </zone>
-          <zone h='90786' id='1302' name='[BC] Campaign Table' w='100000' x='0' y='9214' />
-        </zone>
-        <zone h='3557' id='1319' type-v2='text' w='100000' x='0' y='96443'>
-          <formatted-text>
-            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-          </formatted-text>
+        <zone h='83556' id='1318' type-v2='layout-basic' w='100000' x='0' y='16444'>
+          <zone h='83556' id='1302' name='[BC] Campaign Table' show-title='false' w='100000' x='0' y='16444' />
         </zone>
       </zone>
     </zone>
+    <zone h='1667' id='1361' mode='typeinlist' name='[BC] Campaign Table' param='[federated.ehemailengagement].[none:campaign_name:nk]' type-v2='filter' values='database' w='27379' x='72108' y='13778' />
   </zones>
   <simple-id uuid='{3C0C1FAB-C0D5-4F0B-8C98-C8F2B37EC364}' />
 </dashboard>
@@ -3046,7 +3501,7 @@ GROUP BY 1, 2, 3, 4</relation>
     <datasource name='Parameters' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -3116,7 +3571,7 @@ GROUP BY 1, 2, 3, 4</relation>
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -3146,9 +3601,9 @@ GROUP BY 1, 2, 3, 4</relation>
   </datasource-dependencies>
   <zones>
     <zone h='100000' id='1400' type-v2='layout-basic' w='100000' x='0' y='0'>
-      <zone friendly-name='Dashboard Container' h='3586' id='1540' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
-        <zone friendly-name='HeroBanner' h='4192' id='1541' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3304' id='1542' type-v2='text' w='49121' x='293' y='444'>
+      <zone friendly-name='Dashboard Container' h='100000' id='1540' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
+        <zone friendly-name='HeroBanner' h='4222' id='1541' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3334' id='1542' type-v2='text' w='48828' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -3161,7 +3616,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3304' id='1543' type-v2='text' w='50292' x='49414' y='444'>
+          <zone forceUpdate='true' h='3334' id='1543' type-v2='text' w='50585' x='49121' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Audience Breakdown</run>
             </formatted-text>
@@ -3181,7 +3636,7 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1544' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone fixed-size='30' friendly-name='Navigation' h='3333' id='1544' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4222'>
           <zone h='3334' id='1545' type-v2='dashboard-object' w='25037' x='0' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
               <button-visual-state>
@@ -3249,8 +3704,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1549' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
-          <zone custom-title='true' h='3555' id='1550' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1549' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1550' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -3261,7 +3716,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1551' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+          <zone h='5556' id='1551' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3269,7 +3724,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1552' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+          <zone h='5556' id='1552' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3277,7 +3732,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1553' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+          <zone h='5556' id='1553' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3285,7 +3740,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1554' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+          <zone h='5556' id='1554' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3293,7 +3748,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1555' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+          <zone h='5556' id='1555' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3301,7 +3756,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1556' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+          <zone h='5556' id='1556' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3309,7 +3764,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1557' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+          <zone h='5556' id='1557' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3317,7 +3772,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1558' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+          <zone h='5556' id='1558' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3332,8 +3787,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone friendly-name='Audience Breakdown Title' fixed-size='30' forceUpdate='true' h='3111' id='1559' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
-          <zone forceUpdate='true' h='3111' id='1560' type-v2='text' w='100000' x='0' y='11333'>
+        <zone fixed-size='30' friendly-name='Audience Breakdown Title' h='3333' id='1559' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
+          <zone forceUpdate='true' h='3333' id='1560' type-v2='text' w='100000' x='0' y='13111'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>AUDIENCE BREAKDOWN</run>
             </formatted-text>
@@ -3346,23 +3801,18 @@ GROUP BY 1, 2, 3, 4</relation>
             </zone-style>
           </zone>
         </zone>
-        <zone h='82000' id='1521' type-v2='layout-basic' w='100000' x='0' y='14444'>
-          <zone h='95664' id='1500' type-v2='layout-basic' w='100000' x='0' y='0'>
-            <zone h='47832' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='0' />
-            <zone h='47832' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='0' />
-            <zone h='47832' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='47832' />
-            <zone h='47832' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='47832' />
+        <zone h='83556' id='1521' type-v2='layout-basic' w='100000' x='0' y='16444'>
+          <zone h='79932' id='1500' type-v2='layout-basic' w='100000' x='0' y='16444'>
+            <zone h='39965' id='1501' name='[BC] Country Breakdown' w='50000' x='0' y='16444' />
+            <zone h='39965' id='1502' name='[BC] Company Size Breakdown' w='50000' x='50000' y='16444' />
+            <zone h='39967' id='1503' name='[BC] Lifecycle Stage Breakdown' w='50000' x='0' y='56409' />
+            <zone h='39967' id='1504' name='[BC] Industry Breakdown' w='50000' x='50000' y='56409' />
           </zone>
-          <zone h='4336' id='1505' type-v2='text' w='100000' x='0' y='95664'>
+          <zone h='3624' id='1505' type-v2='text' w='100000' x='0' y='96376'>
             <formatted-text>
               <run fontcolor='#6b7280' fontname='Poppins' fontsize='11'>Best performing segment will appear here once data is loaded</run>
             </formatted-text>
           </zone>
-        </zone>
-        <zone h='3557' id='1522' type-v2='text' w='100000' x='0' y='96443'>
-          <formatted-text>
-            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-          </formatted-text>
         </zone>
       </zone>
     </zone>
@@ -3385,7 +3835,7 @@ GROUP BY 1, 2, 3, 4</relation>
     <datasource name='Parameters' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -3455,7 +3905,7 @@ GROUP BY 1, 2, 3, 4</relation>
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -3485,9 +3935,9 @@ GROUP BY 1, 2, 3, 4</relation>
   </datasource-dependencies>
   <zones>
     <zone h='100000' id='1600' type-v2='layout-basic' w='100000' x='0' y='0'>
-      <zone friendly-name='Dashboard Container' h='3586' id='1740' param='vert' type-v2='layout-flow' w='100000' x='0' y='4192'>
-        <zone friendly-name='HeroBanner' h='4192' id='1741' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3304' id='1742' type-v2='text' w='49121' x='293' y='444'>
+      <zone friendly-name='Dashboard Container' h='100000' id='1740' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
+        <zone friendly-name='HeroBanner' h='4222' id='1741' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
+          <zone forceUpdate='true' h='3334' id='1742' type-v2='text' w='49561' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -3500,7 +3950,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3304' id='1743' type-v2='text' w='50292' x='49414' y='444'>
+          <zone forceUpdate='true' h='3334' id='1743' type-v2='text' w='49853' x='49854' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Email Pipeline</run>
             </formatted-text>
@@ -3520,7 +3970,7 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Navigation' fixed-size='30' h='3333' id='1744' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4192'>
+        <zone fixed-size='30' friendly-name='Navigation' h='3333' id='1744' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4222'>
           <zone h='3334' id='1745' type-v2='dashboard-object' w='25037' x='0' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{C5677F52-EC91-4676-970C-B2B74BC6CBAC}&quot;' button-type='text'>
               <button-visual-state>
@@ -3588,8 +4038,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#4b2b72' />
           </zone-style>
         </zone>
-        <zone friendly-name='Filters &amp; Parameters' h='3555' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7778'>
-          <zone custom-title='true' h='3555' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7778'>
+        <zone friendly-name='Filters &amp; Parameters' h='5556' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -3600,7 +4050,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7778'>
+          <zone h='5556' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3608,7 +4058,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7778'>
+          <zone h='5556' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3616,7 +4066,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7778'>
+          <zone h='5556' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3624,7 +4074,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7778'>
+          <zone h='5556' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3632,7 +4082,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7778'>
+          <zone h='5556' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3640,7 +4090,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7778'>
+          <zone h='5556' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3648,7 +4098,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7778'>
+          <zone h='5556' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3656,7 +4106,7 @@ GROUP BY 1, 2, 3, 4</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='3555' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7778'>
+          <zone h='5556' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -3671,8 +4121,8 @@ GROUP BY 1, 2, 3, 4</relation>
             <format attr='background-color' value='#eea7ff4e' />
           </zone-style>
         </zone>
-        <zone friendly-name='Pipeline Title' fixed-size='30' forceUpdate='true' h='3111' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='11333'>
-          <zone forceUpdate='true' h='3111' id='1760' type-v2='text' w='100000' x='0' y='11333'>
+        <zone fixed-size='30' friendly-name='Pipeline Title' h='3333' id='1759' param='horz' type-v2='layout-flow' w='100000' x='0' y='13111'>
+          <zone forceUpdate='true' h='3333' id='1760' type-v2='text' w='100000' x='0' y='13111'>
             <formatted-text>
               <run bold='true' fontcolor='#4b2b72' fontname='Tableau Block' fontsize='8'>PIPELINE</run>
             </formatted-text>
@@ -3685,33 +4135,28 @@ GROUP BY 1, 2, 3, 4</relation>
             </zone-style>
           </zone>
         </zone>
-        <zone h='82000' id='1726' type-v2='layout-basic' w='100000' x='0' y='14444'>
-          <zone h='4878' id='1700' type-v2='text' w='100000' x='0' y='0'>
+        <zone h='83556' id='1726' type-v2='layout-basic' w='100000' x='0' y='16444'>
+          <zone h='4075' id='1700' type-v2='text' w='100000' x='0' y='16444'>
             <formatted-text>
               <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
             </formatted-text>
           </zone>
-          <zone h='10840' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='4878'>
-            <zone h='100000' id='1702' name='[SC] Pipeline - Sends' w='20000' x='0' y='0' />
-            <zone h='100000' id='1703' name='[SC] Pipeline - Opens' w='20000' x='20000' y='0' />
-            <zone h='100000' id='1704' name='[SC] Pipeline - Clicks' w='20000' x='40000' y='0' />
-            <zone h='100000' id='1705' name='[SC] Pipeline - MQLs' w='20000' x='60000' y='0' />
-            <zone h='100000' id='1706' name='[SC] Pipeline - SAOs' w='20000' x='80000' y='0' />
+          <zone h='9057' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20519'>
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='20059' x='0' y='20556' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='19985' x='20059' y='20556' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - Clicks' w='19985' x='40044' y='20556' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - MQLs' w='19986' x='60029' y='20556' />
+            <zone h='9000' id='1706' name='[SC] Pipeline - SAOs' w='19985' x='80015' y='20556' />
           </zone>
-          <zone h='84282' id='1707' type-v2='layout-basic' w='100000' x='0' y='15718'>
-            <zone h='100000' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='0' />
-            <zone h='59000' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='0' />
-            <zone h='41000' id='1710' type-v2='text' w='35000' x='65000' y='59000'>
+          <zone h='70424' id='1707' type-v2='layout-basic' w='100000' x='0' y='29576'>
+            <zone h='70424' id='1708' name='[BC] Pipeline Table' w='65000' x='0' y='29576' />
+            <zone h='41549' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29576' />
+            <zone h='28875' id='1710' type-v2='text' w='35000' x='65000' y='71125'>
               <formatted-text>
                 <run fontcolor='#4b5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
               </formatted-text>
             </zone>
           </zone>
-        </zone>
-        <zone h='3557' id='1727' type-v2='text' w='100000' x='0' y='96443'>
-          <formatted-text>
-            <run fontcolor='#9ca3af' fontname='Poppins' fontsize='10'>Source: Redshift mart.fct_marketing_email_engagement · dim_marketing_campaign · dim_marketing_audience  —  Open Rate Target: TBC | CTR Target: TBC | Unsub Threshold: TBC</run>
-          </formatted-text>
         </zone>
       </zone>
     </zone>
@@ -3958,7 +4403,7 @@ GROUP BY 1, 2, 3, 4</relation>
   </cards>
   <simple-id uuid='{BAFC71AA-D414-442D-9EF6-B489D966ED0B}' />
 </window>
-<window class='worksheet' name='[BC] Platform Split'>
+<window class='worksheet' maximized='true' name='[BC] Platform Split'>
   <cards>
     <edge name='left'>
       <strip size='160'>
@@ -3968,11 +4413,24 @@ GROUP BY 1, 2, 3, 4</relation>
       </strip>
     </edge>
     <edge name='top'>
-      <strip size='2147483647'><card type='columns' /></strip>
-      <strip size='2147483647'><card type='rows' /></strip>
-      <strip size='31'><card type='title' /></strip>
+      <strip size='2147483647'>
+        <card type='columns' />
+      </strip>
+      <strip size='2147483647'>
+        <card type='rows' />
+      </strip>
+      <strip size='31'>
+        <card type='title' />
+      </strip>
     </edge>
   </cards>
+  <viewpoint>
+    <highlight>
+      <color-one-way>
+        <field>[federated.ehemailengagement].[none:platform:nk]</field>
+      </color-one-way>
+    </highlight>
+  </viewpoint>
   <simple-id uuid='{0EB4057F-2E8E-4864-92CF-88D5EBDEAC69}' />
 </window>
 <window class='worksheet' name='[BC] Campaign Table'>
@@ -3990,6 +4448,13 @@ GROUP BY 1, 2, 3, 4</relation>
       <strip size='31'><card type='title' /></strip>
     </edge>
   </cards>
+  <viewpoint>
+    <highlight>
+      <color-one-way>
+        <field>[federated.ehemailengagement].[none:campaign_name:nk]</field>
+      </color-one-way>
+    </highlight>
+  </viewpoint>
   <simple-id uuid='{ED283786-112B-47C4-85C9-4FC4D935CD14}' />
 </window>
 <window class='worksheet' name='[BC] Country Breakdown'>
@@ -4111,9 +4576,45 @@ GROUP BY 1, 2, 3, 4</relation>
   </cards>
   <simple-id uuid='{C73E3170-EDA9-4AA5-9EF6-189313F021A7}' />
 </window>
-<window class='dashboard' maximized='true' name='Email Overview'>
+<window class='worksheet' name='[BC] Platform Scorecard Marketo'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{E2F3A4B5-C6D7-4E81-9203-B4C5D6E7F8A9}' />
+</window>
+<window class='worksheet' name='[BC] Platform Scorecard Braze B2B'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{C4D5E6F7-A8B9-4EA3-B124-D6E7F8A9B0C1}' />
+</window>
+<window class='dashboard' name='Email Overview'>
   <viewpoints>
     <viewpoint name='[BC] Email Trend' />
+    <viewpoint name='[BC] Platform Scorecard Braze B2B' />
+    <viewpoint name='[BC] Platform Scorecard Marketo' />
     <viewpoint name='[BC] Platform Split'>
       <zoom type='entire-view' />
     </viewpoint>
@@ -4147,7 +4648,24 @@ GROUP BY 1, 2, 3, 4</relation>
 </window>
 <window class='dashboard' name='Email Campaign Performance'>
   <viewpoints>
-    <viewpoint name='[BC] Campaign Table' />
+    <viewpoint name='[BC] Campaign Table'>
+      <zoom type='fit-width' />
+      <selection-collection>
+        <node-selection select-tuples='false'>
+          <oriented-node-reference orientation='horizontal'>
+            <node-reference>
+              <fields>
+                <field>[federated.ehemailengagement].[:Measure Names]</field>
+              </fields>
+              <multibucket>
+                <bucket>&quot;[federated.ehemailengagement].[usr:Sends SP:qk]&quot;</bucket>
+              </multibucket>
+            </node-reference>
+            <page-reference />
+          </oriented-node-reference>
+        </node-selection>
+      </selection-collection>
+    </viewpoint>
   </viewpoints>
   <active id='-1' />
   <simple-id uuid='{A32A9061-EDF3-40B3-93CD-E1B12EA58AFA}' />
@@ -4162,7 +4680,7 @@ GROUP BY 1, 2, 3, 4</relation>
   <active id='-1' />
   <simple-id uuid='{009BEC44-BB31-41EF-B95B-51262EC806BA}' />
 </window>
-<window class='dashboard' name='Email Pipeline'>
+<window class='dashboard' maximized='true' name='Email Pipeline'>
   <viewpoints>
     <viewpoint name='[BC] Pipeline Table' />
     <viewpoint name='[BC] Pipeline Trend' />

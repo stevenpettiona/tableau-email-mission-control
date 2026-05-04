@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [SAOs LY]
+  caption: SAOs LY
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<column caption='SAOs LY' datatype='real' name='[SAOs LY]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [saos_weighted_cust] END)' />
+</column>

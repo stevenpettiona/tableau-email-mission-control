@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Won ARR SP]
+  caption: Won ARR SP
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [won_arr_weighted_cust] END)' />
+</column>

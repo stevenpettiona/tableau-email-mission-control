@@ -39,12 +39,12 @@
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
-        <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative' />
-        <column-instance column='[Sends]' derivation='User' name='[usr:Sends:qk]' pivot='key' type='quantitative' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
-        <column caption='CTR' datatype='real' name='[CTR]' role='measure' type='quantitative' />
-        <column-instance column='[CTR]' derivation='User' name='[usr:CTR:qk]' pivot='key' type='quantitative' />
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative' />
+        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
+        <column caption='CTR SP' datatype='real' default-format='p0.00%' name='[CTR SP]' role='measure' type='quantitative' />
+        <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:event_week:ok]</column>
@@ -63,7 +63,7 @@
         </view>
         <mark class='Bar' />
         <encodings>
-          <color column='[federated.ehemailengagement].[usr:Open Rate:qk]' />
+          <color column='[federated.ehemailengagement].[usr:Open Rate SP:qk]' />
         </encodings>
         <style>
           <style-rule element='mark'>
@@ -73,7 +73,7 @@
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Sends:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Sends SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{568CFFE5-0DD7-4C81-BF72-A0FA802584F9}' />

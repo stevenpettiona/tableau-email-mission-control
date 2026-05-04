@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Wons SP]
+  caption: Wons SP
+  datasource: ds2
+  last-modified: 2026-05-04
+-->
+<column caption='Wons SP' datatype='real' name='[Wons SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= [Parameters].[Start Date] AND [sao_date] &lt;= [Parameters].[End Date] THEN [wons_weighted_cust] END)' />
+</column>

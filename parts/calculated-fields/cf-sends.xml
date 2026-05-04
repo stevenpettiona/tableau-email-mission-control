@@ -6,5 +6,5 @@
   last-modified: 2026-05-01
 -->
 <column caption='Sends' datatype='integer' name='[Sends]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='COUNTD(IF [event_type]=&quot;Send&quot; THEN [event_id] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_type]=&quot;Send&quot; THEN [event_count] END)' />
 </column>

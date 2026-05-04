@@ -38,8 +38,8 @@
         <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
         <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
-        <column caption='Open Rate' datatype='real' name='[Open Rate]' role='measure' type='quantitative' />
-        <column-instance column='[Open Rate]' derivation='User' name='[usr:Open Rate:qk]' pivot='key' type='quantitative' />
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
           <slices>
             <column>[federated.ehemailengagement].[none:campaign_name:nk]</column>
@@ -65,7 +65,7 @@
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailengagement].[usr:Open Rate:qk]</rows>
+    <rows>[federated.ehemailengagement].[usr:Open Rate SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{9E8C44AC-047F-483A-A5D9-26CA4672D306}' />

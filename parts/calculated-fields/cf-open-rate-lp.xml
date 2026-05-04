@@ -5,6 +5,6 @@
   datasource: ds1
   last-modified: 2026-05-01
 -->
-<column caption='Open Rate LP' datatype='real' default-format='0.0%' name='[Open Rate LP]' role='measure' type='quantitative'>
+<column caption='Open Rate LP' datatype='real' default-format='p0.00%' name='[Open Rate LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Opens LP] / IIF([Sends LP] = 0, NULL, [Sends LP])' />
 </column>
