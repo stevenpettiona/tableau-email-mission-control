@@ -3,7 +3,7 @@
   name: federated.ehemailpipeline
   caption: EH Email Pipeline
   datasource: ds2
-  last-modified: 2026-05-01
+  last-modified: 2026-05-04
 -->
 <datasource caption='EH Email Pipeline' inline='true' name='federated.ehemailpipeline' version='18.1'>
   <connection class='federated'>
@@ -43,23 +43,46 @@ LEFT JOIN mart.dim_marketing_audience a
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
 and f.event_timestamp >= &apos;20250101&apos;
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
-      <relation connection='redshift.ds2conn' name='Program MQLs' type='text'>SELECT
-    dim_marketing_campaign_sk,
-    date              AS mql_date,
-    country           AS mql_country,
-    employee_segment  AS mql_segment,
-    SUM(mql_count)    AS mqls,
-    SUM(lead_count)   AS leads,
-    SUM(recycled_mql_count) AS recycled_mqls
-FROM mart.rpt_marketing_mofu_leads
-WHERE dim_marketing_campaign_sk IS NOT NULL
-GROUP BY 1, 2, 3, 4</relation>
-      <relation connection='redshift.ds2conn' name='Program SAOs' type='text'>SELECT
+      <relation connection='redshift.ds2conn' name='Pipeline Metrics' type='text'>SELECT
+    m.dim_marketing_campaign_sk,
+    c.campaign_name,
+    m.date                   AS mql_date,
+    NULL::date               AS sao_date,
+    m.country                AS mql_country,
+    NULL::varchar            AS sao_country,
+    m.employee_segment       AS mql_segment,
+    NULL::varchar            AS sao_segment,
+    SUM(m.mql_count)         AS mqls,
+    SUM(m.lead_count)        AS leads,
+    SUM(m.recycled_mql_count) AS recycled_mqls,
+    0                        AS saos,
+    0                        AS wons,
+    0::numeric               AS sao_arr_aud,
+    0::numeric               AS won_arr,
+    0::numeric               AS saos_weighted_cust,
+    0::numeric               AS wons_weighted_cust,
+    0::numeric               AS sao_arr_weighted_cust,
+    0::numeric               AS won_arr_weighted_cust
+FROM mart.rpt_marketing_mofu_leads m
+LEFT JOIN mart.dim_marketing_campaign c
+    ON m.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+WHERE m.dim_marketing_campaign_sk IS NOT NULL
+GROUP BY m.dim_marketing_campaign_sk, c.campaign_name, m.date, m.country, m.employee_segment
+
+UNION ALL
+
+SELECT
     b.dim_marketing_campaign_sk,
     c.campaign_name,
-    b.date                                         AS sao_date,
-    b.country                                      AS sao_country,
-    b.employee_segment                             AS sao_segment,
+    NULL::date               AS mql_date,
+    b.date                   AS sao_date,
+    NULL::varchar            AS mql_country,
+    b.country                AS sao_country,
+    NULL::varchar            AS mql_segment,
+    b.employee_segment       AS sao_segment,
+    0                        AS mqls,
+    0                        AS leads,
+    0                        AS recycled_mqls,
     SUM(b.sao_count)                               AS saos,
     SUM(b.won_count)                               AS wons,
     SUM(b.sao_arr)                                 AS sao_arr_aud,
@@ -72,7 +95,7 @@ FROM mart.rpt_marketing_bofu_opportunities b
 LEFT JOIN mart.dim_marketing_campaign c
     ON b.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 WHERE b.dim_marketing_campaign_sk IS NOT NULL
-GROUP BY 1, 2, 3, 4, 5</relation>
+GROUP BY b.dim_marketing_campaign_sk, c.campaign_name, b.date, b.country, b.employee_segment</relation>
     </relation>
     <object-graph>
       <objects>
@@ -81,14 +104,9 @@ GROUP BY 1, 2, 3, 4, 5</relation>
             <relation connection='redshift.ds2conn' name='Email Events' type='text' />
           </properties>
         </object>
-        <object caption='Program MQLs' id='Program MQLs_DS2'>
+        <object caption='Pipeline Metrics' id='Pipeline Metrics_DS2'>
           <properties context=''>
-            <relation connection='redshift.ds2conn' name='Program MQLs' type='text' />
-          </properties>
-        </object>
-        <object caption='Program SAOs' id='Program SAOs_DS2'>
-          <properties context=''>
-            <relation connection='redshift.ds2conn' name='Program SAOs' type='text' />
+            <relation connection='redshift.ds2conn' name='Pipeline Metrics' type='text' />
           </properties>
         </object>
       </objects>
@@ -98,15 +116,7 @@ GROUP BY 1, 2, 3, 4, 5</relation>
             <expression op='[dim_marketing_campaign_sk]' />
             <expression op='[dim_marketing_campaign_sk (Email Events)]' />
           </expression>
-          <first-end-point object-id='Program MQLs_DS2' />
-          <second-end-point object-id='Email Events_DS2_ROOT' />
-        </relationship>
-        <relationship cardinality-1='many' cardinality-2='many' integrity-1='some' integrity-2='some'>
-          <expression op='='>
-            <expression op='[dim_marketing_campaign_sk]' />
-            <expression op='[dim_marketing_campaign_sk (Email Events)]' />
-          </expression>
-          <first-end-point object-id='Program SAOs_DS2' />
+          <first-end-point object-id='Pipeline Metrics_DS2' />
           <second-end-point object-id='Email Events_DS2_ROOT' />
         </relationship>
       </relationships>
@@ -125,32 +135,31 @@ GROUP BY 1, 2, 3, 4, 5</relation>
       <map key='[country]' value='[Email Events].[country]' />
       <map key='[company_size]' value='[Email Events].[company_size]' />
       <map key='[product]' value='[Email Events].[product]' />
-      <map key='[dim_marketing_campaign_sk (Program MQLs)]' value='[Program MQLs].[dim_marketing_campaign_sk]' />
-      <map key='[mql_date]' value='[Program MQLs].[mql_date]' />
-      <map key='[mql_country]' value='[Program MQLs].[mql_country]' />
-      <map key='[mql_segment]' value='[Program MQLs].[mql_segment]' />
-      <map key='[mqls]' value='[Program MQLs].[mqls]' />
-      <map key='[leads]' value='[Program MQLs].[leads]' />
-      <map key='[recycled_mqls]' value='[Program MQLs].[recycled_mqls]' />
-      <map key='[dim_marketing_campaign_sk (Program SAOs)]' value='[Program SAOs].[dim_marketing_campaign_sk]' />
-      <map key='[campaign_name (Program SAOs)]' value='[Program SAOs].[campaign_name]' />
-      <map key='[sao_date]' value='[Program SAOs].[sao_date]' />
-      <map key='[sao_country]' value='[Program SAOs].[sao_country]' />
-      <map key='[sao_segment]' value='[Program SAOs].[sao_segment]' />
-      <map key='[saos]' value='[Program SAOs].[saos]' />
-      <map key='[wons]' value='[Program SAOs].[wons]' />
-      <map key='[sao_arr_aud]' value='[Program SAOs].[sao_arr_aud]' />
-      <map key='[won_arr]' value='[Program SAOs].[won_arr]' />
-      <map key='[saos_weighted_cust]' value='[Program SAOs].[saos_weighted_cust]' />
-      <map key='[wons_weighted_cust]' value='[Program SAOs].[wons_weighted_cust]' />
-      <map key='[sao_arr_weighted_cust]' value='[Program SAOs].[sao_arr_weighted_cust]' />
-      <map key='[won_arr_weighted_cust]' value='[Program SAOs].[won_arr_weighted_cust]' />
+      <map key='[dim_marketing_campaign_sk (Pipeline Metrics)]' value='[Pipeline Metrics].[dim_marketing_campaign_sk]' />
+      <map key='[campaign_name (Pipeline Metrics)]' value='[Pipeline Metrics].[campaign_name]' />
+      <map key='[mql_date]' value='[Pipeline Metrics].[mql_date]' />
+      <map key='[sao_date]' value='[Pipeline Metrics].[sao_date]' />
+      <map key='[mql_country]' value='[Pipeline Metrics].[mql_country]' />
+      <map key='[sao_country]' value='[Pipeline Metrics].[sao_country]' />
+      <map key='[mql_segment]' value='[Pipeline Metrics].[mql_segment]' />
+      <map key='[sao_segment]' value='[Pipeline Metrics].[sao_segment]' />
+      <map key='[mqls]' value='[Pipeline Metrics].[mqls]' />
+      <map key='[leads]' value='[Pipeline Metrics].[leads]' />
+      <map key='[recycled_mqls]' value='[Pipeline Metrics].[recycled_mqls]' />
+      <map key='[saos]' value='[Pipeline Metrics].[saos]' />
+      <map key='[wons]' value='[Pipeline Metrics].[wons]' />
+      <map key='[sao_arr_aud]' value='[Pipeline Metrics].[sao_arr_aud]' />
+      <map key='[won_arr]' value='[Pipeline Metrics].[won_arr]' />
+      <map key='[saos_weighted_cust]' value='[Pipeline Metrics].[saos_weighted_cust]' />
+      <map key='[wons_weighted_cust]' value='[Pipeline Metrics].[wons_weighted_cust]' />
+      <map key='[sao_arr_weighted_cust]' value='[Pipeline Metrics].[sao_arr_weighted_cust]' />
+      <map key='[won_arr_weighted_cust]' value='[Pipeline Metrics].[won_arr_weighted_cust]' />
     </cols>
   </connection>
   <aliases enabled='yes' />
   <!-- Email Events columns -->
   <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
-  <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+  <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
   <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
   <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
   <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
@@ -159,18 +168,17 @@ GROUP BY 1, 2, 3, 4, 5</relation>
   <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
   <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
   <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
-  <!-- Program MQLs columns -->
+  <!-- Pipeline Metrics columns (MQLs + SAOs unified via UNION ALL) -->
+  <column caption='Program Name (Pipeline)' datatype='string' hidden='true' name='[campaign_name (Pipeline Metrics)]' role='dimension' type='nominal' />
   <column caption='MQL Date' datatype='date' name='[mql_date]' role='dimension' type='ordinal' />
+  <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
   <column caption='MQL Country' datatype='string' name='[mql_country]' role='dimension' type='nominal' />
+  <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
   <column caption='MQL Segment' datatype='string' name='[mql_segment]' role='dimension' type='nominal' />
+  <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
   <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
   <column caption='Leads' datatype='integer' name='[leads]' role='measure' type='quantitative' />
   <column caption='Recycled MQLs' datatype='integer' name='[recycled_mqls]' role='measure' type='quantitative' />
-  <!-- Program SAOs columns -->
-  <column caption='Program Name (SAOs)' datatype='string' hidden='true' name='[campaign_name (Program SAOs)]' role='dimension' type='nominal' />
-  <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
-  <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
-  <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
   <column caption='SAOs' datatype='integer' name='[saos]' role='measure' type='quantitative' />
   <column caption='Wons' datatype='real' name='[wons]' role='measure' type='quantitative' />
   <column caption='SAO ARR (AUD)' datatype='real' default-format='&quot;$&quot;#,##0' name='[sao_arr_aud]' role='measure' type='quantitative' />

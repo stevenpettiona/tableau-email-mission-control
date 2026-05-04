@@ -477,23 +477,46 @@ LEFT JOIN mart.dim_marketing_audience a
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
 and f.event_timestamp >= &apos;20250101&apos;
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
-      <relation connection='redshift.ds2conn' name='Program MQLs' type='text'>SELECT
-    dim_marketing_campaign_sk,
-    date              AS mql_date,
-    country           AS mql_country,
-    employee_segment  AS mql_segment,
-    SUM(mql_count)    AS mqls,
-    SUM(lead_count)   AS leads,
-    SUM(recycled_mql_count) AS recycled_mqls
-FROM mart.rpt_marketing_mofu_leads
-WHERE dim_marketing_campaign_sk IS NOT NULL
-GROUP BY 1, 2, 3, 4</relation>
-      <relation connection='redshift.ds2conn' name='Program SAOs' type='text'>SELECT
+      <relation connection='redshift.ds2conn' name='Pipeline Metrics' type='text'>SELECT
+    m.dim_marketing_campaign_sk,
+    c.campaign_name,
+    m.date                   AS mql_date,
+    NULL::date               AS sao_date,
+    m.country                AS mql_country,
+    NULL::varchar            AS sao_country,
+    m.employee_segment       AS mql_segment,
+    NULL::varchar            AS sao_segment,
+    SUM(m.mql_count)         AS mqls,
+    SUM(m.lead_count)        AS leads,
+    SUM(m.recycled_mql_count) AS recycled_mqls,
+    0                        AS saos,
+    0                        AS wons,
+    0::numeric               AS sao_arr_aud,
+    0::numeric               AS won_arr,
+    0::numeric               AS saos_weighted_cust,
+    0::numeric               AS wons_weighted_cust,
+    0::numeric               AS sao_arr_weighted_cust,
+    0::numeric               AS won_arr_weighted_cust
+FROM mart.rpt_marketing_mofu_leads m
+LEFT JOIN mart.dim_marketing_campaign c
+    ON m.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+WHERE m.dim_marketing_campaign_sk IS NOT NULL
+GROUP BY m.dim_marketing_campaign_sk, c.campaign_name, m.date, m.country, m.employee_segment
+
+UNION ALL
+
+SELECT
     b.dim_marketing_campaign_sk,
     c.campaign_name,
-    b.date                                         AS sao_date,
-    b.country                                      AS sao_country,
-    b.employee_segment                             AS sao_segment,
+    NULL::date               AS mql_date,
+    b.date                   AS sao_date,
+    NULL::varchar            AS mql_country,
+    b.country                AS sao_country,
+    NULL::varchar            AS mql_segment,
+    b.employee_segment       AS sao_segment,
+    0                        AS mqls,
+    0                        AS leads,
+    0                        AS recycled_mqls,
     SUM(b.sao_count)                               AS saos,
     SUM(b.won_count)                               AS wons,
     SUM(b.sao_arr)                                 AS sao_arr_aud,
@@ -506,7 +529,7 @@ FROM mart.rpt_marketing_bofu_opportunities b
 LEFT JOIN mart.dim_marketing_campaign c
     ON b.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
 WHERE b.dim_marketing_campaign_sk IS NOT NULL
-GROUP BY 1, 2, 3, 4, 5</relation>
+GROUP BY b.dim_marketing_campaign_sk, c.campaign_name, b.date, b.country, b.employee_segment</relation>
     </relation>
     <object-graph>
       <objects>
@@ -515,14 +538,9 @@ GROUP BY 1, 2, 3, 4, 5</relation>
             <relation connection='redshift.ds2conn' name='Email Events' type='text' />
           </properties>
         </object>
-        <object caption='Program MQLs' id='Program MQLs_DS2'>
+        <object caption='Pipeline Metrics' id='Pipeline Metrics_DS2'>
           <properties context=''>
-            <relation connection='redshift.ds2conn' name='Program MQLs' type='text' />
-          </properties>
-        </object>
-        <object caption='Program SAOs' id='Program SAOs_DS2'>
-          <properties context=''>
-            <relation connection='redshift.ds2conn' name='Program SAOs' type='text' />
+            <relation connection='redshift.ds2conn' name='Pipeline Metrics' type='text' />
           </properties>
         </object>
       </objects>
@@ -532,15 +550,7 @@ GROUP BY 1, 2, 3, 4, 5</relation>
             <expression op='[dim_marketing_campaign_sk]' />
             <expression op='[dim_marketing_campaign_sk (Email Events)]' />
           </expression>
-          <first-end-point object-id='Program MQLs_DS2' />
-          <second-end-point object-id='Email Events_DS2_ROOT' />
-        </relationship>
-        <relationship cardinality-1='many' cardinality-2='many' integrity-1='some' integrity-2='some'>
-          <expression op='='>
-            <expression op='[dim_marketing_campaign_sk]' />
-            <expression op='[dim_marketing_campaign_sk (Email Events)]' />
-          </expression>
-          <first-end-point object-id='Program SAOs_DS2' />
+          <first-end-point object-id='Pipeline Metrics_DS2' />
           <second-end-point object-id='Email Events_DS2_ROOT' />
         </relationship>
       </relationships>
@@ -559,32 +569,31 @@ GROUP BY 1, 2, 3, 4, 5</relation>
       <map key='[country]' value='[Email Events].[country]' />
       <map key='[company_size]' value='[Email Events].[company_size]' />
       <map key='[product]' value='[Email Events].[product]' />
-      <map key='[dim_marketing_campaign_sk (Program MQLs)]' value='[Program MQLs].[dim_marketing_campaign_sk]' />
-      <map key='[mql_date]' value='[Program MQLs].[mql_date]' />
-      <map key='[mql_country]' value='[Program MQLs].[mql_country]' />
-      <map key='[mql_segment]' value='[Program MQLs].[mql_segment]' />
-      <map key='[mqls]' value='[Program MQLs].[mqls]' />
-      <map key='[leads]' value='[Program MQLs].[leads]' />
-      <map key='[recycled_mqls]' value='[Program MQLs].[recycled_mqls]' />
-      <map key='[dim_marketing_campaign_sk (Program SAOs)]' value='[Program SAOs].[dim_marketing_campaign_sk]' />
-      <map key='[campaign_name (Program SAOs)]' value='[Program SAOs].[campaign_name]' />
-      <map key='[sao_date]' value='[Program SAOs].[sao_date]' />
-      <map key='[sao_country]' value='[Program SAOs].[sao_country]' />
-      <map key='[sao_segment]' value='[Program SAOs].[sao_segment]' />
-      <map key='[saos]' value='[Program SAOs].[saos]' />
-      <map key='[wons]' value='[Program SAOs].[wons]' />
-      <map key='[sao_arr_aud]' value='[Program SAOs].[sao_arr_aud]' />
-      <map key='[won_arr]' value='[Program SAOs].[won_arr]' />
-      <map key='[saos_weighted_cust]' value='[Program SAOs].[saos_weighted_cust]' />
-      <map key='[wons_weighted_cust]' value='[Program SAOs].[wons_weighted_cust]' />
-      <map key='[sao_arr_weighted_cust]' value='[Program SAOs].[sao_arr_weighted_cust]' />
-      <map key='[won_arr_weighted_cust]' value='[Program SAOs].[won_arr_weighted_cust]' />
+      <map key='[dim_marketing_campaign_sk (Pipeline Metrics)]' value='[Pipeline Metrics].[dim_marketing_campaign_sk]' />
+      <map key='[campaign_name (Pipeline Metrics)]' value='[Pipeline Metrics].[campaign_name]' />
+      <map key='[mql_date]' value='[Pipeline Metrics].[mql_date]' />
+      <map key='[sao_date]' value='[Pipeline Metrics].[sao_date]' />
+      <map key='[mql_country]' value='[Pipeline Metrics].[mql_country]' />
+      <map key='[sao_country]' value='[Pipeline Metrics].[sao_country]' />
+      <map key='[mql_segment]' value='[Pipeline Metrics].[mql_segment]' />
+      <map key='[sao_segment]' value='[Pipeline Metrics].[sao_segment]' />
+      <map key='[mqls]' value='[Pipeline Metrics].[mqls]' />
+      <map key='[leads]' value='[Pipeline Metrics].[leads]' />
+      <map key='[recycled_mqls]' value='[Pipeline Metrics].[recycled_mqls]' />
+      <map key='[saos]' value='[Pipeline Metrics].[saos]' />
+      <map key='[wons]' value='[Pipeline Metrics].[wons]' />
+      <map key='[sao_arr_aud]' value='[Pipeline Metrics].[sao_arr_aud]' />
+      <map key='[won_arr]' value='[Pipeline Metrics].[won_arr]' />
+      <map key='[saos_weighted_cust]' value='[Pipeline Metrics].[saos_weighted_cust]' />
+      <map key='[wons_weighted_cust]' value='[Pipeline Metrics].[wons_weighted_cust]' />
+      <map key='[sao_arr_weighted_cust]' value='[Pipeline Metrics].[sao_arr_weighted_cust]' />
+      <map key='[won_arr_weighted_cust]' value='[Pipeline Metrics].[won_arr_weighted_cust]' />
     </cols>
   </connection>
   <aliases enabled='yes' />
   <!-- Email Events columns -->
   <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
-  <column datatype='datetime' name='[event_timestamp]' role='dimension' type='ordinal' />
+  <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
   <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
   <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
   <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
@@ -593,18 +602,17 @@ GROUP BY 1, 2, 3, 4, 5</relation>
   <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
   <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
   <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
-  <!-- Program MQLs columns -->
+  <!-- Pipeline Metrics columns (MQLs + SAOs unified via UNION ALL) -->
+  <column caption='Program Name (Pipeline)' datatype='string' hidden='true' name='[campaign_name (Pipeline Metrics)]' role='dimension' type='nominal' />
   <column caption='MQL Date' datatype='date' name='[mql_date]' role='dimension' type='ordinal' />
+  <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
   <column caption='MQL Country' datatype='string' name='[mql_country]' role='dimension' type='nominal' />
+  <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
   <column caption='MQL Segment' datatype='string' name='[mql_segment]' role='dimension' type='nominal' />
+  <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
   <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
   <column caption='Leads' datatype='integer' name='[leads]' role='measure' type='quantitative' />
   <column caption='Recycled MQLs' datatype='integer' name='[recycled_mqls]' role='measure' type='quantitative' />
-  <!-- Program SAOs columns -->
-  <column caption='Program Name (SAOs)' datatype='string' hidden='true' name='[campaign_name (Program SAOs)]' role='dimension' type='nominal' />
-  <column caption='SAO Date' datatype='date' name='[sao_date]' role='dimension' type='ordinal' />
-  <column caption='SAO Country' datatype='string' name='[sao_country]' role='dimension' type='nominal' />
-  <column caption='SAO Segment' datatype='string' name='[sao_segment]' role='dimension' type='nominal' />
   <column caption='SAOs' datatype='integer' name='[saos]' role='measure' type='quantitative' />
   <column caption='Wons' datatype='real' name='[wons]' role='measure' type='quantitative' />
   <column caption='SAO ARR (AUD)' datatype='real' default-format='&quot;$&quot;#,##0' name='[sao_arr_aud]' role='measure' type='quantitative' />
@@ -2356,57 +2364,154 @@ GROUP BY 1, 2, 3, 4, 5</relation>
     <view>
       <datasources>
         <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
-        <datasource caption='Parameters' name='Parameters' />
+        <datasource name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
-        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Date Range (Days)' datatype='integer' name='[Date Range Days]' param-domain-type='list' role='measure' type='ordinal' value='90' />
-        <column caption='Chart View' datatype='string' name='[Chart View Toggle]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends + Rates&quot;' />
-        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
-        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
-        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
-        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
-        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;core&quot;' value='Core' />
+            <alias key='&quot;micro&quot;' value='Micro' />
+            <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+          </aliases>
+        </column>
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Inbound&quot;' value='Inbound' />
+            <alias key='&quot;Outbound&quot;' value='Outbound' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Product' datatype='string' name='[Product Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;&quot;' value='Not Specified' />
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;CHR&quot;' value='CHR' />
+            <alias key='&quot;EAP&quot;' value='EAP' />
+            <alias key='&quot;GC&quot;' value='GC' />
+            <alias key='&quot;HRA&quot;' value='HRA' />
+            <alias key='&quot;LMS&quot;' value='LMS' />
+            <alias key='&quot;MP&quot;' value='MP' />
+          </aliases>
+        </column>
+        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Opens SP] / IIF([Sends SP] = 0, NULL, [Sends SP])' />
+        </column>
+        <column caption='Opens SP' datatype='integer' name='[Opens SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
+        <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
+        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
+        <column caption='Event Type' datatype='string' name='[event_type]' role='dimension' type='nominal' />
         <column caption='Event Week' datatype='date' name='[event_week]' role='dimension' type='ordinal' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
-        <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
-        <column caption='Open Rate SP' datatype='real' default-format='p0.00%' name='[Open Rate SP]' role='measure' type='quantitative' />
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
         <column-instance column='[Open Rate SP]' derivation='User' name='[usr:Open Rate SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
-          <slices>
-            <column>[federated.ehemailengagement].[none:campaign_name:nk]</column>
-            <column>[federated.ehemailengagement].[none:event_week:ok]</column>
-          </slices>
       <aggregation value='true' />
     </view>
-    <style />
+    <style>
+      <style-rule element='axis'>
+        <format attr='display' class='0' field='[federated.ehemailengagement].[usr:Open Rate SP:qk]' scope='rows' value='false' />
+        <format attr='tick-color' field='[federated.ehemailengagement].[usr:Open Rate SP:qk]' value='#00000000' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='display' field='[federated.ehemailengagement].[none:event_week:ok]' value='false' />
+      </style-rule>
+    </style>
     <panes>
       <pane selection-relaxation-option='selection-relaxation-allow'>
         <view>
           <breakdown value='auto' />
         </view>
         <mark class='Line' />
-        <encodings>
-
-        </encodings>
         <style>
           <style-rule element='mark'>
-            <format attr='mark-labels-show' value='true' />
-            <format attr='mark-labels-cull' value='true' />
+            <format attr='mark-labels-show' value='false' />
+            <format attr='mark-labels-cull' value='false' />
+            <format attr='mark-labels-mode' value='range' />
           </style-rule>
         </style>
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[usr:Open Rate SP:qk]</rows>
     <cols>[federated.ehemailengagement].[none:event_week:ok]</cols>
+    <mark-labels>
+      <mark-label id='0' label-state='off'>
+        <tuple-reference>
+          <tuple-descriptor>
+            <pane-descriptor>
+              <x-fields>
+                <field>[federated.ehemailengagement].[none:event_week:ok]</field>
+              </x-fields>
+              <y-fields>
+                <field>[federated.ehemailengagement].[usr:Open Rate SP:qk]</field>
+              </y-fields>
+            </pane-descriptor>
+            <columns>
+              <field>[federated.ehemailengagement].[none:event_week:ok]</field>
+              <field>[federated.ehemailengagement].[usr:Open Rate SP:qk]</field>
+            </columns>
+          </tuple-descriptor>
+          <tuple>
+            <value>#2026-01-26#</value>
+            <value>2.8450928381962863</value>
+          </tuple>
+        </tuple-reference>
+      </mark-label>
+    </mark-labels>
   </table>
   <simple-id uuid='{9E8C44AC-047F-483A-A5D9-26CA4672D306}' />
 </worksheet>
@@ -4525,7 +4630,7 @@ GROUP BY 1, 2, 3, 4, 5</relation>
   </cards>
   <simple-id uuid='{90C8DA08-33BD-4E24-B75C-0F2C1FCA9195}' />
 </window>
-<window class='worksheet' name='[SK] Campaign Trend Sparkline'>
+<window class='worksheet' maximized='true' name='[SK] Campaign Trend Sparkline'>
   <cards>
     <edge name='left'>
       <strip size='160'>
@@ -4535,11 +4640,20 @@ GROUP BY 1, 2, 3, 4, 5</relation>
       </strip>
     </edge>
     <edge name='top'>
-      <strip size='2147483647'><card type='columns' /></strip>
-      <strip size='2147483647'><card type='rows' /></strip>
-      <strip size='31'><card type='title' /></strip>
+      <strip size='2147483647'>
+        <card type='columns' />
+      </strip>
+      <strip size='2147483647'>
+        <card type='rows' />
+      </strip>
+      <strip size='31'>
+        <card type='title' />
+      </strip>
     </edge>
   </cards>
+  <viewpoint>
+    <floating-toolbar-visibility value='2' />
+  </viewpoint>
   <simple-id uuid='{5873F957-3874-473C-9FD4-C8A6CB0838E6}' />
 </window>
 <window class='worksheet' name='[BC] Pipeline Trend'>
