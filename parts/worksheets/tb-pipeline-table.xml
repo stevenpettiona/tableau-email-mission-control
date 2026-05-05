@@ -3,7 +3,7 @@
   name: [TB] Pipeline Table
   caption: [TB] Pipeline Table
   datasource: ds2
-  last-modified: 2026-05-05
+  last-modified: 2026-05-06
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[TB] Pipeline Table'>
@@ -18,46 +18,114 @@
     <view>
       <datasources>
         <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
-        <datasource caption='Parameters' name='Parameters' />
+        <datasource name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
-        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#' />
-        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#' />
-        <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
-        <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
-        <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column caption='Pipeline ARR per Won' datatype='real' default-format='&quot;$&quot;#,##0' name='[Pipeline ARR per Won]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Won ARR SP] / IIF([Wons SP] = 0, NULL, [Wons SP])' />
+        </column>
+        <column caption='Pipeline CTOR' datatype='real' default-format='p0.00%' name='[Pipeline CTOR]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Pipeline Clicks SP] / IIF([Pipeline Opens SP] = 0, NULL, [Pipeline Opens SP])' />
+        </column>
+        <column caption='Pipeline Click-to-MQL' datatype='real' default-format='p0.00%' name='[Pipeline Click-to-MQL]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Pipeline MQLs SP] / IIF([Pipeline Clicks SP] = 0, NULL, [Pipeline Clicks SP])' />
+        </column>
+        <column caption='Pipeline Clicks SP' datatype='integer' name='[Pipeline Clicks SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [clicks] END)' />
+        </column>
+        <column caption='Pipeline MQL-to-SAO' datatype='real' default-format='p0.00%' name='[Pipeline MQL-to-SAO]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[SAOs SP] / IIF([Pipeline MQLs SP] = 0, NULL, [Pipeline MQLs SP])' />
+        </column>
+        <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(&#10;IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [mqls_recycled] &#10;END&#10;)' />
+        </column>
+        <column caption='Pipeline Open Rate' datatype='real' default-format='p0.00%' name='[Pipeline Open Rate]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Pipeline Opens SP] / IIF([Pipeline Sends SP] = 0, NULL, [Pipeline Sends SP])' />
+        </column>
+        <column caption='Pipeline Opens SP' datatype='integer' name='[Pipeline Opens SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [opens] END)' />
+        </column>
+        <column caption='Pipeline Sends SP' datatype='integer' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [sends] END)' />
+        </column>
+        <column caption='Pipeline Win Rate' datatype='real' default-format='p0.00%' name='[Pipeline Win Rate]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Wons SP] / IIF([SAOs SP] = 0, NULL, [SAOs SP])' />
+        </column>
+        <column caption='SAOs SP' datatype='real' name='[SAOs SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [saos] END)' />
+        </column>
+        <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [arr] END)' />
+        </column>
+        <column caption='Wons SP' datatype='real' name='[Wons SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [wons] END)' />
+        </column>
+        <column caption='Won ARR' datatype='real' default-format='&quot;$&quot;#,##0' name='[arr]' role='measure' type='quantitative' />
         <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
-        <column caption='Pipeline Sends SP' datatype='integer' name='[Pipeline Sends SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline Open Rate' datatype='real' default-format='p0.00%' name='[Pipeline Open Rate]' role='measure' type='quantitative' />
-        <column caption='Pipeline Clicks SP' datatype='integer' name='[Pipeline Clicks SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline CTOR' datatype='real' default-format='p0.00%' name='[Pipeline CTOR]' role='measure' type='quantitative' />
-        <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline Click-to-MQL' datatype='real' default-format='p0.00%' name='[Pipeline Click-to-MQL]' role='measure' type='quantitative' />
-        <column caption='SAOs SP' datatype='real' name='[SAOs SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline MQL-to-SAO' datatype='real' default-format='p0.00%' name='[Pipeline MQL-to-SAO]' role='measure' type='quantitative' />
-        <column caption='Wons SP' datatype='real' name='[Wons SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline Win Rate' datatype='real' default-format='p0.00%' name='[Pipeline Win Rate]' role='measure' type='quantitative' />
-        <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative' />
-        <column caption='Pipeline ARR per Won' datatype='real' default-format='&quot;$&quot;#,##0' name='[Pipeline ARR per Won]' role='measure' type='quantitative' />
-        <column-instance column='[Pipeline Sends SP]' derivation='User' name='[usr:Pipeline Sends SP:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline Open Rate]' derivation='User' name='[usr:Pipeline Open Rate:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline Clicks SP]' derivation='User' name='[usr:Pipeline Clicks SP:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline CTOR]' derivation='User' name='[usr:Pipeline CTOR:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline MQLs SP]' derivation='User' name='[usr:Pipeline MQLs SP:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline Click-to-MQL]' derivation='User' name='[usr:Pipeline Click-to-MQL:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[SAOs SP]' derivation='User' name='[usr:SAOs SP:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline MQL-to-SAO]' derivation='User' name='[usr:Pipeline MQL-to-SAO:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Wons SP]' derivation='User' name='[usr:Wons SP:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Pipeline Win Rate]' derivation='User' name='[usr:Pipeline Win Rate:qk]' pivot='key' type='quantitative' />
-        <column-instance column='[Won ARR SP]' derivation='User' name='[usr:Won ARR SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Clicks' datatype='integer' name='[clicks]' role='measure' type='quantitative' />
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
+        <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
+        <column caption='MQLs (Recycled)' datatype='integer' name='[mqls_recycled]' role='measure' type='quantitative' />
+        <column caption='Opens' datatype='integer' name='[opens]' role='measure' type='quantitative' />
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+        <column caption='SAOs' datatype='real' name='[saos]' role='measure' type='quantitative' />
+        <column caption='Sends' datatype='integer' name='[sends]' role='measure' type='quantitative' />
         <column-instance column='[Pipeline ARR per Won]' derivation='User' name='[usr:Pipeline ARR per Won:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline CTOR]' derivation='User' name='[usr:Pipeline CTOR:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline Click-to-MQL]' derivation='User' name='[usr:Pipeline Click-to-MQL:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline Clicks SP]' derivation='User' name='[usr:Pipeline Clicks SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline MQL-to-SAO]' derivation='User' name='[usr:Pipeline MQL-to-SAO:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline MQLs SP]' derivation='User' name='[usr:Pipeline MQLs SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline Open Rate]' derivation='User' name='[usr:Pipeline Open Rate:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline Sends SP]' derivation='User' name='[usr:Pipeline Sends SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Pipeline Win Rate]' derivation='User' name='[usr:Pipeline Win Rate:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[SAOs SP]' derivation='User' name='[usr:SAOs SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Won ARR SP]' derivation='User' name='[usr:Won ARR SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Wons SP]' derivation='User' name='[usr:Wons SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Wons' datatype='real' name='[wons]' role='measure' type='quantitative' />
         <column datatype='string' name='[:Measure Names]' role='dimension' type='nominal'>
           <aliases>
             <alias key='&quot;[federated.ehemailpipeline].[usr:Pipeline Sends SP:qk]&quot;' value='Sends' />
@@ -126,6 +194,7 @@
         <format attr='text-align' value='left' />
         <format attr='background-color' field='[federated.ehemailpipeline].[:Measure Names]' value='#6B3FA0' />
         <format attr='color' data-class='subtotal' field='[federated.ehemailpipeline].[:Measure Names]' value='#ffffff' />
+        <format attr='width' field='[federated.ehemailpipeline].[campaign_name]' value='320' />
       </style-rule>
       <style-rule element='field-labels'>
         <format attr='background-color' value='#1F1045' />

@@ -2,11 +2,10 @@
   part-type: dashboard
   name: Email Pipeline
   caption: Email Pipeline
-  datasource: -
-  last-modified: 2026-05-04
+  last-modified: 2026-05-06
 -->
 <!-- SECTION:DASHBOARD -->
- <dashboard enable-sort-zone-taborder='true' name='Email Pipeline'>
+<dashboard enable-sort-zone-taborder='true' name='Email Pipeline'>
   <style>
     <style-rule element='dashboard'>
       <format attr='background-color' value='#f5f3fa' />
@@ -23,7 +22,7 @@
     <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -80,8 +79,8 @@
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
     </column>
-    <column alias='Won' caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Won&quot;'>
-      <calculation class='tableau' formula='&quot;Won&quot;' />
+    <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;'>
+      <calculation class='tableau' formula='&quot;MQL&quot;' />
       <aliases>
         <alias key='&quot;ARR&quot;' value='ARR' />
         <alias key='&quot;MQL&quot;' value='MQL' />
@@ -350,24 +349,24 @@
           </zone>
         </zone>
         <zone h='83779' id='1726' type-v2='layout-basic' w='100000' x='0' y='16221'>
-          <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
-            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='20333' />
-            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='20333' />
-            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='7686' x='15447' y='20333' />
-            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='7687' x='23133' y='20333' />
-            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='7687' x='30820' y='20333' />
-            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='7686' x='38507' y='20333' />
-            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='7687' x='46193' y='20333' />
-            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='7687' x='53880' y='20333' />
-            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='7686' x='61567' y='20333' />
-            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='7687' x='69253' y='20333' />
-            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='7687' x='76940' y='20333' />
-            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='7686' x='84627' y='20333' />
-            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='7687' x='92313' y='20333' />
+          <zone h='12223' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='16221'>
+            <zone h='12222' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='16222' />
+            <zone h='12222' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='16222' />
+            <zone h='12222' id='1703' name='[SC] Pipeline - Opens' w='7686' x='15447' y='16222' />
+            <zone h='12222' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='7687' x='23133' y='16222' />
+            <zone h='12222' id='1808' name='[SC] Pipeline - Clicks' w='7687' x='30820' y='16222' />
+            <zone h='12222' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='7686' x='38507' y='16222' />
+            <zone h='12222' id='1704' name='[SC] Pipeline - MQLs' w='7687' x='46193' y='16222' />
+            <zone h='12222' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='7687' x='53880' y='16222' />
+            <zone h='12222' id='1705' name='[SC] Pipeline - SAOs' w='7686' x='61567' y='16222' />
+            <zone h='12222' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='7687' x='69253' y='16222' />
+            <zone h='12222' id='1805' name='[SC] Pipeline - Wons' w='7687' x='76940' y='16222' />
+            <zone h='12222' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='7686' x='84627' y='16222' />
+            <zone h='12222' id='1807' name='[SC] Pipeline - ARR' w='7687' x='92313' y='16222' />
           </zone>
-          <zone h='70614' id='1707' type-v2='layout-basic' w='100000' x='0' y='29386'>
-            <zone h='70614' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='29386' />
-            <zone h='70614' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29386' />
+          <zone h='71556' id='1707' type-v2='layout-basic' w='100000' x='0' y='28444'>
+            <zone h='71556' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='28444' />
+            <zone h='71556' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='28444' />
           </zone>
         </zone>
       </zone>
@@ -392,10 +391,10 @@
     <viewpoint name='[SC] Pipeline - CTOR'>
       <zoom type='entire-view' />
     </viewpoint>
-    <viewpoint name='[SC] Pipeline - Clicks'>
+    <viewpoint name='[SC] Pipeline - Click-to-MQL'>
       <zoom type='entire-view' />
     </viewpoint>
-    <viewpoint name='[SC] Pipeline - Click-to-MQL'>
+    <viewpoint name='[SC] Pipeline - Clicks'>
       <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Pipeline - MQL-to-SAO'>

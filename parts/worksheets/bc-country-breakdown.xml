@@ -3,7 +3,7 @@
   name: [BC] Country Breakdown
   caption: [BC] Country Breakdown
   datasource: ds1
-  last-modified: 2026-05-04
+  last-modified: 2026-05-06
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[BC] Country Breakdown'>
@@ -40,8 +40,8 @@
             <alias key='&quot;NZ&quot;' value='NZ' />
           </aliases>
         </column>
-        <column alias='CTR' caption='Metric' datatype='string' name='[Direction (copy)]' param-domain-type='list' role='measure' type='nominal' value='&quot;CTR&quot;'>
-          <calculation class='tableau' formula='&quot;CTR&quot;' />
+        <column caption='Metric' datatype='string' name='[Direction (copy)]' param-domain-type='list' role='measure' type='nominal' value='&quot;Open Rate&quot;'>
+          <calculation class='tableau' formula='&quot;Open Rate&quot;' />
           <aliases>
             <alias key='&quot;CTOR&quot;' value='CTOR' />
             <alias key='&quot;CTR&quot;' value='CTR' />
@@ -94,8 +94,8 @@
             <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
           </aliases>
         </column>
-        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
-          <calculation class='tableau' formula='#2026-05-01#' />
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
           <range min='#2023-01-01#' />
         </column>
       </datasource-dependencies>

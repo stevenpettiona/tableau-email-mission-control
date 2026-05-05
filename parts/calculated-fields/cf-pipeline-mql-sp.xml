@@ -6,5 +6,8 @@
   last-modified: 2026-05-05
 -->
 <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] END) ' />
+  <calculation class='tableau' formula='SUM(
+  IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] 
+  END
+  )' />
 </column>

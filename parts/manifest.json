@@ -22,6 +22,7 @@
     "calculated-fields/cf-opens-sp.xml",
     "calculated-fields/cf-clicks-sp.xml",
     "calculated-fields/cf-unsubscribes-sp.xml",
+    "calculated-fields/cf-dynamic-volume-sp.xml",
     "calculated-fields/cf-sends-lp.xml",
     "calculated-fields/cf-opens-lp.xml",
     "calculated-fields/cf-clicks-lp.xml",

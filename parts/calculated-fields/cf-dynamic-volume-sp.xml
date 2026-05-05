@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Dynamic Volume SP]
+  caption: Dynamic Volume SP
+  datasource: ds1
+  last-modified: 2026-05-06
+-->
+<column caption='Dynamic Volume SP' datatype='integer' name='[Dynamic Volume SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='CASE [Parameters].[Volume Metric] WHEN &quot;Sends&quot; THEN [Sends SP] WHEN &quot;Opens&quot; THEN [Opens SP] WHEN &quot;Clicks&quot; THEN [Clicks SP] WHEN &quot;Unsubscribes&quot; THEN [Unsubscribes SP] END' />
+</column>

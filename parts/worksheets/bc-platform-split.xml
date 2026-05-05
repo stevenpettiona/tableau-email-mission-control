@@ -3,7 +3,7 @@
   name: [BC] Platform Split
   caption: [BC] Platform Split
   datasource: ds1
-  last-modified: 2026-05-04
+  last-modified: 2026-05-06
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[BC] Platform Split'>
@@ -90,18 +90,33 @@
           <calculation class='tableau' formula='#2026-02-01#' />
           <range min='#2023-01-01#' />
         </column>
-      </datasource-dependencies>
-      <datasource-dependencies datasource='federated.ehemailengagement'>
-        <column caption='Sends SP' datatype='integer' default-format='n#,##0,,.00M;-#,##0,,.00M' name='[Sends SP]' role='measure' type='quantitative'>
-          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
-        </column>
-        <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal'>
+        <column caption='Volume Metric' datatype='string' name='[Volume Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends&quot;'>
+          <calculation class='tableau' formula='&quot;Sends&quot;' />
           <aliases>
-            <alias key='&quot;core&quot;' value='Core' />
-            <alias key='&quot;micro&quot;' value='Micro' />
-            <alias key='&quot;mid-market&quot;' value='Mid-Market' />
+            <alias key='&quot;Sends&quot;' value='Sends' />
+            <alias key='&quot;Opens&quot;' value='Opens' />
+            <alias key='&quot;Clicks&quot;' value='Clicks' />
+            <alias key='&quot;Unsubscribes&quot;' value='Unsubscribes' />
           </aliases>
         </column>
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailengagement'>
+        <column caption='Sends SP' datatype='integer' name='[Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Opens SP' datatype='integer' name='[Opens SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Open&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Clicks SP' datatype='integer' name='[Clicks SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Click&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Unsubscribes SP' datatype='integer' name='[Unsubscribes SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Unsubscribe&quot; AND [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
+        </column>
+        <column caption='Dynamic Volume SP' datatype='integer' name='[Dynamic Volume SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='CASE [Parameters].[Volume Metric] WHEN &quot;Sends&quot; THEN [Sends SP] WHEN &quot;Opens&quot; THEN [Opens SP] WHEN &quot;Clicks&quot; THEN [Clicks SP] WHEN &quot;Unsubscribes&quot; THEN [Unsubscribes SP] END' />
+        </column>
+        <column caption='Company Size' datatype='string' name='[company_size]' role='dimension' type='nominal' />
         <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
         <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
         <column datatype='integer' name='[event_count]' role='measure' type='quantitative' />
@@ -116,7 +131,7 @@
         </column>
         <column caption='Product' datatype='string' name='[product]' role='dimension' type='nominal' />
         <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
-        <column-instance column='[Sends SP]' derivation='User' name='[usr:Sends SP:qk]' pivot='key' type='quantitative' />
+        <column-instance column='[Dynamic Volume SP]' derivation='User' name='[usr:Dynamic Volume SP:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
     </view>
@@ -143,7 +158,7 @@
       </pane>
     </panes>
     <rows>[federated.ehemailengagement].[none:platform:nk]</rows>
-    <cols>[federated.ehemailengagement].[usr:Sends SP:qk]</cols>
+    <cols>[federated.ehemailengagement].[usr:Dynamic Volume SP:qk]</cols>
   </table>
   <simple-id uuid='{C13B17E9-4CCA-4E6A-BE15-E2081718EA22}' />
 </worksheet>
@@ -167,6 +182,11 @@
       </strip>
       <strip size='31'>
         <card type='title' />
+      </strip>
+    </edge>
+    <edge name='right'>
+      <strip size='160'>
+        <card mode='compact' param='[Parameters].[Volume Metric]' type='parameter' />
       </strip>
     </edge>
   </cards>

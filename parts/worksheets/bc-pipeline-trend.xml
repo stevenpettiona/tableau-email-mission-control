@@ -3,7 +3,7 @@
   name: [BC] Pipeline Trend
   caption: [BC] Pipeline Trend
   datasource: ds2
-  last-modified: 2026-05-05
+  last-modified: 2026-05-06
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[BC] Pipeline Trend'>
@@ -18,20 +18,93 @@
     <view>
       <datasources>
         <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
-        <datasource caption='Parameters' name='Parameters' />
+        <datasource name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
-        <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;' />
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;'>
+          <calculation class='tableau' formula='&quot;MQL&quot;' />
+          <aliases>
+            <alias key='&quot;ARR&quot;' value='ARR' />
+            <alias key='&quot;MQL&quot;' value='MQL' />
+            <alias key='&quot;SAO&quot;' value='SAO' />
+            <alias key='&quot;Won&quot;' value='Won' />
+          </aliases>
+        </column>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='CASE [Parameters].[Pipeline Metric] WHEN &quot;MQL&quot; THEN [Pipeline MQLs SP] WHEN &quot;SAO&quot; THEN [SAOs SP] WHEN &quot;Won&quot; THEN [Wons SP] WHEN &quot;ARR&quot; THEN [Won ARR SP] END' />
+        </column>
+        <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(&#10;IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [mqls_recycled] &#10;END&#10;)' />
+        </column>
+        <column caption='SAOs SP' datatype='real' name='[SAOs SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [saos] END)' />
+        </column>
+        <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [arr] END)' />
+        </column>
+        <column caption='Wons SP' datatype='real' name='[Wons SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [wons] END)' />
+        </column>
+        <column caption='Won ARR' datatype='real' default-format='&quot;$&quot;#,##0' name='[arr]' role='measure' type='quantitative' />
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
         <column datatype='date' name='[event_week]' role='dimension' type='ordinal' />
-        <column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative' />
+        <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
+        <column caption='MQLs (Recycled)' datatype='integer' name='[mqls_recycled]' role='measure' type='quantitative' />
         <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+        <column caption='SAOs' datatype='real' name='[saos]' role='measure' type='quantitative' />
         <column-instance column='[Pipeline - Dynamic SP]' derivation='User' name='[usr:Pipeline - Dynamic SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Wons' datatype='real' name='[wons]' role='measure' type='quantitative' />
       </datasource-dependencies>
       <filter class='quantitative' column='[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]' included-values='in-range'>
-        <min>1</min>
+        <min>1.0</min>
       </filter>
+      <slices>
+        <column>[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]</column>
+      </slices>
       <aggregation value='true' />
     </view>
     <style>
@@ -49,6 +122,7 @@
           <style-rule element='mark'>
             <format attr='mark-labels-show' value='true' />
             <format attr='mark-labels-cull' value='true' />
+            <format attr='mark-color' value='#7a48b9' />
           </style-rule>
         </style>
       </pane>

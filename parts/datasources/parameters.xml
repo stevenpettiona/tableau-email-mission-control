@@ -210,4 +210,19 @@
       <member alias='ARR' value='&quot;ARR&quot;' />
     </members>
   </column>
+  <column caption='Volume Metric' datatype='string' name='[Volume Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends&quot;'>
+    <calculation class='tableau' formula='&quot;Sends&quot;' />
+    <aliases>
+      <alias key='&quot;Sends&quot;' value='Sends' />
+      <alias key='&quot;Opens&quot;' value='Opens' />
+      <alias key='&quot;Clicks&quot;' value='Clicks' />
+      <alias key='&quot;Unsubscribes&quot;' value='Unsubscribes' />
+    </aliases>
+    <members>
+      <member alias='Sends' value='&quot;Sends&quot;' />
+      <member alias='Opens' value='&quot;Opens&quot;' />
+      <member alias='Clicks' value='&quot;Clicks&quot;' />
+      <member alias='Unsubscribes' value='&quot;Unsubscribes&quot;' />
+    </members>
+  </column>
 </datasource>
