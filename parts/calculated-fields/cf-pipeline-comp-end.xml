@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Comp End]
+  caption: Pipeline Comp End
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Comp End' datatype='date' name='[Pipeline Comp End]' role='dimension' type='ordinal'>
+  <calculation class='tableau' formula='IF [Parameters].[Compare Period] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) ELSEIF [Parameters].[Compare Period] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -1, [Parameters].[Start Date]) ELSE [Parameters].[Comparison End] END' />
+</column>

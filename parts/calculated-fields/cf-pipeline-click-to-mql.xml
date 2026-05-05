@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Click-to-MQL]
+  caption: Pipeline Click-to-MQL
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Click-to-MQL' datatype='real' default-format='p0.00%' name='[Pipeline Click-to-MQL]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Pipeline MQLs SP] / IIF([Pipeline Clicks SP] = 0, NULL, [Pipeline Clicks SP])' />
+</column>

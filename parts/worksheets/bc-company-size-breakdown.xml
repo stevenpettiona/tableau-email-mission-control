@@ -192,16 +192,16 @@
     </edge>
     <edge name='right'>
       <strip size='160'>
-        <card pane-specification-id='0' param='[federated.ehemailengagement].[none:lifecycle_stage:nk]' type='color' />
+        <card pane-specification-id='0' param='[federated.ehemailengagement].[none:company_size:nk]' type='color' />
       </strip>
     </edge>
   </cards>
   <viewpoint>
     <highlight>
       <color-one-way>
-        <field>[federated.ehemailengagement].[none:lifecycle_stage:nk]</field>
+        <field>[federated.ehemailengagement].[none:company_size:nk]</field>
       </color-one-way>
     </highlight>
   </viewpoint>
-  <simple-id uuid='{76F7E153-5461-4349-82DA-75EA25EE61A8}' />
+  <simple-id uuid='{C9F3A1B5-7E2D-4F6C-8A90-1D3E5B7F9C2A}' />
 </window>

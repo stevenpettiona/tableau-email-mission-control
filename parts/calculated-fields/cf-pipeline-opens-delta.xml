@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Opens Δ]
+  caption: Pipeline Opens Δ
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Opens Δ' datatype='real' default-format='p0.00%' name='[Pipeline Opens Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Pipeline Opens SP] - [Pipeline Opens LP]) / IIF([Pipeline Opens LP] = 0, NULL, [Pipeline Opens LP])' />
+</column>

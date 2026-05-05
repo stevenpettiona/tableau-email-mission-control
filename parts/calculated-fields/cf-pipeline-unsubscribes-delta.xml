@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Unsubscribes Δ]
+  caption: Pipeline Unsubscribes Δ
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Unsubscribes Δ' datatype='real' default-format='p0.00%' name='[Pipeline Unsubscribes Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Pipeline Unsubscribes SP] - [Pipeline Unsubscribes LP]) / IIF([Pipeline Unsubscribes LP] = 0, NULL, [Pipeline Unsubscribes LP])' />
+</column>

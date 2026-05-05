@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Open Rate]
+  caption: Pipeline Open Rate
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Open Rate' datatype='real' default-format='p0.00%' name='[Pipeline Open Rate]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Pipeline Opens SP] / IIF([Pipeline Sends SP] = 0, NULL, [Pipeline Sends SP])' />
+</column>

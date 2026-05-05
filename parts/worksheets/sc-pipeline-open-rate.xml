@@ -1,0 +1,142 @@
+<!--
+  part-type: worksheet
+  name: [SC] Pipeline - Open Rate
+  caption: [SC] Pipeline - Open Rate
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<!-- SECTION:WORKSHEET -->
+<worksheet name='[SC] Pipeline - Open Rate'>
+  <layout-options>
+    <title>
+      <formatted-text>
+        <run bold='true' fontalignment='1' fontcolor='#6b3fa0' fontname='Poppins' fontsize='8'>OPEN RATE</run>
+      </formatted-text>
+    </title>
+  </layout-options>
+  <table>
+    <view>
+      <datasources>
+        <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
+        <datasource name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;AU&quot;' value='AU' />
+            <alias key='&quot;CA&quot;' value='CA' />
+            <alias key='&quot;GB&quot;' value='UK' />
+            <alias key='&quot;NZ&quot;' value='NZ' />
+          </aliases>
+        </column>
+        <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
+          <calculation class='tableau' formula='#2026-05-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+        <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;braze b2b&quot;' value='Braze B2B' />
+            <alias key='&quot;marketo&quot;' value='Marketo' />
+          </aliases>
+        </column>
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Batch and Blast&quot;' value='Batch &amp; Blast' />
+            <alias key='&quot;Default&quot;' value='Default' />
+            <alias key='&quot;Email Nurture&quot;' value='Email Nurture' />
+            <alias key='&quot;Event-Webinar&quot;' value='Event / Webinar' />
+            <alias key='&quot;Newsletter&quot;' value='Newsletter' />
+            <alias key='&quot;Sales Email&quot;' value='Sales Email' />
+            <alias key='&quot;Training/Hero Academy&quot;' value='Training / Hero Academy' />
+          </aliases>
+        </column>
+        <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+          <calculation class='tableau' formula='#2026-02-01#' />
+          <range min='#2023-01-01#' />
+        </column>
+      </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column caption='Pipeline Open Rate' datatype='real' default-format='p0.00%' name='[Pipeline Open Rate]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='[Pipeline Opens SP] / IIF([Pipeline Sends SP] = 0, NULL, [Pipeline Sends SP])' />
+        </column>
+        <column caption='Pipeline Opens SP' datatype='integer' name='[Pipeline Opens SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [opens] END)' />
+        </column>
+        <column caption='Pipeline Sends SP' datatype='integer' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
+          <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [sends] END)' />
+        </column>
+        <column caption='Country' datatype='string' name='[country]' role='dimension' semantic-role='[Country].[ISO3166_2]' type='nominal' />
+        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
+        <column caption='Opens' datatype='integer' name='[opens]' role='measure' type='quantitative' />
+        <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
+        <column caption='Program Type' datatype='string' name='[program_type]' role='dimension' type='nominal' />
+        <column caption='Sends' datatype='integer' name='[sends]' role='measure' type='quantitative' />
+        <column-instance column='[Pipeline Open Rate]' derivation='User' name='[usr:Pipeline Open Rate:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <aggregation value='true' />
+    </view>
+    <style>
+      <style-rule element='cell'>
+        <format attr='text-align' value='center' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+      <style-rule element='label'>
+        <format attr='text-align' value='center' />
+        <format attr='vertical-align' value='center' />
+      </style-rule>
+    </style>
+    <panes>
+      <pane selection-relaxation-option='selection-relaxation-allow'>
+        <view>
+          <breakdown value='auto' />
+        </view>
+        <mark class='Automatic' />
+        <encodings>
+          <text column='[federated.ehemailpipeline].[usr:Pipeline Open Rate:qk]' />
+        </encodings>
+        <customized-label>
+          <formatted-text>
+            <run fontcolor='#eea7ff' fontname='Tableau Light' fontsize='18'>→</run>
+            <run><![CDATA[
+
+<[federated.ehemailpipeline].[usr:Pipeline Open Rate:qk]>]]></run>
+          </formatted-text>
+        </customized-label>
+        <style>
+          <style-rule element='mark'>
+            <format attr='mark-labels-show' value='true' />
+            <format attr='mark-labels-cull' value='true' />
+          </style-rule>
+        </style>
+      </pane>
+    </panes>
+    <rows />
+    <cols />
+  </table>
+  <simple-id uuid='{EF012345-6789-4ABC-8DEF-0123456789AB}' />
+</worksheet>
+
+<!-- SECTION:WINDOW-ENTRY -->
+<window class='worksheet' name='[SC] Pipeline - Open Rate'>
+  <cards>
+    <edge name='left'>
+      <strip size='160'>
+        <card type='pages' />
+        <card type='filters' />
+        <card type='marks' />
+      </strip>
+    </edge>
+    <edge name='top'>
+      <strip size='2147483647'><card type='columns' /></strip>
+      <strip size='2147483647'><card type='rows' /></strip>
+      <strip size='31'><card type='title' /></strip>
+    </edge>
+  </cards>
+  <simple-id uuid='{F0123456-789A-4BCD-8EF0-123456789ABC}' />
+</window>

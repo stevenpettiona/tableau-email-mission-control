@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [SAOs Δ]
+  caption: SAOs Δ
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='SAOs Δ' datatype='real' default-format='p0.00%' name='[SAOs Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([SAOs SP] - [SAOs LY]) / IIF([SAOs LY] = 0, NULL, [SAOs LY])' />
+</column>

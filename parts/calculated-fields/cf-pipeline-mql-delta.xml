@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline MQLs Δ]
+  caption: Pipeline MQLs Δ
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline MQLs Δ' datatype='real' default-format='p0.00%' name='[Pipeline MQLs Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Pipeline MQLs SP] - [Pipeline MQLs LP]) / IIF([Pipeline MQLs LP] = 0, NULL, [Pipeline MQLs LP])' />
+</column>

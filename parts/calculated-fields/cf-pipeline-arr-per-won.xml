@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline ARR per Won]
+  caption: Pipeline ARR per Won
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline ARR per Won' datatype='real' default-format='&quot;$&quot;#,##0' name='[Pipeline ARR per Won]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Won ARR SP] / IIF([Wons SP] = 0, NULL, [Wons SP])' />
+</column>

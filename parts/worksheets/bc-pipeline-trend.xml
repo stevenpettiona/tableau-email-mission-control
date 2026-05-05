@@ -3,7 +3,7 @@
   name: [BC] Pipeline Trend
   caption: [BC] Pipeline Trend
   datasource: ds2
-  last-modified: 2026-05-04
+  last-modified: 2026-05-05
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[BC] Pipeline Trend'>
@@ -20,11 +20,9 @@
         <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
       </datasources>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column caption='MQL Date' datatype='date' name='[mql_date]' role='dimension' type='ordinal' />
-        <column caption='MQL Segment' datatype='string' name='[mql_segment]' role='dimension' type='nominal' />
+        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
         <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
-        <column-instance column='[mql_date]' derivation='None' name='[none:mql_date:ok]' pivot='key' type='ordinal' />
-        <column-instance column='[mql_segment]' derivation='None' name='[none:mql_segment:nk]' pivot='key' type='nominal' />
+        <column-instance column='[event_timestamp]' derivation='None' name='[none:event_timestamp:ok]' pivot='key' type='ordinal' />
         <column-instance column='[mqls]' derivation='Sum' name='[sum:mqls:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
@@ -40,9 +38,6 @@
           <breakdown value='auto' />
         </view>
         <mark class='Bar' />
-        <encodings>
-          <color column='[federated.ehemailpipeline].[none:mql_segment:nk]' />
-        </encodings>
         <style>
           <style-rule element='mark'>
             <format attr='mark-labels-show' value='true' />
@@ -52,7 +47,7 @@
       </pane>
     </panes>
     <rows>[federated.ehemailpipeline].[sum:mqls:qk]</rows>
-    <cols>[federated.ehemailpipeline].[none:mql_date:ok]</cols>
+    <cols>[federated.ehemailpipeline].[none:event_timestamp:ok]</cols>
   </table>
   <simple-id uuid='{FD079FAA-2170-43F7-9E01-652F6D17C9B0}' />
 </worksheet>
@@ -78,18 +73,6 @@
         <card type='title' />
       </strip>
     </edge>
-    <edge name='right'>
-      <strip size='160'>
-        <card pane-specification-id='0' param='[federated.ehemailpipeline].[none:mql_segment:nk]' type='color' />
-      </strip>
-    </edge>
   </cards>
-  <viewpoint>
-    <highlight>
-      <color-one-way>
-        <field>[federated.ehemailpipeline].[none:mql_segment:nk]</field>
-      </color-one-way>
-    </highlight>
-  </viewpoint>
   <simple-id uuid='{229FCBB6-A5B4-4F7B-AC43-551EDFFB914B}' />
 </window>

@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Won ARR Δ]
+  caption: Won ARR Δ
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Won ARR Δ' datatype='real' default-format='p0.00%' name='[Won ARR Δ]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='([Won ARR SP] - [Won ARR LY]) / IIF([Won ARR LY] = 0, NULL, [Won ARR LY])' />
+</column>

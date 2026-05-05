@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline CTOR]
+  caption: Pipeline CTOR
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline CTOR' datatype='real' default-format='p0.00%' name='[Pipeline CTOR]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Pipeline Clicks SP] / IIF([Pipeline Opens SP] = 0, NULL, [Pipeline Opens SP])' />
+</column>

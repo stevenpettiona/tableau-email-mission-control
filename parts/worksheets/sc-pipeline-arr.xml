@@ -1,16 +1,16 @@
 <!--
   part-type: worksheet
-  name: [SC] Pipeline - Sends
-  caption: [SC] Pipeline - Sends
+  name: [SC] Pipeline - ARR
+  caption: [SC] Pipeline - ARR
   datasource: ds2
   last-modified: 2026-05-05
 -->
 <!-- SECTION:WORKSHEET -->
-<worksheet name='[SC] Pipeline - Sends'>
+<worksheet name='[SC] Pipeline - ARR'>
   <layout-options>
     <title>
       <formatted-text>
-        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>SENDS</run>
+        <run bold='true' fontalignment='1' fontcolor='#6B3FA0' fontname='Poppins' fontsize='8'>WON ARR</run>
       </formatted-text>
     </title>
   </layout-options>
@@ -37,10 +37,10 @@
         <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column caption='Pipeline Sends SP' datatype='integer' name='[Pipeline Sends SP]' role='measure' type='quantitative' />
-        <column-instance column='[Pipeline Sends SP]' derivation='User' name='[usr:Pipeline Sends SP:qk]' pivot='key' type='quantitative' />
-        <column caption='Pipeline Sends Δ' datatype='real' default-format='p0.00%' name='[Pipeline Sends Δ]' role='measure' type='quantitative' />
-        <column-instance column='[Pipeline Sends Δ]' derivation='User' name='[usr:Pipeline Sends Δ:qk]' pivot='key' type='quantitative' />
+        <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative' />
+        <column-instance column='[Won ARR SP]' derivation='User' name='[usr:Won ARR SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Won ARR Δ' datatype='real' default-format='p0.00%' name='[Won ARR Δ]' role='measure' type='quantitative' />
+        <column-instance column='[Won ARR Δ]' derivation='User' name='[usr:Won ARR Δ:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
     </view>
@@ -61,14 +61,14 @@
         </view>
         <mark class='Automatic' />
         <encodings>
-          <text column='[federated.ehemailpipeline].[usr:Pipeline Sends SP:qk]' />
-          <text column='[federated.ehemailpipeline].[usr:Pipeline Sends Δ:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Won ARR SP:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Won ARR Δ:qk]' />
         </encodings>
         <customized-label>
           <formatted-text>
-            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline Sends SP:qk]>]]></run>
+            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:Won ARR SP:qk]>]]></run>
             <run>Æ&#10;</run>
-            <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline Sends Δ:qk]> vs prior period]]></run>
+            <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:Won ARR Δ:qk]> vs prior period]]></run>
           </formatted-text>
         </customized-label>
         <style>
@@ -82,11 +82,11 @@
     <rows />
     <cols />
   </table>
-  <simple-id uuid='{6E9C8E48-96B2-4E22-BB6C-D998A30D81BD}' />
+  <simple-id uuid='{C3D4E5F6-A7B8-4901-ACDE-F01234567890}' />
 </worksheet>
 
 <!-- SECTION:WINDOW-ENTRY -->
-<window class='worksheet' name='[SC] Pipeline - Sends'>
+<window class='worksheet' name='[SC] Pipeline - ARR'>
   <cards>
     <edge name='left'>
       <strip size='160'>
@@ -101,5 +101,5 @@
       <strip size='31'><card type='title' /></strip>
     </edge>
   </cards>
-  <simple-id uuid='{0623CE47-672D-49F3-9552-CE76DFB90BA5}' />
+  <simple-id uuid='{D4E5F6A7-B8C9-4012-BDEF-012345678901}' />
 </window>

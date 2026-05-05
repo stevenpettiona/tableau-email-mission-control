@@ -5,6 +5,6 @@
   datasource: ds1
   last-modified: 2026-05-01
 -->
-<column caption='Sends LP' datatype='integer' name='[Sends LP]' role='measure' type='quantitative'>
+<column caption='Sends LP' datatype='integer' default-format='#,##0' name='[Sends LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_type] = &quot;Send&quot; AND [event_timestamp] &gt;= [Comp Start Date] AND [event_timestamp] &lt;= [Comp End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Filter]) AND ([Parameters].[Direction Filter] = &quot;All&quot; OR [direction] = [Parameters].[Direction Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) AND ([Parameters].[Company Size Filter] = &quot;All&quot; OR [company_size] = [Parameters].[Company Size Filter]) AND ([Parameters].[Product Filter] = &quot;All&quot; OR [product] = [Parameters].[Product Filter] OR ([Parameters].[Product Filter] = &quot;&quot; AND ISNULL([product]))) THEN [event_count] END)' />
 </column>

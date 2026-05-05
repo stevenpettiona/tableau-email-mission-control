@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline Win Rate]
+  caption: Pipeline Win Rate
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline Win Rate' datatype='real' default-format='p0.00%' name='[Pipeline Win Rate]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[Wons SP] / IIF([SAOs SP] = 0, NULL, [SAOs SP])' />
+</column>

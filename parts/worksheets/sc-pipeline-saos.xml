@@ -3,7 +3,7 @@
   name: [SC] Pipeline - SAOs
   caption: [SC] Pipeline - SAOs
   datasource: ds2
-  last-modified: 2026-05-04
+  last-modified: 2026-05-05
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[SC] Pipeline - SAOs'>
@@ -37,8 +37,10 @@
         <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column caption='SAOs SP' datatype='integer' name='[saos]' role='measure' type='quantitative' />
-        <column-instance column='[saos]' derivation='Sum' name='[sum:saos:qk]' pivot='key' type='quantitative' />
+        <column caption='SAOs SP' datatype='real' name='[SAOs SP]' role='measure' type='quantitative' />
+        <column-instance column='[SAOs SP]' derivation='User' name='[usr:SAOs SP:qk]' pivot='key' type='quantitative' />
+        <column caption='SAOs Δ' datatype='real' default-format='p0.00%' name='[SAOs Δ]' role='measure' type='quantitative' />
+        <column-instance column='[SAOs Δ]' derivation='User' name='[usr:SAOs Δ:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
     </view>
@@ -59,8 +61,16 @@
         </view>
         <mark class='Automatic' />
         <encodings>
-          <text column='[federated.ehemailpipeline].[sum:saos:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:SAOs SP:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:SAOs Δ:qk]' />
         </encodings>
+        <customized-label>
+          <formatted-text>
+            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:SAOs SP:qk]>]]></run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:SAOs Δ:qk]> vs prior period]]></run>
+          </formatted-text>
+        </customized-label>
         <style>
           <style-rule element='mark'>
             <format attr='mark-labels-show' value='true' />

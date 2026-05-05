@@ -6,5 +6,5 @@
   last-modified: 2026-05-04
 -->
 <column caption='Won ARR LY' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR LY]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='SUM(IF [sao_date] &gt;= DATEADD(&apos;year&apos;, -1, [Parameters].[Start Date]) AND [sao_date] &lt;= DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) THEN [won_arr_weighted_cust] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Pipeline Comp Start] AND [event_timestamp] &lt;= [Pipeline Comp End] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [arr] END)' />
 </column>

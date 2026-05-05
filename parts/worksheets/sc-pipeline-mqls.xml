@@ -3,7 +3,7 @@
   name: [SC] Pipeline - MQLs
   caption: [SC] Pipeline - MQLs
   datasource: ds2
-  last-modified: 2026-05-04
+  last-modified: 2026-05-05
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[SC] Pipeline - MQLs'>
@@ -37,8 +37,10 @@
         <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
       </datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column caption='MQLs SP' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
-        <column-instance column='[mqls]' derivation='Sum' name='[sum:mqls:qk]' pivot='key' type='quantitative' />
+        <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative' />
+        <column-instance column='[Pipeline MQLs SP]' derivation='User' name='[usr:Pipeline MQLs SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Pipeline MQLs Δ' datatype='real' default-format='p0.00%' name='[Pipeline MQLs Δ]' role='measure' type='quantitative' />
+        <column-instance column='[Pipeline MQLs Δ]' derivation='User' name='[usr:Pipeline MQLs Δ:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
     </view>
@@ -59,8 +61,16 @@
         </view>
         <mark class='Automatic' />
         <encodings>
-          <text column='[federated.ehemailpipeline].[sum:mqls:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Pipeline MQLs SP:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Pipeline MQLs Δ:qk]' />
         </encodings>
+        <customized-label>
+          <formatted-text>
+            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline MQLs SP:qk]>]]></run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline MQLs Δ:qk]> vs prior period]]></run>
+          </formatted-text>
+        </customized-label>
         <style>
           <style-rule element='mark'>
             <format attr='mark-labels-show' value='true' />

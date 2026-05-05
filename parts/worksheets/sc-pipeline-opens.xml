@@ -2,8 +2,8 @@
   part-type: worksheet
   name: [SC] Pipeline - Opens
   caption: [SC] Pipeline - Opens
-  datasource: ds1
-  last-modified: 2026-05-04
+  datasource: ds2
+  last-modified: 2026-05-05
 -->
 <!-- SECTION:WORKSHEET -->
 <worksheet name='[SC] Pipeline - Opens'>
@@ -17,7 +17,7 @@
   <table>
     <view>
       <datasources>
-        <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
+        <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
         <datasource caption='Parameters' name='Parameters' />
       </datasources>
       <datasource-dependencies datasource='Parameters'>
@@ -36,11 +36,11 @@
         <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
         <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
       </datasource-dependencies>
-      <datasource-dependencies datasource='federated.ehemailengagement'>
-        <column caption='Opens SP' datatype='integer' name='[Opens SP]' role='measure' type='quantitative' />
-        <column-instance column='[Opens SP]' derivation='User' name='[usr:Opens SP:qk]' pivot='key' type='quantitative' />
-        <column caption='Opens Δ' datatype='real' default-format='p0.00%' name='[Opens Δ]' role='measure' type='quantitative' />
-        <column-instance column='[Opens Δ]' derivation='User' name='[usr:Opens Δ:qk]' pivot='key' type='quantitative' />
+      <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column caption='Pipeline Opens SP' datatype='integer' name='[Pipeline Opens SP]' role='measure' type='quantitative' />
+        <column-instance column='[Pipeline Opens SP]' derivation='User' name='[usr:Pipeline Opens SP:qk]' pivot='key' type='quantitative' />
+        <column caption='Pipeline Opens Δ' datatype='real' default-format='p0.00%' name='[Pipeline Opens Δ]' role='measure' type='quantitative' />
+        <column-instance column='[Pipeline Opens Δ]' derivation='User' name='[usr:Pipeline Opens Δ:qk]' pivot='key' type='quantitative' />
       </datasource-dependencies>
       <aggregation value='true' />
     </view>
@@ -61,16 +61,16 @@
         </view>
         <mark class='Automatic' />
         <encodings>
-          <text column='[federated.ehemailengagement].[usr:Opens SP:qk]' />
-              <text column='[federated.ehemailengagement].[usr:Opens Δ:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Pipeline Opens SP:qk]' />
+          <text column='[federated.ehemailpipeline].[usr:Pipeline Opens Δ:qk]' />
         </encodings>
-            <customized-label>
-              <formatted-text>
-                <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailengagement].[usr:Opens SP:qk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailengagement].[usr:Opens Δ:qk]> vs prior period]]></run>
-              </formatted-text>
-            </customized-label>
+        <customized-label>
+          <formatted-text>
+            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline Opens SP:qk]>]]></run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:Pipeline Opens Δ:qk]> vs prior period]]></run>
+          </formatted-text>
+        </customized-label>
         <style>
           <style-rule element='mark'>
             <format attr='mark-labels-show' value='true' />

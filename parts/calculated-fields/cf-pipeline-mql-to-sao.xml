@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline MQL-to-SAO]
+  caption: Pipeline MQL-to-SAO
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline MQL-to-SAO' datatype='real' default-format='p0.00%' name='[Pipeline MQL-to-SAO]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='[SAOs SP] / IIF([Pipeline MQLs SP] = 0, NULL, [Pipeline MQLs SP])' />
+</column>

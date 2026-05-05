@@ -116,8 +116,8 @@
         <member alias='Default' value='&quot;Default&quot;' />
       </members>
     </column>
-    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
-      <calculation class='tableau' formula='#2026-05-01#' />
+    <column caption='Start Date' datatype='date' name='[Start Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-02-01#'>
+      <calculation class='tableau' formula='#2026-02-01#' />
       <range min='#2023-01-01#' />
     </column>
   </datasource-dependencies>
@@ -333,20 +333,23 @@
             </formatted-text>
           </zone>
           <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
-            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='20059' x='0' y='20333' />
-            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='19985' x='20059' y='20333' />
-            <zone h='9000' id='1704' name='[SC] Pipeline - Clicks' w='19985' x='40044' y='20333' />
-            <zone h='9000' id='1705' name='[SC] Pipeline - MQLs' w='19986' x='60029' y='20333' />
-            <zone h='9000' id='1706' name='[SC] Pipeline - SAOs' w='19985' x='80015' y='20333' />
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='8346' x='0' y='20333' />
+            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='8345' x='8346' y='20333' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='8346' x='16691' y='20333' />
+            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='8345' x='25037' y='20333' />
+            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='8345' x='33382' y='20333' />
+            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='8346' x='41727' y='20333' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='8345' x='41728' y='20333' />
+            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='8346' x='50073' y='20333' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='8345' x='58419' y='20333' />
+            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='8346' x='66764' y='20333' />
+            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='8345' x='75110' y='20333' />
+            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='8273' x='83455' y='20333' />
+            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='8272' x='91728' y='20333' />
           </zone>
           <zone h='70614' id='1707' type-v2='layout-basic' w='100000' x='0' y='29386'>
             <zone h='70614' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='29386' />
-            <zone h='41659' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29386' />
-            <zone h='28955' id='1710' type-v2='text' w='35000' x='65000' y='71045'>
-              <formatted-text>
-                <run fontcolor='#4b5563' fontname='Poppins' fontsize='11'>What This View Intentionally Omits — No ROI or revenue attribution. No multi-touch attribution. No individual recipient tracing.</run>
-              </formatted-text>
-            </zone>
+            <zone h='70614' id='1709' name='[BC] Pipeline Trend' w='35000' x='65000' y='29386' />
           </zone>
         </zone>
       </zone>
@@ -362,10 +365,28 @@
     <viewpoint name='[BC] Pipeline Trend'>
       <zoom type='entire-view' />
     </viewpoint>
+    <viewpoint name='[SC] Pipeline - ARR'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - ARR per Won'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - CTOR'>
+      <zoom type='entire-view' />
+    </viewpoint>
     <viewpoint name='[SC] Pipeline - Clicks'>
       <zoom type='entire-view' />
     </viewpoint>
+    <viewpoint name='[SC] Pipeline - Click-to-MQL'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - MQL-to-SAO'>
+      <zoom type='entire-view' />
+    </viewpoint>
     <viewpoint name='[SC] Pipeline - MQLs'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Open Rate'>
       <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Pipeline - Opens'>
@@ -375,6 +396,12 @@
       <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[SC] Pipeline - Sends'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Win Rate'>
+      <zoom type='entire-view' />
+    </viewpoint>
+    <viewpoint name='[SC] Pipeline - Wons'>
       <zoom type='entire-view' />
     </viewpoint>
     <viewpoint name='[TB] Pipeline Table'>
