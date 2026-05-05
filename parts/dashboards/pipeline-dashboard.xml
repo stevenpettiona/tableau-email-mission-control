@@ -6,7 +6,7 @@
   last-modified: 2026-05-04
 -->
 <!-- SECTION:DASHBOARD -->
-<dashboard enable-sort-zone-taborder='true' name='Email Pipeline'>
+ <dashboard enable-sort-zone-taborder='true' name='Email Pipeline'>
   <style>
     <style-rule element='dashboard'>
       <format attr='background-color' value='#f5f3fa' />
@@ -23,7 +23,7 @@
     <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -79,6 +79,21 @@
     <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
+    </column>
+    <column alias='Won' caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Won&quot;'>
+      <calculation class='tableau' formula='&quot;Won&quot;' />
+      <aliases>
+        <alias key='&quot;ARR&quot;' value='ARR' />
+        <alias key='&quot;MQL&quot;' value='MQL' />
+        <alias key='&quot;SAO&quot;' value='SAO' />
+        <alias key='&quot;Won&quot;' value='Won' />
+      </aliases>
+      <members>
+        <member alias='MQL' value='&quot;MQL&quot;' />
+        <member alias='SAO' value='&quot;SAO&quot;' />
+        <member alias='Won' value='&quot;Won&quot;' />
+        <member alias='ARR' value='&quot;ARR&quot;' />
+      </members>
     </column>
     <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
@@ -230,7 +245,7 @@
           </zone-style>
         </zone>
         <zone friendly-name='Filters &amp; Parameters' h='5333' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
-          <zone custom-title='true' h='5333' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
+          <zone custom-title='true' h='5333' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='10000' x='0' y='7555'>
             <formatted-text>
               <run fontname='Tableau Bold'>Country</run>
             </formatted-text>
@@ -241,7 +256,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
+          <zone h='5333' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='10000' x='10000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -249,7 +264,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
+          <zone h='5333' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='10000' x='20000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -257,7 +272,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
+          <zone h='5333' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='10000' x='30000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -265,7 +280,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
+          <zone h='5333' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='10000' x='40000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -273,7 +288,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
+          <zone h='5333' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='10000' x='50000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -281,7 +296,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
+          <zone h='5333' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='10000' x='60000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -289,7 +304,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
+          <zone h='5333' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='10000' x='70000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -297,7 +312,15 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
+          <zone h='5333' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='10000' x='80000' y='7555'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='5333' id='1809' mode='compact' param='[Parameters].[Pipeline Metric]' type-v2='paramctrl' w='10000' x='90000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -333,19 +356,19 @@
             </formatted-text>
           </zone>
           <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
-            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='8346' x='0' y='20333' />
-            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='8345' x='8346' y='20333' />
-            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='8346' x='16691' y='20333' />
-            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='8345' x='25037' y='20333' />
-            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='8345' x='33382' y='20333' />
-            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='8346' x='41727' y='20333' />
-            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='8345' x='41728' y='20333' />
-            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='8346' x='50073' y='20333' />
-            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='8345' x='58419' y='20333' />
-            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='8346' x='66764' y='20333' />
-            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='8345' x='75110' y='20333' />
-            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='8273' x='83455' y='20333' />
-            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='8272' x='91728' y='20333' />
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='20333' />
+            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='20333' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='7686' x='15447' y='20333' />
+            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='7687' x='23133' y='20333' />
+            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='7687' x='30820' y='20333' />
+            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='7686' x='38507' y='20333' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='7687' x='46193' y='20333' />
+            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='7687' x='53880' y='20333' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='7686' x='61567' y='20333' />
+            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='7687' x='69253' y='20333' />
+            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='7687' x='76940' y='20333' />
+            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='7686' x='84627' y='20333' />
+            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='7687' x='92313' y='20333' />
           </zone>
           <zone h='70614' id='1707' type-v2='layout-basic' w='100000' x='0' y='29386'>
             <zone h='70614' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='29386' />

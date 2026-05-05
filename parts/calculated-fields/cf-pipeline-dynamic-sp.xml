@@ -1,0 +1,10 @@
+<!--
+  part-type: calculated-field
+  name: [Pipeline - Dynamic SP]
+  caption: Pipeline - Dynamic SP
+  datasource: ds2
+  last-modified: 2026-05-05
+-->
+<column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='CASE [Parameters].[Pipeline Metric] WHEN &quot;MQL&quot; THEN [Pipeline MQLs SP] WHEN &quot;SAO&quot; THEN [SAOs SP] WHEN &quot;Won&quot; THEN [Wons SP] WHEN &quot;ARR&quot; THEN [Won ARR SP] END' />
+</column>

@@ -195,4 +195,19 @@
       <member value='&quot;Unsubscribe Rate&quot;' />
     </members>
   </column>
+  <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;'>
+    <calculation class='tableau' formula='&quot;MQL&quot;' />
+    <aliases>
+      <alias key='&quot;MQL&quot;' value='MQL' />
+      <alias key='&quot;SAO&quot;' value='SAO' />
+      <alias key='&quot;Won&quot;' value='Won' />
+      <alias key='&quot;ARR&quot;' value='ARR' />
+    </aliases>
+    <members>
+      <member alias='MQL' value='&quot;MQL&quot;' />
+      <member alias='SAO' value='&quot;SAO&quot;' />
+      <member alias='Won' value='&quot;Won&quot;' />
+      <member alias='ARR' value='&quot;ARR&quot;' />
+    </members>
+  </column>
 </datasource>

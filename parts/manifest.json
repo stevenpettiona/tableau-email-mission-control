@@ -84,6 +84,7 @@
     "calculated-fields/cf-pipeline-mql-to-sao.xml",
     "calculated-fields/cf-pipeline-win-rate.xml",
     "calculated-fields/cf-pipeline-arr-per-won.xml",
+    "calculated-fields/cf-pipeline-dynamic-sp.xml",
     "calculated-fields/cf-sends-pop.xml",
     "calculated-fields/cf-opens-pop.xml",
     "calculated-fields/cf-clicks-pop.xml",

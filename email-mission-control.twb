@@ -224,6 +224,21 @@
       <member value='&quot;Unsubscribe Rate&quot;' />
     </members>
   </column>
+  <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;'>
+    <calculation class='tableau' formula='&quot;MQL&quot;' />
+    <aliases>
+      <alias key='&quot;MQL&quot;' value='MQL' />
+      <alias key='&quot;SAO&quot;' value='SAO' />
+      <alias key='&quot;Won&quot;' value='Won' />
+      <alias key='&quot;ARR&quot;' value='ARR' />
+    </aliases>
+    <members>
+      <member alias='MQL' value='&quot;MQL&quot;' />
+      <member alias='SAO' value='&quot;SAO&quot;' />
+      <member alias='Won' value='&quot;Won&quot;' />
+      <member alias='ARR' value='&quot;ARR&quot;' />
+    </members>
+  </column>
 </datasource>
 
 <datasource caption='EH Email Engagement' inline='true' name='federated.ehemailengagement' version='18.1'>
@@ -582,10 +597,10 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
   <column caption='Pipeline Comp End' datatype='date' name='[Pipeline Comp End]' role='dimension' type='ordinal'>
   <calculation class='tableau' formula='IF [Parameters].[Compare Period] = &quot;YoY&quot; THEN DATEADD(&apos;year&apos;, -1, [Parameters].[End Date]) ELSEIF [Parameters].[Compare Period] = &quot;PoP&quot; THEN DATEADD(&apos;day&apos;, -1, [Parameters].[Start Date]) ELSE [Parameters].[Comparison End] END' />
 </column>
-  <column caption='Pipeline Sends SP' datatype='integer' default-format='#,##0' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
+  <column caption='Pipeline Sends SP' datatype='integer' default-format='#,##0.00,,&quot;M&quot;' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [sends] END)' />
 </column>
-  <column caption='Pipeline Opens SP' datatype='integer' default-format='#,##0' name='[Pipeline Opens SP]' role='measure' type='quantitative'>
+  <column caption='Pipeline Opens SP' datatype='integer' default-format='#,##0.00,,&quot;M&quot;' name='[Pipeline Opens SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [opens] END)' />
 </column>
   <column caption='Pipeline Clicks SP' datatype='integer' default-format='#,##0' name='[Pipeline Clicks SP]' role='measure' type='quantitative'>
@@ -595,7 +610,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [unsubscribes] END)' />
 </column>
   <column caption='Pipeline MQLs SP' datatype='integer' name='[Pipeline MQLs SP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] END) ' />
 </column>
   <column caption='Pipeline Sends LP' datatype='integer' default-format='#,##0' name='[Pipeline Sends LP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Pipeline Comp Start] AND [event_timestamp] &lt;= [Pipeline Comp End] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [sends] END)' />
@@ -610,7 +625,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Pipeline Comp Start] AND [event_timestamp] &lt;= [Pipeline Comp End] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [unsubscribes] END)' />
 </column>
   <column caption='Pipeline MQLs LP' datatype='integer' default-format='#,##0' name='[Pipeline MQLs LP]' role='measure' type='quantitative'>
-  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Pipeline Comp Start] AND [event_timestamp] &lt;= [Pipeline Comp End] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] END)' />
+  <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Pipeline Comp Start] AND [event_timestamp] &lt;= [Pipeline Comp End] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [mqls] + [MQLs (Recycled)] END ) ' />
 </column>
   <column caption='Pipeline Sends Δ' datatype='real' default-format='p0.00%' name='[Pipeline Sends Δ]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='([Pipeline Sends SP] - [Pipeline Sends LP]) / IIF([Pipeline Sends LP] = 0, NULL, [Pipeline Sends LP])' />
@@ -636,7 +651,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
   <column caption='SAO ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[SAO ARR SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [arr] END)' />
 </column>
-  <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0' name='[Won ARR SP]' role='measure' type='quantitative'>
+  <column caption='Won ARR SP' datatype='real' default-format='&quot;$&quot;#,##0,&quot;K&quot;' name='[Won ARR SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [arr] END)' />
 </column>
   <column caption='SAOs LY' datatype='real' name='[SAOs LY]' role='measure' type='quantitative'>
@@ -680,6 +695,9 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
 </column>
   <column caption='Pipeline ARR per Won' datatype='real' default-format='&quot;$&quot;#,##0' name='[Pipeline ARR per Won]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='[Won ARR SP] / IIF([Wons SP] = 0, NULL, [Wons SP])' />
+</column>
+  <column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative'>
+  <calculation class='tableau' formula='CASE [Parameters].[Pipeline Metric] WHEN &quot;MQL&quot; THEN [Pipeline MQLs SP] WHEN &quot;SAO&quot; THEN [SAOs SP] WHEN &quot;Won&quot; THEN [Wons SP] WHEN &quot;ARR&quot; THEN [Won ARR SP] END' />
 </column>
   <column caption='SAOs PoP %' datatype='real' default-format='p0.00%' name='[SAOs PoP %]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='([SAOs SP] - [SAOs LY]) / IIF([SAOs LY] = 0, NULL, [SAOs LY])' />
@@ -5193,13 +5211,20 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
     <view>
       <datasources>
         <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
+        <datasource caption='Parameters' name='Parameters' />
       </datasources>
-      <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
-        <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
-        <column-instance column='[event_timestamp]' derivation='None' name='[none:event_timestamp:ok]' pivot='key' type='ordinal' />
-        <column-instance column='[mqls]' derivation='Sum' name='[sum:mqls:qk]' pivot='key' type='quantitative' />
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;' />
       </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column datatype='date' name='[event_week]' role='dimension' type='ordinal' />
+        <column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative' />
+        <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
+        <column-instance column='[Pipeline - Dynamic SP]' derivation='User' name='[usr:Pipeline - Dynamic SP:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <filter class='quantitative' column='[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]' included-values='in-range'>
+        <min>1</min>
+      </filter>
       <aggregation value='true' />
     </view>
     <style>
@@ -5221,8 +5246,8 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailpipeline].[sum:mqls:qk]</rows>
-    <cols>[federated.ehemailpipeline].[none:event_timestamp:ok]</cols>
+    <rows>[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]</rows>
+    <cols>[federated.ehemailpipeline].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{FD079FAA-2170-43F7-9E01-652F6D17C9B0}' />
 </worksheet>
@@ -7013,7 +7038,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
     <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -7069,6 +7094,21 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
     <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
+    </column>
+    <column alias='Won' caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Won&quot;'>
+      <calculation class='tableau' formula='&quot;Won&quot;' />
+      <aliases>
+        <alias key='&quot;ARR&quot;' value='ARR' />
+        <alias key='&quot;MQL&quot;' value='MQL' />
+        <alias key='&quot;SAO&quot;' value='SAO' />
+        <alias key='&quot;Won&quot;' value='Won' />
+      </aliases>
+      <members>
+        <member alias='MQL' value='&quot;MQL&quot;' />
+        <member alias='SAO' value='&quot;SAO&quot;' />
+        <member alias='Won' value='&quot;Won&quot;' />
+        <member alias='ARR' value='&quot;ARR&quot;' />
+      </members>
     </column>
     <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
@@ -7220,7 +7260,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
           </zone-style>
         </zone>
         <zone friendly-name='Filters &amp; Parameters' h='5333' id='1749' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
-          <zone custom-title='true' h='5333' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
+          <zone custom-title='true' h='5333' id='1750' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='10000' x='0' y='7555'>
             <formatted-text>
               <run fontname='Tableau Bold'>Country</run>
             </formatted-text>
@@ -7231,7 +7271,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
+          <zone h='5333' id='1751' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='10000' x='10000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7239,7 +7279,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
+          <zone h='5333' id='1752' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='10000' x='20000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7247,7 +7287,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
+          <zone h='5333' id='1753' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='10000' x='30000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7255,7 +7295,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
+          <zone h='5333' id='1754' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='10000' x='40000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7263,7 +7303,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
+          <zone h='5333' id='1755' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='10000' x='50000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7271,7 +7311,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
+          <zone h='5333' id='1756' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='10000' x='60000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7279,7 +7319,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
+          <zone h='5333' id='1757' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='10000' x='70000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7287,7 +7327,15 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5333' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
+          <zone h='5333' id='1758' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='10000' x='80000' y='7555'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='5333' id='1809' mode='compact' param='[Parameters].[Pipeline Metric]' type-v2='paramctrl' w='10000' x='90000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -7323,19 +7371,19 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
             </formatted-text>
           </zone>
           <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
-            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='8346' x='0' y='20333' />
-            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='8345' x='8346' y='20333' />
-            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='8346' x='16691' y='20333' />
-            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='8345' x='25037' y='20333' />
-            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='8345' x='33382' y='20333' />
-            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='8346' x='41727' y='20333' />
-            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='8345' x='41728' y='20333' />
-            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='8346' x='50073' y='20333' />
-            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='8345' x='58419' y='20333' />
-            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='8346' x='66764' y='20333' />
-            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='8345' x='75110' y='20333' />
-            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='8273' x='83455' y='20333' />
-            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='8272' x='91728' y='20333' />
+            <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='20333' />
+            <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='20333' />
+            <zone h='9000' id='1703' name='[SC] Pipeline - Opens' w='7686' x='15447' y='20333' />
+            <zone h='9000' id='1801' name='[SC] Pipeline - CTOR' show-title='false' w='7687' x='23133' y='20333' />
+            <zone h='9000' id='1808' name='[SC] Pipeline - Clicks' w='7687' x='30820' y='20333' />
+            <zone h='9000' id='1802' name='[SC] Pipeline - Click-to-MQL' show-title='false' w='7686' x='38507' y='20333' />
+            <zone h='9000' id='1704' name='[SC] Pipeline - MQLs' w='7687' x='46193' y='20333' />
+            <zone h='9000' id='1803' name='[SC] Pipeline - MQL-to-SAO' show-title='false' w='7687' x='53880' y='20333' />
+            <zone h='9000' id='1705' name='[SC] Pipeline - SAOs' w='7686' x='61567' y='20333' />
+            <zone h='9000' id='1804' name='[SC] Pipeline - Win Rate' show-title='false' w='7687' x='69253' y='20333' />
+            <zone h='9000' id='1805' name='[SC] Pipeline - Wons' w='7687' x='76940' y='20333' />
+            <zone h='9000' id='1806' name='[SC] Pipeline - ARR per Won' show-title='false' w='7686' x='84627' y='20333' />
+            <zone h='9000' id='1807' name='[SC] Pipeline - ARR' w='7687' x='92313' y='20333' />
           </zone>
           <zone h='70614' id='1707' type-v2='layout-basic' w='100000' x='0' y='29386'>
             <zone h='70614' id='1708' name='[TB] Pipeline Table' w='65000' x='0' y='29386' />

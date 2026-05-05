@@ -18,13 +18,20 @@
     <view>
       <datasources>
         <datasource caption='EH Email Pipeline' name='federated.ehemailpipeline' />
+        <datasource caption='Parameters' name='Parameters' />
       </datasources>
-      <datasource-dependencies datasource='federated.ehemailpipeline'>
-        <column datatype='date' name='[event_timestamp]' role='dimension' type='ordinal' />
-        <column caption='MQLs' datatype='integer' name='[mqls]' role='measure' type='quantitative' />
-        <column-instance column='[event_timestamp]' derivation='None' name='[none:event_timestamp:ok]' pivot='key' type='ordinal' />
-        <column-instance column='[mqls]' derivation='Sum' name='[sum:mqls:qk]' pivot='key' type='quantitative' />
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Pipeline Metric' datatype='string' name='[Pipeline Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;MQL&quot;' />
       </datasource-dependencies>
+      <datasource-dependencies datasource='federated.ehemailpipeline'>
+        <column datatype='date' name='[event_week]' role='dimension' type='ordinal' />
+        <column caption='Pipeline - Dynamic SP' datatype='real' name='[Pipeline - Dynamic SP]' role='measure' type='quantitative' />
+        <column-instance column='[event_week]' derivation='None' name='[none:event_week:ok]' pivot='key' type='ordinal' />
+        <column-instance column='[Pipeline - Dynamic SP]' derivation='User' name='[usr:Pipeline - Dynamic SP:qk]' pivot='key' type='quantitative' />
+      </datasource-dependencies>
+      <filter class='quantitative' column='[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]' included-values='in-range'>
+        <min>1</min>
+      </filter>
       <aggregation value='true' />
     </view>
     <style>
@@ -46,8 +53,8 @@
         </style>
       </pane>
     </panes>
-    <rows>[federated.ehemailpipeline].[sum:mqls:qk]</rows>
-    <cols>[federated.ehemailpipeline].[none:event_timestamp:ok]</cols>
+    <rows>[federated.ehemailpipeline].[usr:Pipeline - Dynamic SP:qk]</rows>
+    <cols>[federated.ehemailpipeline].[none:event_week:ok]</cols>
   </table>
   <simple-id uuid='{FD079FAA-2170-43F7-9E01-652F6D17C9B0}' />
 </worksheet>

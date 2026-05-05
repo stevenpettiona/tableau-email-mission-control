@@ -5,6 +5,6 @@
   datasource: ds2
   last-modified: 2026-05-05
 -->
-<column caption='Pipeline Sends SP' datatype='integer' default-format='#,##0' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
+<column caption='Pipeline Sends SP' datatype='integer' default-format='#,##0.00,,&quot;M&quot;' name='[Pipeline Sends SP]' role='measure' type='quantitative'>
   <calculation class='tableau' formula='SUM(IF [event_timestamp] &gt;= [Parameters].[Start Date] AND [event_timestamp] &lt;= [Parameters].[End Date] AND ([Parameters].[Platform Filter] = &quot;All&quot; OR [platform] = [Parameters].[Platform Filter]) AND ([Parameters].[Program Type Quick Filter] = &quot;All&quot; OR [program_type] = [Parameters].[Program Type Quick Filter]) AND ([Parameters].[Country Filter] = &quot;All&quot; OR [country] = [Parameters].[Country Filter]) THEN [sends] END)' />
 </column>
