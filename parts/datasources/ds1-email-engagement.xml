@@ -30,7 +30,7 @@
     c.direction,
     c.campaign_year_month,
     a.marketo_geo_code                            AS country,
-    a.sf_estimated_company_size_category          AS company_size,
+    coalesce(a.sf_estimated_company_size_category, 'core')         AS company_size,
     a.marketo_industry                            AS industry,
     a.marketo_lifecycle_stage                     AS lifecycle_stage
 FROM mart.fct_marketing_email_engagement f
@@ -40,7 +40,7 @@ LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
-and f.event_timestamp >= &apos;20250101&apos;
+and f.event_timestamp >= &apos;20260501&apos;
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
     <cols>
       <map key='[event_count]' value='[Email Engagement].[event_count]' />

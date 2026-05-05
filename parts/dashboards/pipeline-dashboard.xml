@@ -350,11 +350,6 @@
           </zone>
         </zone>
         <zone h='83779' id='1726' type-v2='layout-basic' w='100000' x='0' y='16221'>
-          <zone h='4083' id='1700' type-v2='text' w='100000' x='0' y='16221'>
-            <formatted-text>
-              <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
-            </formatted-text>
-          </zone>
           <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
             <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='20333' />
             <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='20333' />

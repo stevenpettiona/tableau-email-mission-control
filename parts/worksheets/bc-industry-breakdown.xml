@@ -149,9 +149,6 @@
       <filter class='quantitative' column='[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]' included-values='in-range'>
         <min>0.005681818181818182</min>
       </filter>
-      <shelf-sorts>
-        <shelf-sort-v2 dimension-to-sort='[federated.ehemailengagement].[none:industry:nk]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]' shelf='rows' />
-      </shelf-sorts>
       <slices>
         <column>[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]</column>
       </slices>

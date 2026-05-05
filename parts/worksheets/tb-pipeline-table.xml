@@ -110,9 +110,6 @@
       <filter class='categorical' column='[federated.ehemailpipeline].[campaign_name]'>
         <groupfilter function='level-members' level='[campaign_name]' user:ui-manual-selection='true' user:ui-manual-selection-all-when-empty='true' user:ui-manual-selection-is-empty='true' user:ui-marker='enumerate' />
       </filter>
-      <shelf-sorts>
-        <shelf-sort-v2 dimension-to-sort='[federated.ehemailpipeline].[campaign_name]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.ehemailpipeline].[usr:SAOs SP:qk]' shelf='rows' />
-      </shelf-sorts>
       <slices>
         <column>[federated.ehemailpipeline].[:Measure Names]</column>
         <column>[federated.ehemailpipeline].[campaign_name]</column>

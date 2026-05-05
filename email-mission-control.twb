@@ -266,7 +266,7 @@
     c.direction,
     c.campaign_year_month,
     a.marketo_geo_code                            AS country,
-    a.sf_estimated_company_size_category          AS company_size,
+    coalesce(a.sf_estimated_company_size_category, 'core')         AS company_size,
     a.marketo_industry                            AS industry,
     a.marketo_lifecycle_stage                     AS lifecycle_stage
 FROM mart.fct_marketing_email_engagement f
@@ -276,7 +276,7 @@ LEFT JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = TRUE
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
-and f.event_timestamp >= &apos;20250101&apos;
+and f.event_timestamp >= &apos;20260501&apos;
 group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
     <cols>
       <map key='[event_count]' value='[Email Engagement].[event_count]' />
@@ -497,16 +497,38 @@ group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
         <connection authentication='auth-user-pass' class='redshift' dbname='dev' odbc-connect-string-extras='' one-time-sql='' port='5439' schema='mart' server='ehdw-01.c4377kymkso8.ap-southeast-2.redshift.amazonaws.com' show-other-databases='' single-node='' sslmode='require' username='tableau' />
       </named-connection>
     </named-connections>
-    <relation connection='redshift.ds2conn' name='Pipeline Flat' type='text'>SELECT
+    <relation connection='redshift.ds2conn' name='Pipeline Flat' type='text'>with m as (
+	select sum(mql_count) as mqls_new,
+		sum(recycled_mql_count) as mqls_recycled,
+		date,
+		dim_marketing_campaign_sk,
+		country
+	from mart.rpt_marketing_mofu_leads
+	where date >= &apos;20260501&apos;
+	group by 3,4,5
+),
+b as (
+	select sum(sao_weighted_with_unattributed_cust) as saos,
+    	SUM(won_weighted_with_unattributed_cust) as wons,
+   		SUM(won_arr_weighted_with_unattributed_cust) as arr,
+   		date,
+		dim_marketing_campaign_sk,
+		country
+    from mart.rpt_marketing_bofu_opportunities
+    where date >= &apos;20260501&apos;
+	group by 4,5,6
+)
+
+SELECT
     count(distinct CASE f.event_type WHEN &apos;Send&apos; THEN f.event_id ELSE NULL end) as sends,
     count(distinct CASE f.event_type WHEN &apos;Open&apos; THEN f.event_id ELSE NULL end) as opens,
     count(distinct CASE f.event_type WHEN &apos;Click&apos; THEN f.event_id ELSE NULL end) as clicks,
     count(distinct CASE f.event_type WHEN &apos;Unsubscribe&apos; THEN f.event_id ELSE NULL end) as unsubscribes,
-    SUM(mofu.mql_count) as mqls_new,
-    SUM(mofu.recycled_mql_count) as mqls_recycled,
-    SUM(bofu.sao_weighted_with_unattributed_cust) as saos,
-    SUM(bofu.won_weighted_with_unattributed_cust) as wons,
-    SUM(bofu.won_arr_weighted_with_unattributed_cust) as arr,
+    SUM(mofu.mqls_new) as mqls_new,
+    SUM(mofu.mqls_recycled) as mqls_recycled,
+    SUM(bofu.saos) as saos,
+    SUM(bofu.wons) as wons,
+    SUM(bofu.arr) as arr,
     DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE as email_date,
     DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
     DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
@@ -521,21 +543,22 @@ group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20</relation>
     c.channel,
     c.direction,
     c.campaign_year_month,
-    a.marketo_geo_code                            AS country
+    a.marketo_geo_code                            AS country,
+    a.marketo_industry 							  as industry
 FROM mart.fct_marketing_email_engagement f
-LEFT JOIN mart.dim_marketing_campaign c
+INNER JOIN mart.dim_marketing_campaign c
     ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
-LEFT JOIN mart.dim_marketing_audience a
+INNER JOIN mart.dim_marketing_audience a
     ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
     AND a.is_current = true
 left join mart.dim_country dc on dc.alpha_two_letter = coalesce(a.marketo_geo_code, a.braze_geo_code)
-LEFT JOIN mart.rpt_marketing_mofu_leads mofu
-    ON mofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and mofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and mofu.country = dc.country
-LEFT JOIN mart.rpt_marketing_bofu_opportunities bofu
-    ON bofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and bofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and bofu.country = dc.country
+LEFT JOIN m mofu
+	ON mofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and mofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and mofu.country = dc.country 
+LEFT JOIN b bofu
+	ON bofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and bofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and bofu.country = dc.country
 WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
-and f.event_timestamp >= &apos;20250501&apos;
-group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
+and f.event_timestamp >= &apos;20260501&apos;
+group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25</relation>
     <cols>
       <map key='[event_timestamp]' value='[Pipeline Flat].[email_date]' />
       <map key='[event_week]' value='[Pipeline Flat].[event_week]' />
@@ -552,6 +575,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
       <map key='[direction]' value='[Pipeline Flat].[direction]' />
       <map key='[campaign_year_month]' value='[Pipeline Flat].[campaign_year_month]' />
       <map key='[country]' value='[Pipeline Flat].[country]' />
+      <map key='[industry]' value='[Pipeline Flat].[industry]' />
       <map key='[sends]' value='[Pipeline Flat].[sends]' />
       <map key='[opens]' value='[Pipeline Flat].[opens]' />
       <map key='[clicks]' value='[Pipeline Flat].[clicks]' />
@@ -579,6 +603,7 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
   <column caption='Direction' datatype='string' name='[direction]' role='dimension' type='nominal' />
   <column caption='Program Launch Month' datatype='date' name='[campaign_year_month]' role='dimension' type='ordinal' />
   <column caption='Country' datatype='string' name='[country]' role='dimension' type='nominal' />
+  <column caption='Industry' datatype='string' name='[industry]' role='dimension' type='nominal' />
   <column caption='Sends' datatype='integer' name='[sends]' role='measure' type='quantitative' />
   <column caption='Opens' datatype='integer' name='[opens]' role='measure' type='quantitative' />
   <column caption='Clicks' datatype='integer' name='[clicks]' role='measure' type='quantitative' />
@@ -3858,9 +3883,6 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
       <filter class='quantitative' column='[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]' included-values='in-range'>
         <min>0.005681818181818182</min>
       </filter>
-      <shelf-sorts>
-        <shelf-sort-v2 dimension-to-sort='[federated.ehemailengagement].[none:industry:nk]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]' shelf='rows' />
-      </shelf-sorts>
       <slices>
         <column>[federated.ehemailengagement].[usr:Calculation_2626799926677504:qk]</column>
       </slices>
@@ -5355,9 +5377,6 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
       <filter class='categorical' column='[federated.ehemailpipeline].[campaign_name]'>
         <groupfilter function='level-members' level='[campaign_name]' user:ui-manual-selection='true' user:ui-manual-selection-all-when-empty='true' user:ui-manual-selection-is-empty='true' user:ui-marker='enumerate' />
       </filter>
-      <shelf-sorts>
-        <shelf-sort-v2 dimension-to-sort='[federated.ehemailpipeline].[campaign_name]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.ehemailpipeline].[usr:SAOs SP:qk]' shelf='rows' />
-      </shelf-sorts>
       <slices>
         <column>[federated.ehemailpipeline].[:Measure Names]</column>
         <column>[federated.ehemailpipeline].[campaign_name]</column>
@@ -7365,11 +7384,6 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
           </zone>
         </zone>
         <zone h='83779' id='1726' type-v2='layout-basic' w='100000' x='0' y='16221'>
-          <zone h='4083' id='1700' type-v2='text' w='100000' x='0' y='16221'>
-            <formatted-text>
-              <run fontcolor='#92400e' fontname='Poppins' fontsize='11'>Attribution is at program level — MQLs and SAOs are credited to the Marketo program, not to individual email recipients.</run>
-            </formatted-text>
-          </zone>
           <zone h='9082' id='1701' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='100000' x='0' y='20304'>
             <zone h='9000' id='1702' name='[SC] Pipeline - Sends' w='7760' x='0' y='20333' />
             <zone h='9000' id='1800' name='[SC] Pipeline - Open Rate' show-title='false' w='7687' x='7760' y='20333' />
