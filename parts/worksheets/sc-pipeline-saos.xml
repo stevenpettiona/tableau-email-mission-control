@@ -66,7 +66,7 @@
         </encodings>
         <customized-label>
           <formatted-text>
-            <run bold='true' fontname='Poppins' fontsize='14'><![CDATA[<[federated.ehemailpipeline].[usr:SAOs SP:qk]>]]></run>
+            <run bold='true' fontname='Poppins' fontsize='12'><![CDATA[<[federated.ehemailpipeline].[usr:SAOs SP:qk]>]]></run>
             <run>Æ&#10;</run>
             <run fontcolor='#888888' fontname='Poppins' fontsize='8'><![CDATA[<[federated.ehemailpipeline].[usr:SAOs Δ:qk]> vs prior period]]></run>
           </formatted-text>
