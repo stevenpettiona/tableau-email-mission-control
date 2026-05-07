@@ -22,7 +22,7 @@
       </datasources>
       <datasource-dependencies datasource='Parameters'>
         <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
@@ -35,7 +35,20 @@
         <column caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;' />
         <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#' />
         <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#' />
-      </datasource-dependencies>
+              <column caption='Lifecycle Stage Filter' datatype='string' name='[Lifecycle Stage Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+          <calculation class='tableau' formula='&quot;All&quot;' />
+          <aliases>
+            <alias key='&quot;All&quot;' value='All' />
+            <alias key='&quot;Subscriber&quot;' value='Subscriber' />
+            <alias key='&quot;Marketing Qualified Lead&quot;' value='Marketing Qualified Lead' />
+            <alias key='&quot;Churn&quot;' value='Churn' />
+            <alias key='&quot;Sales Accepted Lead&quot;' value='Sales Accepted Lead' />
+            <alias key='&quot;Sales Qualified Lead&quot;' value='Sales Qualified Lead' />
+            <alias key='&quot;Customer&quot;' value='Customer' />
+            <alias key='&quot;Lead&quot;' value='Lead' />
+          </aliases>
+        </column>
+</datasource-dependencies>
       <datasource-dependencies datasource='federated.ehemailengagement'>
         <column caption='CTR SP' datatype='real' name='[CTR SP]' role='measure' type='quantitative' />
         <column-instance column='[CTR SP]' derivation='User' name='[usr:CTR SP:qk]' pivot='key' type='quantitative' />

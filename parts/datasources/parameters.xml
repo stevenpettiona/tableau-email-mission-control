@@ -225,4 +225,27 @@
       <member alias='Unsubscribes' value='&quot;Unsubscribes&quot;' />
     </members>
   </column>
+  <column caption='Lifecycle Stage Filter' datatype='string' name='[Lifecycle Stage Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <calculation class='tableau' formula='&quot;All&quot;' />
+    <aliases>
+      <alias key='&quot;All&quot;' value='All' />
+      <alias key='&quot;Subscriber&quot;' value='Subscriber' />
+      <alias key='&quot;Marketing Qualified Lead&quot;' value='Marketing Qualified Lead' />
+      <alias key='&quot;Churn&quot;' value='Churn' />
+      <alias key='&quot;Sales Accepted Lead&quot;' value='Sales Accepted Lead' />
+      <alias key='&quot;Sales Qualified Lead&quot;' value='Sales Qualified Lead' />
+      <alias key='&quot;Customer&quot;' value='Customer' />
+      <alias key='&quot;Lead&quot;' value='Lead' />
+    </aliases>
+    <members>
+      <member alias='All' value='&quot;All&quot;' />
+      <member alias='Subscriber' value='&quot;Subscriber&quot;' />
+      <member alias='Marketing Qualified Lead' value='&quot;Marketing Qualified Lead&quot;' />
+      <member alias='Churn' value='&quot;Churn&quot;' />
+      <member alias='Sales Accepted Lead' value='&quot;Sales Accepted Lead&quot;' />
+      <member alias='Sales Qualified Lead' value='&quot;Sales Qualified Lead&quot;' />
+      <member alias='Customer' value='&quot;Customer&quot;' />
+      <member alias='Lead' value='&quot;Lead&quot;' />
+    </members>
+  </column>
 </datasource>

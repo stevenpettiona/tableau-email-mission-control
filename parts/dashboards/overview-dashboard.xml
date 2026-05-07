@@ -80,9 +80,45 @@
         <member alias='CA' value='&quot;CA&quot;' />
       </members>
     </column>
+    <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Inbound&quot;' value='Inbound' />
+        <alias key='&quot;Outbound&quot;' value='Outbound' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Inbound' value='&quot;Inbound&quot;' />
+        <member alias='Outbound' value='&quot;Outbound&quot;' />
+      </members>
+    </column>
     <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
+    </column>
+    <column caption='Lifecycle Stage Filter' datatype='string' name='[Lifecycle Stage Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Churn&quot;' value='Churn' />
+        <alias key='&quot;Customer&quot;' value='Customer' />
+        <alias key='&quot;Lead&quot;' value='Lead' />
+        <alias key='&quot;Marketing Qualified Lead&quot;' value='Marketing Qualified Lead' />
+        <alias key='&quot;Sales Accepted Lead&quot;' value='Sales Accepted Lead' />
+        <alias key='&quot;Sales Qualified Lead&quot;' value='Sales Qualified Lead' />
+        <alias key='&quot;Subscriber&quot;' value='Subscriber' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Subscriber' value='&quot;Subscriber&quot;' />
+        <member alias='Marketing Qualified Lead' value='&quot;Marketing Qualified Lead&quot;' />
+        <member alias='Churn' value='&quot;Churn&quot;' />
+        <member alias='Sales Accepted Lead' value='&quot;Sales Accepted Lead&quot;' />
+        <member alias='Sales Qualified Lead' value='&quot;Sales Qualified Lead&quot;' />
+        <member alias='Customer' value='&quot;Customer&quot;' />
+        <member alias='Lead' value='&quot;Lead&quot;' />
+      </members>
     </column>
     <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
@@ -124,8 +160,8 @@
       <calculation class='tableau' formula='#2026-02-01#' />
       <range min='#2023-01-01#' />
     </column>
-    <column alias='Opens' caption='Volume Metric' datatype='string' name='[Volume Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Opens&quot;'>
-      <calculation class='tableau' formula='&quot;Opens&quot;' />
+    <column caption='Volume Metric' datatype='string' name='[Volume Metric]' param-domain-type='list' role='measure' type='nominal' value='&quot;Sends&quot;'>
+      <calculation class='tableau' formula='&quot;Sends&quot;' />
       <aliases>
         <alias key='&quot;Clicks&quot;' value='Clicks' />
         <alias key='&quot;Opens&quot;' value='Opens' />
@@ -246,7 +282,7 @@
           </zone-style>
         </zone>
         <zone friendly-name='Filters &amp; Parameters' h='5556' id='1139' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
-          <zone custom-title='true' h='5556' id='1141' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='10000' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1141' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='8333' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -257,7 +293,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1140' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='10000' x='10000' y='7555'>
+          <zone h='5556' id='1140' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='8333' x='8333' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -265,7 +301,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1142' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='10000' x='20000' y='7555'>
+          <zone h='5556' id='1142' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='8333' x='16666' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -273,7 +309,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1143' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='10000' x='30000' y='7555'>
+          <zone h='5556' id='1143' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='8333' x='24999' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -281,7 +317,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1144' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='10000' x='40000' y='7555'>
+          <zone h='5556' id='1144' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='8333' x='33332' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -289,7 +325,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1145' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='10000' x='50000' y='7555'>
+          <zone h='5556' id='1145' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='8333' x='41665' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -297,7 +333,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1146' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='10000' x='60000' y='7555'>
+          <zone h='5556' id='1146' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='8333' x='49998' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -305,7 +341,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1147' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='10000' x='70000' y='7555'>
+          <zone h='5556' id='1147' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='8333' x='58331' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -313,7 +349,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1148' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='10000' x='80000' y='7555'>
+          <zone h='5556' id='1148' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='8333' x='66664' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -321,7 +357,23 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone custom-title='true' h='5556' id='1169' mode='compact' param='[Parameters].[Volume Metric]' type-v2='paramctrl' w='10000' x='90000' y='7555'>
+          <zone h='5556' id='1170' mode='compact' param='[Parameters].[Direction Filter]' type-v2='paramctrl' w='8333' x='74997' y='7555'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone h='5556' id='1171' mode='compact' param='[Parameters].[Lifecycle Stage Filter]' type-v2='paramctrl' w='8333' x='83330' y='7555'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone custom-title='true' h='5556' id='1169' mode='compact' param='[Parameters].[Volume Metric]' type-v2='paramctrl' w='8337' x='91663' y='7555'>
             <formatted-text>
               <run>Metric</run>
             </formatted-text>
@@ -391,7 +443,7 @@
             </zone-style>
           </zone>
           <zone h='11667' id='1104' name='[SC] Unsubscribes' w='6222' x='37775' y='16444'>
-            <layout-cache cell-count-h='1' non-cell-size-h='28' type-h='cell' type-w='fixed' />
+            <layout-cache cell-count-h='1' non-cell-size-h='41' type-h='cell' type-w='fixed' />
           </zone>
           <zone h='11667' id='1164' name='[LC] Unsubscribes Trend Sparkline' w='6223' x='43997' y='16444'>
             <layout-cache minheight='115' type-h='scalable' type-w='fixed' />
@@ -477,7 +529,7 @@
           </zone>
           <zone h='68556' id='1157' param='vert' type-v2='layout-flow' w='26720' x='73280' y='31444'>
             <zone h='51444' id='1111' name='[BC] Platform Split' w='26720' x='73280' y='31444'>
-              <layout-cache minwidth='180' type-h='cell' type-w='scalable' />
+              <layout-cache cell-count-h='2' minwidth='180' non-cell-size-h='83' type-h='cell' type-w='scalable' />
             </zone>
             <zone fixed-size='154' h='17111' id='1159' is-fixed='true' layout-strategy-id='distribute-evenly' param='horz' type-v2='layout-flow' w='26720' x='73280' y='82888'>
               <zone h='16889' id='1158' name='[BC] Platform Scorecard Marketo' w='13323' x='73353' y='83000'>

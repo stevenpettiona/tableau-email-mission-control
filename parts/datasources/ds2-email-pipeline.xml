@@ -13,73 +13,84 @@
       </named-connection>
     </named-connections>
     <relation connection='redshift.ds2conn' name='Pipeline Flat' type='text'>with m as (
-	select sum(mql_count) as mqls_new,
-		sum(recycled_mql_count) as mqls_recycled,
-		date,
-		dim_marketing_campaign_sk,
-		country
-	from mart.rpt_marketing_mofu_leads
-	where date >= &apos;20260501&apos;
-	group by 3,4,5
-),
-b as (
-	select sum(sao_weighted_with_unattributed_cust) as saos,
-    	SUM(won_weighted_with_unattributed_cust) as wons,
-   		SUM(won_arr_weighted_with_unattributed_cust) as arr,
-   		date,
-		dim_marketing_campaign_sk,
-		country
-    from mart.rpt_marketing_bofu_opportunities
-    where date >= &apos;20260501&apos;
-	group by 4,5,6
-)
+        select sum(mql_count) as mqls_new,
+          sum(recycled_mql_count) as mqls_recycled,
+          date,
+          dim_marketing_campaign_sk,
+          country
+        from mart.rpt_marketing_mofu_leads
+        where date >= &apos;20260501&apos;
+        group by 3,4,5
+      ),
+      b as (
+        select sum(sao_weighted_with_unattributed_cust) as saos,
+            SUM(won_weighted_with_unattributed_cust) as wons,
+            SUM(won_arr_weighted_with_unattributed_cust) as arr,
+            date,
+          dim_marketing_campaign_sk,
+          country
+          from mart.rpt_marketing_bofu_opportunities
+          where date >= &apos;20260501&apos;
+        group by 4,5,6
+      ),
+      e as (
+        select count(distinct CASE event_type WHEN &apos;Send&apos; THEN event_id ELSE NULL end) as sends,
+            count(distinct CASE event_type WHEN &apos;Open&apos; THEN event_id ELSE NULL end) as opens,
+            count(distinct CASE event_type WHEN &apos;Click&apos; THEN event_id ELSE NULL end) as clicks,
+            count(distinct CASE event_type WHEN &apos;Unsubscribe&apos; THEN event_id ELSE NULL end) as unsubscribes,
+            DATE_TRUNC(&apos;day&apos;, event_timestamp)::DATE as email_date,
+            source                                      AS platform,
+            dim_marketing_campaign_sk,
+            dim_marketing_audience_sk
+          FROM mart.fct_marketing_email_engagement
+          where event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
+        and event_timestamp >= &apos;20260501&apos;
+        group by 5,6,7,8
+            
+      )
 
-SELECT
-    count(distinct CASE f.event_type WHEN &apos;Send&apos; THEN f.event_id ELSE NULL end) as sends,
-    count(distinct CASE f.event_type WHEN &apos;Open&apos; THEN f.event_id ELSE NULL end) as opens,
-    count(distinct CASE f.event_type WHEN &apos;Click&apos; THEN f.event_id ELSE NULL end) as clicks,
-    count(distinct CASE f.event_type WHEN &apos;Unsubscribe&apos; THEN f.event_id ELSE NULL end) as unsubscribes,
-    SUM(mofu.mqls_new) as mqls_new,
-    SUM(mofu.mqls_recycled) as mqls_recycled,
-    SUM(bofu.saos) as saos,
-    SUM(bofu.wons) as wons,
-    SUM(bofu.arr) as arr,
-    DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE as email_date,
-    DATE_TRUNC(&apos;week&apos;,  f.event_timestamp)::DATE AS event_week,
-    DATE_TRUNC(&apos;month&apos;, f.event_timestamp)::DATE AS event_month,
-    f.source                                      AS platform,
-    f.dim_marketing_campaign_sk,
-    c.campaign_name,
-    c.sub_campaign_name,
-    c.campaign_source,
-    c.program_type,
-    c.campaign_type,
-    c.product,
-    c.channel,
-    c.direction,
-    c.campaign_year_month,
-    a.marketo_geo_code                            AS country,
-    a.marketo_industry 							  as industry
-FROM mart.fct_marketing_email_engagement f
-INNER JOIN mart.dim_marketing_campaign c
-    ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
-INNER JOIN mart.dim_marketing_audience a
-    ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
-    AND a.is_current = true
-left join mart.dim_country dc on dc.alpha_two_letter = coalesce(a.marketo_geo_code, a.braze_geo_code)
-LEFT JOIN m mofu
-	ON mofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and mofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and mofu.country = dc.country 
-LEFT JOIN b bofu
-	ON bofu.date = DATE_TRUNC(&apos;day&apos;, f.event_timestamp)::DATE and bofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and bofu.country = dc.country
-WHERE f.event_type IN (&apos;Send&apos;,&apos;Open&apos;,&apos;Click&apos;,&apos;Unsubscribe&apos;)
-and f.event_timestamp >= &apos;20260501&apos;
-group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25</relation>
+      SELECT
+          sum(f.sends) as sends,
+          sum(f.opens) as opens,
+          sum(f.clicks) as clicks,
+          sum(f.unsubscribes) as unsubscribes,
+          SUM(mofu.mqls_new) as mqls_new,
+          SUM(mofu.mqls_recycled) as mqls_recycled,
+          SUM(bofu.saos) as saos,
+          SUM(bofu.wons) as wons,
+          SUM(bofu.arr) as arr,
+          DATE_TRUNC(&apos;day&apos;, f.email_date)::DATE as email_date,
+          DATE_TRUNC(&apos;week&apos;,  f.email_date)::DATE AS event_week,
+          DATE_TRUNC(&apos;month&apos;, f.email_date)::DATE AS event_month,
+          f.platform,
+          c.campaign_name,
+          c.sub_campaign_name,
+          c.campaign_source,
+          c.program_type,
+          c.campaign_type,
+          c.product,
+          c.channel,
+          c.direction,
+          c.campaign_year_month,
+          a.marketo_geo_code                            AS country,
+          a.marketo_industry 							  as industry
+      FROM e f
+      INNER JOIN mart.dim_marketing_campaign c
+          ON f.dim_marketing_campaign_sk = c.dim_marketing_campaign_sk
+      INNER JOIN mart.dim_marketing_audience a
+          ON f.dim_marketing_audience_sk = a.dim_marketing_audience_sk
+          AND a.is_current = true
+      left join mart.dim_country dc on dc.alpha_two_letter = coalesce(a.marketo_geo_code, a.braze_geo_code)
+      LEFT JOIN m mofu
+        ON mofu.date = f.email_date and mofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and mofu.country = dc.country 
+      LEFT JOIN b bofu
+        ON bofu.date = f.email_date and bofu.dim_marketing_campaign_sk = f.dim_marketing_campaign_sk and bofu.country = dc.country
+      group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24</relation>
     <cols>
       <map key='[event_timestamp]' value='[Pipeline Flat].[email_date]' />
       <map key='[event_week]' value='[Pipeline Flat].[event_week]' />
       <map key='[event_month]' value='[Pipeline Flat].[event_month]' />
       <map key='[platform]' value='[Pipeline Flat].[platform]' />
-      <map key='[dim_marketing_campaign_sk]' value='[Pipeline Flat].[dim_marketing_campaign_sk]' />
       <map key='[campaign_name]' value='[Pipeline Flat].[campaign_name]' />
       <map key='[sub_campaign_name]' value='[Pipeline Flat].[sub_campaign_name]' />
       <map key='[campaign_source]' value='[Pipeline Flat].[campaign_source]' />
@@ -107,7 +118,6 @@ group by 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25</relation>
   <column datatype='date' name='[event_week]' role='dimension' type='ordinal' />
   <column datatype='date' name='[event_month]' role='dimension' type='ordinal' />
   <column caption='Platform' datatype='string' name='[platform]' role='dimension' type='nominal' />
-  <column datatype='integer' hidden='true' name='[dim_marketing_campaign_sk]' role='dimension' type='ordinal' />
   <column caption='Program Name' datatype='string' name='[campaign_name]' role='dimension' type='nominal' />
   <column caption='Sub-Campaign' datatype='string' name='[sub_campaign_name]' role='dimension' type='nominal' />
   <column caption='Campaign Source' datatype='string' name='[campaign_source]' role='dimension' type='nominal' />

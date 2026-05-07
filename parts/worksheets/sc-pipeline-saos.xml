@@ -22,7 +22,7 @@
       </datasources>
       <datasource-dependencies datasource='Parameters'>
         <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
-        <column caption='Program Type' datatype='string' name='[Program Type Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
+        <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />
         <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;' />

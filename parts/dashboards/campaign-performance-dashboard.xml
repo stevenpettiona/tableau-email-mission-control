@@ -23,7 +23,7 @@
     <datasource caption='EH Email Engagement' name='federated.ehemailengagement' />
   </datasources>
   <datasource-dependencies datasource='Parameters'>
-    <column alias='All' caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Company Size' datatype='string' name='[Company Size Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -37,27 +37,6 @@
         <member alias='Core' value='&quot;core&quot;' />
         <member alias='Mid-Market' value='&quot;mid-market&quot;' />
       </members>
-    </column>
-    <column alias='Period over Period' caption='Compare Period' datatype='string' name='[Compare Period]' param-domain-type='list' role='measure' type='nominal' value='&quot;PoP&quot;'>
-      <calculation class='tableau' formula='&quot;PoP&quot;' />
-      <aliases>
-        <alias key='&quot;Custom&quot;' value='Custom Range' />
-        <alias key='&quot;PoP&quot;' value='Period over Period' />
-        <alias key='&quot;YoY&quot;' value='Year over Year' />
-      </aliases>
-      <members>
-        <member alias='Year over Year' value='&quot;YoY&quot;' />
-        <member alias='Period over Period' value='&quot;PoP&quot;' />
-        <member alias='Custom Range' value='&quot;Custom&quot;' />
-      </members>
-    </column>
-    <column caption='Comparison End' datatype='date' name='[Comparison End]' param-domain-type='range' role='measure' type='quantitative' value='#2025-05-01#'>
-      <calculation class='tableau' formula='#2025-05-01#' />
-      <range min='#2023-01-01#' />
-    </column>
-    <column caption='Comparison Start' datatype='date' name='[Comparison Start]' param-domain-type='range' role='measure' type='quantitative' value='#2025-02-01#'>
-      <calculation class='tableau' formula='#2025-02-01#' />
-      <range min='#2023-01-01#' />
     </column>
     <column caption='Country' datatype='string' name='[Country Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
@@ -76,9 +55,45 @@
         <member alias='CA' value='&quot;CA&quot;' />
       </members>
     </column>
+    <column caption='Direction' datatype='string' name='[Direction Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Inbound&quot;' value='Inbound' />
+        <alias key='&quot;Outbound&quot;' value='Outbound' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Inbound' value='&quot;Inbound&quot;' />
+        <member alias='Outbound' value='&quot;Outbound&quot;' />
+      </members>
+    </column>
     <column caption='End Date' datatype='date' name='[End Date]' param-domain-type='range' role='measure' type='quantitative' value='#2026-05-01#'>
       <calculation class='tableau' formula='#2026-05-01#' />
       <range min='#2023-01-01#' />
+    </column>
+    <column caption='Lifecycle Stage Filter' datatype='string' name='[Lifecycle Stage Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+      <calculation class='tableau' formula='&quot;All&quot;' />
+      <aliases>
+        <alias key='&quot;All&quot;' value='All' />
+        <alias key='&quot;Churn&quot;' value='Churn' />
+        <alias key='&quot;Customer&quot;' value='Customer' />
+        <alias key='&quot;Lead&quot;' value='Lead' />
+        <alias key='&quot;Marketing Qualified Lead&quot;' value='Marketing Qualified Lead' />
+        <alias key='&quot;Sales Accepted Lead&quot;' value='Sales Accepted Lead' />
+        <alias key='&quot;Sales Qualified Lead&quot;' value='Sales Qualified Lead' />
+        <alias key='&quot;Subscriber&quot;' value='Subscriber' />
+      </aliases>
+      <members>
+        <member alias='All' value='&quot;All&quot;' />
+        <member alias='Subscriber' value='&quot;Subscriber&quot;' />
+        <member alias='Marketing Qualified Lead' value='&quot;Marketing Qualified Lead&quot;' />
+        <member alias='Churn' value='&quot;Churn&quot;' />
+        <member alias='Sales Accepted Lead' value='&quot;Sales Accepted Lead&quot;' />
+        <member alias='Sales Qualified Lead' value='&quot;Sales Qualified Lead&quot;' />
+        <member alias='Customer' value='&quot;Customer&quot;' />
+        <member alias='Lead' value='&quot;Lead&quot;' />
+      </members>
     </column>
     <column caption='Platform' datatype='string' name='[Platform Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
@@ -93,7 +108,7 @@
         <member alias='Braze B2B' value='&quot;braze b2b&quot;' />
       </members>
     </column>
-    <column alias='All' caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
+    <column caption='Program Type Quick Filter' datatype='string' name='[Program Type Quick Filter]' param-domain-type='list' role='measure' type='nominal' value='&quot;All&quot;'>
       <calculation class='tableau' formula='&quot;All&quot;' />
       <aliases>
         <alias key='&quot;All&quot;' value='All' />
@@ -129,7 +144,7 @@
     <zone h='100000' id='1200' type-v2='layout-basic' w='100000' x='0' y='0'>
       <zone friendly-name='Dashboard Container' h='100000' id='1340' param='vert' type-v2='layout-flow' w='100000' x='0' y='0'>
         <zone friendly-name='HeroBanner' h='4222' id='1341' param='horz' type-v2='layout-flow' w='100000' x='0' y='0'>
-          <zone forceUpdate='true' h='3334' id='1342' type-v2='text' w='48389' x='293' y='444'>
+          <zone forceUpdate='true' h='3334' id='1342' type-v2='text' w='48536' x='293' y='444'>
             <formatted-text>
               <run bold='true' fontcolor='#ffffff' fontsize='12'>Employment</run>
               <run bold='true' fontcolor='#f63eff' fontsize='12'>Hero</run>
@@ -142,7 +157,7 @@
               <format attr='background-color' value='#4b2b72' />
             </zone-style>
           </zone>
-          <zone forceUpdate='true' h='3334' id='1343' type-v2='text' w='51024' x='48682' y='444'>
+          <zone forceUpdate='true' h='3334' id='1343' type-v2='text' w='50878' x='48829' y='444'>
             <formatted-text>
               <run bold='true' fontalignment='2' fontcolor='#ffffff' fontname='Tableau Block'>Email Mission Control - Campaign Performance</run>
             </formatted-text>
@@ -211,7 +226,7 @@
           <zone h='3334' id='1348' type-v2='dashboard-object' w='24963' x='75037' y='4222'>
             <button action='tabdoc:goto-sheet window-id=&quot;{6C7A0900-EC67-48CA-B906-CCEB95344A45}&quot;' button-type='text'>
               <button-visual-state>
-                <caption>Email &#8594; Pipeline</caption>
+                <caption>Email → Pipeline</caption>
                 <button-caption-font-style fontcolor='#ffffff' fontsize='9' />
                 <format attr='background-color' value='#4b2b72' />
               </button-visual-state>
@@ -231,7 +246,7 @@
           </zone-style>
         </zone>
         <zone friendly-name='Filters &amp; Parameters' h='5556' id='1349' param='horz' type-v2='layout-flow' w='100000' x='0' y='7555'>
-          <zone custom-title='true' h='5556' id='1350' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='11111' x='0' y='7555'>
+          <zone custom-title='true' h='5556' id='1350' mode='compact' param='[Parameters].[Country Filter]' type-v2='paramctrl' w='12500' x='0' y='7555'>
             <formatted-text>
               <run fontcolor='#4b2b72' fontname='Tableau Bold' fontsize='8'>Country</run>
             </formatted-text>
@@ -242,7 +257,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1351' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='11111' x='11111' y='7555'>
+          <zone h='5556' id='1351' mode='datetime' param='[Parameters].[Start Date]' type-v2='paramctrl' w='12500' x='12500' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -250,7 +265,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1352' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='11111' x='22222' y='7555'>
+          <zone h='5556' id='1352' mode='datetime' param='[Parameters].[End Date]' type-v2='paramctrl' w='12500' x='25000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -258,7 +273,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1353' mode='compact' param='[Parameters].[Compare Period]' type-v2='paramctrl' w='11111' x='33333' y='7555'>
+          <zone h='5556' id='1356' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='12500' x='37500' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -266,7 +281,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1354' mode='datetime' param='[Parameters].[Comparison Start]' type-v2='paramctrl' w='11111' x='44444' y='7555'>
+          <zone h='5556' id='1357' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='12500' x='50000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -274,7 +289,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1355' mode='datetime' param='[Parameters].[Comparison End]' type-v2='paramctrl' w='11111' x='55555' y='7555'>
+          <zone h='5556' id='1358' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='12500' x='62500' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -282,7 +297,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1356' mode='compact' param='[Parameters].[Company Size Filter]' type-v2='paramctrl' w='11111' x='66666' y='7555'>
+          <zone h='5556' id='1362' mode='compact' param='[Parameters].[Direction Filter]' type-v2='paramctrl' w='12500' x='75000' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -290,15 +305,7 @@
               <format attr='margin' value='4' />
             </zone-style>
           </zone>
-          <zone h='5556' id='1357' mode='compact' param='[Parameters].[Program Type Quick Filter]' type-v2='paramctrl' w='11111' x='77777' y='7555'>
-            <zone-style>
-              <format attr='border-color' value='#000000' />
-              <format attr='border-style' value='none' />
-              <format attr='border-width' value='0' />
-              <format attr='margin' value='4' />
-            </zone-style>
-          </zone>
-          <zone h='5556' id='1358' mode='compact' param='[Parameters].[Platform Filter]' type-v2='paramctrl' w='11112' x='88888' y='7555'>
+          <zone h='5556' id='1363' mode='compact' param='[Parameters].[Lifecycle Stage Filter]' type-v2='paramctrl' w='12500' x='87500' y='7555'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
